@@ -3,7 +3,11 @@
   "compilerOptions": {
     "rootDir": "./",
     "jsx": "react",
-    "outDir": "./build"
+    "outDir": "./build",
+    "paths": {
+      //other paths can go here
+      "~/*": ["./inertia/*"]
+    }
   },
   "references": [{ "path": "./tsconfig.inertia.json" }]
 }

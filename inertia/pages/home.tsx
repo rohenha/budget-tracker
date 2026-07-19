@@ -1,3 +1,5 @@
+import { Button } from '~/components/ui/button'
+
 export default function Home() {
   return (
     <>
@@ -8,6 +10,7 @@ export default function Home() {
           client-side interactivity — seamless, fast, and cohesive.
         </p>
       </div>
+      <Button>Hello world</Button>
 
       <div className="cards">
         <a href="https://docs.adonisjs.com/introduction" target="_blank" rel="noreferrer">
