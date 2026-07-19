@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "yahoo-finance2": {
+      "source": "gadicc/yahoo-finance2",
+      "sourceType": "github",
+      "skillPath": "skills/yahoo-finance2/SKILL.md",
+      "computedHash": "734f66d04cfa4ad54c1924757bcf41eabaafe109af0dd9ec26c43c408d56d1f2"
+    }
+  }
+}
