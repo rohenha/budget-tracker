@@ -9,7 +9,7 @@ import {
 } from '~/components/ui/dialog'
 import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'
-import { Field, FieldContent, FieldLabel } from '~/components/ui/field'
+import { Field, FieldContent, FieldError, FieldLabel } from '~/components/ui/field'
 import { getIcon, type Categorie } from '~/components/budget/constants'
 
 export default function EditCategoryDialog({
@@ -29,9 +29,9 @@ export default function EditCategoryDialog({
         <Form
           route="categories.update"
           routeParams={{ id: categorie.id }}
-          onSubmit={() => onOpenChange(false)}
+          onSuccess={() => onOpenChange(false)}
         >
-          {() => (
+          {({ errors }) => (
             <>
               <DialogHeader>
                 <DialogTitle>Modifier {categorie.label}</DialogTitle>
@@ -41,7 +41,13 @@ export default function EditCategoryDialog({
                 <Field>
                   <FieldLabel>Nom</FieldLabel>
                   <FieldContent>
-                    <Input name="label" id="label" defaultValue={categorie.label} />
+                    <Input
+                      name="label"
+                      id="label"
+                      defaultValue={categorie.label}
+                      aria-invalid={!!errors.label}
+                    />
+                    <FieldError errors={[{ message: errors.label }]} />
                   </FieldContent>
                 </Field>
                 <Field>
@@ -53,7 +59,9 @@ export default function EditCategoryDialog({
                       step="0.01"
                       min="0"
                       defaultValue={categorie.budget ?? ''}
+                      aria-invalid={!!errors.budget}
                     />
+                    <FieldError errors={[{ message: errors.budget }]} />
                   </FieldContent>
                 </Field>
                 <Field>
@@ -64,7 +72,9 @@ export default function EditCategoryDialog({
                       name="color"
                       defaultValue={categorie.color}
                       className="h-7 w-14 p-0.5"
+                      aria-invalid={!!errors.color}
                     />
+                    <FieldError errors={[{ message: errors.color }]} />
                   </FieldContent>
                 </Field>
               </div>
@@ -73,7 +83,12 @@ export default function EditCategoryDialog({
                   <Icon className="size-4" style={{ color: categorie.color }} />
                   <span className="text-xs text-muted-foreground">{categorie.icon}</span>
                 </div>
-                <Button type="button" variant="outline" size="sm" onClick={() => onOpenChange(false)}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => onOpenChange(false)}
+                >
                   Annuler
                 </Button>
                 <Button type="submit" size="sm">

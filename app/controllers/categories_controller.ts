@@ -6,13 +6,13 @@ export default class CategoriesController {
   async index({ inertia, auth }: HttpContext) {
     const user = auth.user!
     await this.ensureDefaultCategorie(user.id)
-    const categories = await Categorie.query()
-      .where('userId', user.id)
-      .orderBy('createdAt', 'asc')
-    return inertia.render('budget/index', { categories: categories.map((c) => c.serialize()) as any })
+    const categories = await Categorie.query().where('userId', user.id).orderBy('createdAt', 'asc')
+    return inertia.render('budget/index', {
+      categories: categories.map((c) => c.serialize()) as any,
+    })
   }
 
-  async store({ request, response, auth }: HttpContext) {
+  async store({ request, response, auth, session }: HttpContext) {
     const user = auth.user!
     const payload = await request.validateUsing(createCategorieValidator)
     const slug = payload.slug ?? (await Categorie.generateSlug(payload.label))
@@ -24,10 +24,11 @@ export default class CategoriesController {
       budget: payload.budget ?? null,
       color: payload.color,
     })
+    session.flash('success', 'Catégorie créée avec succès')
     response.redirect().toRoute('budget')
   }
 
-  async update({ request, response, auth, params }: HttpContext) {
+  async update({ request, response, auth, params, session }: HttpContext) {
     const user = auth.user!
     const categorie = await Categorie.query()
       .where('id', params.id)
@@ -35,7 +36,8 @@ export default class CategoriesController {
       .firstOrFail()
     const payload = await request.validateUsing(updateCategorieValidator)
     const slug =
-      payload.slug ?? (payload.label ? await Categorie.generateSlug(payload.label, categorie.id) : undefined)
+      payload.slug ??
+      (payload.label ? await Categorie.generateSlug(payload.label, categorie.id) : undefined)
     categorie.merge({
       ...(payload.label !== undefined ? { label: payload.label } : {}),
       ...(slug !== undefined ? { slug } : {}),
@@ -44,10 +46,11 @@ export default class CategoriesController {
       ...(payload.color !== undefined ? { color: payload.color } : {}),
     })
     await categorie.save()
+    session.flash('success', 'Catégorie modifiée avec succès')
     response.redirect().toRoute('budget')
   }
 
-  async destroy({ response, auth, params }: HttpContext) {
+  async destroy({ response, auth, params, session }: HttpContext) {
     const user = auth.user!
     const categorie = await Categorie.query()
       .where('id', params.id)
@@ -61,6 +64,7 @@ export default class CategoriesController {
       return response.redirect().back()
     }
     await categorie.delete()
+    session.flash('success', 'Catégorie supprimée avec succès')
     response.redirect().toRoute('budget')
   }
 

@@ -9,7 +9,6 @@ import { resolvePageComponent } from '@adonisjs/inertia/helpers'
 
 import AuthLayout from '~/layouts/auth'
 import DefaultLayout from '~/layouts/default'
-import RootLayout from '~/layouts/root'
 
 const appName = import.meta.env.VITE_APP_NAME || 'AdonisJS'
 
@@ -30,9 +29,9 @@ createInertiaApp({
   setup({ el, App, props }) {
     createRoot(el).render(
       <TuyauProvider client={client}>
-        <RootLayout>
-          <App {...props} />
-        </RootLayout>
+        {/* <RootLayout> */}
+        <App {...props} />
+        {/* </RootLayout> */}
       </TuyauProvider>
     )
   },

@@ -28,7 +28,7 @@ export default function AddCategoryDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
-        <Form route="categories.store" onSubmit={() => onOpenChange(false)}>
+        <Form route="categories.store" onSuccess={() => onOpenChange(false)}>
           {({ errors }) => (
             <>
               <DialogHeader>
@@ -106,7 +106,12 @@ export default function AddCategoryDialog({
                 </Field>
               </div>
               <DialogFooter>
-                <Button type="button" variant="outline" size="sm" onClick={() => onOpenChange(false)}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => onOpenChange(false)}
+                >
                   Annuler
                 </Button>
                 <Button type="submit" size="sm">

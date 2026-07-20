@@ -44,9 +44,9 @@ So that naviguer confortablement sur tous les écrans.
   **When** il s'agit d'un texte interactif (<18px)
   **Then** ce token n'est pas utilisé — réservé aux placeholders, timestamps, textes secondaires non interactifs (UX-DR22)
 
-- **Given** un composant PageState global est défini
+- **Given** un composant page_state global est défini
   **When** une page a besoin d'afficher un état loading, empty ou error
-  **Then** PageState est utilisé avec les props loading, empty (titre + message + CTA), error (message + action), children
+  **Then** page_state est utilisé avec les props loading, empty (titre + message + CTA), error (message + action), children
   **And** chaque page personnalise le texte du titre et message empty/error via les props
   **And** l'état loading utilise shadcn Skeleton avec aria-busy="true"
   **And** l'état error utilise un message avec variant destructive
@@ -62,7 +62,7 @@ So that naviguer confortablement sur tous les écrans.
 - [x] Create story file
 - [x] Create shadcn UI components: Skeleton, Card, Dialog, Select, Table
 - [x] Create Sidebar component with responsive hamburger menu
-- [x] Create PageState component with loading/empty/error/children states
+- [x] Create page_state component with loading/empty/error/children states
 - [x] Update default layout with sidebar, skip nav link, and authenticated layout
 - [x] Update app.css with typography hierarchy base styles and prefers-reduced-motion
 - [x] Add placeholder routes for main navigation sections
@@ -86,7 +86,7 @@ So that naviguer confortablement sur tous les écrans.
 
 1. Create all shadcn UI components following existing patterns
 2. Build Sidebar with navigation links + mobile hamburger
-3. Build PageState with loading/empty/error states
+3. Build page_state with loading/empty/error states
 4. Refactor default layout to support authenticated/public modes
 5. Add typography base styles and reduced-motion
 6. Define placeholder routes for all main sections
@@ -104,7 +104,7 @@ So that naviguer confortablement sur tous les écrans.
 
 - Created 5 shadcn UI components (Skeleton, Card, Dialog, Select, Table)
 - Created Sidebar with 6 nav links, responsive hamburger, aria-current
-- Created PageState with loading/empty/error/children variants
+- Created page_state with loading/empty/error/children variants
 - Refactored default layout with skip nav, sidebar, proper html classes
 - Added typography base styles + prefers-reduced-motion support
 - Added 5 placeholder routes for main sections

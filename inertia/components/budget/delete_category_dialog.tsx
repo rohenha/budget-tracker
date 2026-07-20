@@ -22,20 +22,31 @@ export default function DeleteCategoryDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
-        <Form route="categories.destroy" routeParams={{ id: categorie.id }} onSubmit={() => onOpenChange(false)}>
+        <Form
+          route="categories.destroy"
+          routeParams={{ id: categorie.id }}
+          onSuccess={() => onOpenChange(false)}
+        >
           {() => (
             <>
               <DialogHeader>
                 <DialogTitle>Supprimer {categorie.label} ?</DialogTitle>
-                <DialogDescription>
-                  Les dépenses liées seront réaffectées à la catégorie Autre.
-                </DialogDescription>
               </DialogHeader>
+              <DialogDescription className="my-4">
+                Les dépenses liées seront réaffectées à la catégorie Autre.
+              </DialogDescription>
               <DialogFooter>
-                <Button type="button" variant="outline" size="sm" onClick={() => onOpenChange(false)}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => onOpenChange(false)}
+                >
                   Annuler
                 </Button>
-                <Button type="submit" variant="destructive" size="sm">Supprimer</Button>
+                <Button type="submit" variant="destructive" size="sm">
+                  Supprimer
+                </Button>
               </DialogFooter>
             </>
           )}
