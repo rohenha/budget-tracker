@@ -1,17 +1,10 @@
 import { type Data } from '@generated/data'
 import { Button } from '~/components/ui/button'
-import { usePage } from '@inertiajs/react'
-import { type ReactElement, useEffect } from 'react'
+import { type ReactElement } from 'react'
 import { Form, Link } from '@adonisjs/inertia/react'
 import ThemeToggle from '~/components/theme_toggle'
 
 export default function PublicLayout({ children }: { children: ReactElement<Data.SharedProps> }) {
-  const { url } = usePage()
-
-  useEffect(() => {
-    import('sonner').then(({ toast }) => toast.dismiss())
-  }, [url])
-
   return (
     <>
       <header className="flex items-center justify-between py-4 px-2 fixed top-0 left-0 w-full z-3 bg-background">

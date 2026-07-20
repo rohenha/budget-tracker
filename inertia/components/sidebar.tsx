@@ -1,6 +1,6 @@
-import { Link } from '@adonisjs/inertia/react'
+import { Link, Form } from '@adonisjs/inertia/react'
 import { usePage } from '@inertiajs/react'
-import { Form } from '@adonisjs/inertia/react'
+import type { SharedProps } from '@adonisjs/inertia/types'
 import {
   LayoutDashboard,
   PiggyBank,
@@ -10,6 +10,7 @@ import {
   Bitcoin,
   Wallet,
   LogOut,
+  User,
 } from 'lucide-react'
 
 import ThemeToggle from '~/components/theme_toggle'
@@ -37,15 +38,16 @@ const navItems = [
   { route: 'cryptos' as const, label: 'Cryptos', icon: Bitcoin },
 ]
 
-function AppSidebar() {
+function AppSidebar({ user }: { user: SharedProps['user'] }) {
   const { url } = usePage()
 
   return (
     <Sidebar collapsible="icon">
-      <SidebarHeader className="flex-row items-center justify-between border-b px-4 py-2">
-        <Link route="dashboard" className="text-sm font-semibold text-sidebar-foreground">
+      <SidebarHeader className="border-b">
+        <SidebarMenuButton tooltip="Budget Tracker" render={<Link route="dashboard" />}>
           <Wallet />
-        </Link>
+          <span>Budget Tracker</span>
+        </SidebarMenuButton>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
@@ -72,14 +74,18 @@ function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <SidebarMenuItem key="logout">
-          <Form route="session.destroy">
-            <SidebarMenuButton tooltip="Déconnexion" type="submit">
-              <LogOut />
-              <span>Déconnexion</span>
-            </SidebarMenuButton>
-          </Form>
-        </SidebarMenuItem>
+        {user ? (
+          <SidebarMenuButton tooltip={user.fullName ?? ''}>
+            <User />
+            <span>{user.fullName}</span>
+          </SidebarMenuButton>
+        ) : null}
+        <Form route="session.destroy">
+          <SidebarMenuButton tooltip="Déconnexion" type="submit">
+            <LogOut />
+            <span>Déconnexion</span>
+          </SidebarMenuButton>
+        </Form>
       </SidebarFooter>
     </Sidebar>
   )
@@ -87,12 +93,18 @@ function AppSidebar() {
 
 export default AppSidebar
 
-export function SidebarLayout({ children }: { children: React.ReactNode }) {
+export function SidebarLayout({
+  children,
+  user,
+}: {
+  children: React.ReactNode
+  user: SharedProps['user']
+}) {
   return (
     <SidebarProvider>
-      <AppSidebar />
+      <AppSidebar user={user} />
       <SidebarInset>
-        <header className="flex h-12 items-center gap-2 border-b px-4">
+        <header className="flex h-12 items-center justify-between gap-2 border-b px-4">
           <SidebarTrigger />
           <ThemeToggle className="text-sidebar-foreground" />
         </header>

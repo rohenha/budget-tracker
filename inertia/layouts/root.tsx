@@ -1,6 +1,13 @@
 import { Toaster } from 'sonner'
+// import { usePage } from '@inertiajs/react'
+// import { useEffect } from 'react'
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  // const { url } = usePage()
+
+  // useEffect(() => {
+  //   import('sonner').then(({ toast }) => toast.dismiss())
+  // }, [url])
   return (
     <>
       <a
