@@ -1,6 +1,16 @@
 import { Link } from '@adonisjs/inertia/react'
 import { usePage } from '@inertiajs/react'
-import { LayoutDashboard, PiggyBank, Receipt, Landmark, TrendingUp, Bitcoin } from 'lucide-react'
+import { Form } from '@adonisjs/inertia/react'
+import {
+  LayoutDashboard,
+  PiggyBank,
+  Receipt,
+  Landmark,
+  TrendingUp,
+  Bitcoin,
+  Wallet,
+  LogOut,
+} from 'lucide-react'
 
 import ThemeToggle from '~/components/theme_toggle'
 import {
@@ -15,6 +25,7 @@ import {
   SidebarProvider,
   SidebarInset,
   SidebarTrigger,
+  SidebarFooter,
 } from '~/components/ui/sidebar'
 
 const navItems = [
@@ -33,9 +44,8 @@ function AppSidebar() {
     <Sidebar collapsible="icon">
       <SidebarHeader className="flex-row items-center justify-between border-b px-4 py-2">
         <Link route="dashboard" className="text-sm font-semibold text-sidebar-foreground">
-          Budget Tracker
+          <Wallet />
         </Link>
-        <ThemeToggle className="text-sidebar-foreground" />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
@@ -61,6 +71,16 @@ function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter>
+        <SidebarMenuItem key="logout">
+          <Form route="session.destroy">
+            <SidebarMenuButton tooltip="Déconnexion" type="submit">
+              <LogOut />
+              <span>Déconnexion</span>
+            </SidebarMenuButton>
+          </Form>
+        </SidebarMenuItem>
+      </SidebarFooter>
     </Sidebar>
   )
 }
@@ -74,6 +94,7 @@ export function SidebarLayout({ children }: { children: React.ReactNode }) {
       <SidebarInset>
         <header className="flex h-12 items-center gap-2 border-b px-4">
           <SidebarTrigger />
+          <ThemeToggle className="text-sidebar-foreground" />
         </header>
         <main id="main-content" className="flex-1 p-4">
           {children}
