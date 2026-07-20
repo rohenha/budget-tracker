@@ -63,7 +63,7 @@ function PageError({ message, action, className }: ErrorProps) {
   )
 }
 
-type PageStateProps = {
+type page_stateProps = {
   loading?: boolean | LoadingProps
   empty?: EmptyProps | null
   error?: ErrorProps | null
@@ -71,7 +71,13 @@ type PageStateProps = {
   className?: string
 }
 
-export default function PageState({ loading, empty, error, children, className }: PageStateProps) {
+export default function page_state({
+  loading,
+  empty,
+  error,
+  children,
+  className,
+}: page_stateProps) {
   if (error) {
     return <PageError {...error} className={className} />
   }
