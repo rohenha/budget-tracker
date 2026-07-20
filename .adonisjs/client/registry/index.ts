@@ -50,9 +50,27 @@ const routes = {
   },
   'budget': {
     methods: ["GET","HEAD"],
-    pattern: '/budget',
-    tokens: [{"old":"/budget","type":0,"val":"budget","end":""}],
+    pattern: '/categories',
+    tokens: [{"old":"/categories","type":0,"val":"categories","end":""}],
     types: placeholder as Registry['budget']['types'],
+  },
+  'categories.store': {
+    methods: ["POST"],
+    pattern: '/categories',
+    tokens: [{"old":"/categories","type":0,"val":"categories","end":""}],
+    types: placeholder as Registry['categories.store']['types'],
+  },
+  'categories.update': {
+    methods: ["PATCH"],
+    pattern: '/categories/:id',
+    tokens: [{"old":"/categories/:id","type":0,"val":"categories","end":""},{"old":"/categories/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['categories.update']['types'],
+  },
+  'categories.destroy': {
+    methods: ["DELETE"],
+    pattern: '/categories/:id',
+    tokens: [{"old":"/categories/:id","type":0,"val":"categories","end":""},{"old":"/categories/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['categories.destroy']['types'],
   },
   'depenses': {
     methods: ["GET","HEAD"],
