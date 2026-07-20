@@ -193,26 +193,32 @@ FR-29: Epic 6 — DCA quick-add crypto
 ## Epic List
 
 ### Epic 1: Budget et Catégories
+
 L'utilisateur configure ses catégories de dépenses/revenus avec label, slug, icône Lucide et budget mensuel. Visualise la répartition des dépenses via un camembert réel vs budgété. La catégorie "Autre" existe par défaut.
 **FRs couverts :** FR-1, FR-2
 
 ### Epic 2: Gestion des Dépenses
+
 L'utilisateur gère ses dépenses quotidiennes : ajout manuel, import CSV Crédit Agricole, filtres par durée. Visualise les dépenses par jour via graphique barres avec moyenne mensuelle.
 **FRs couverts :** FR-5, FR-6, FR-7, FR-8, FR-9
 
 ### Epic 3: Crédits Immobiliers
+
 L'utilisateur gère ses crédits immobiliers avec calcul d'amortissement français. Visualise le récapitulatif (total dû, intérêts, apport initial) et modifie/supprime les crédits.
 **FRs couverts :** FR-10, FR-11, FR-12
 
 ### Epic 4: Investissements
+
 L'utilisateur gère ses supports d'investissement (actions, ETFs) avec achats/ventes, prix via yahoo-finance2, et visualise la répartition du portefeuille.
 **FRs couverts :** FR-13, FR-14, FR-15, FR-16, FR-17, FR-18
 
 ### Epic 5: Cryptomonnaies
+
 L'utilisateur gère ses cryptos avec achats/ventes, prix via CoinGecko. Utilise le même pattern AssetTransactionService que les investissements.
 **FRs couverts :** FR-19, FR-20, FR-21, FR-22, FR-23, FR-24
 
 ### Epic 6: Dashboard et Vue d'Ensemble
+
 L'utilisateur consacre son patrimoine net en un coup d'œil : indicateurs synthétiques, import CSV rapide, DCA quick-add. Prix rafraîchis automatiquement avec fallback.
 **FRs couverts :** FR-25, FR-26, FR-27, FR-28, FR-29
 
@@ -539,6 +545,7 @@ So que suivre un nouvel actif.
 
 > **Tâche technique — AssetTransactionService**
 > Service partagé (Investissements + Cryptos) pour transactions achat/vente avec prix moyen pondéré.
+>
 > - Formule AD-5 : `SUM(quantité * prix_unitaire + frais) / SUM(quantité)`
 > - Vente réduit quantité sans affecter coût unitaire achats restants
 > - Validateur VineJS partagé pour date, quantité, prix unitaire, frais

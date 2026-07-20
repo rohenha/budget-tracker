@@ -12,4 +12,10 @@ export interface ApiDefinition {
     store: typeof routes['session.store']
     destroy: typeof routes['session.destroy']
   }
+  dashboard: typeof routes['dashboard']
+  budget: typeof routes['budget']
+  depenses: typeof routes['depenses']
+  credits: typeof routes['credits']
+  investissements: typeof routes['investissements']
+  cryptos: typeof routes['cryptos']
 }

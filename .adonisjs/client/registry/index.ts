@@ -42,6 +42,42 @@ const routes = {
     tokens: [{"old":"/logout","type":0,"val":"logout","end":""}],
     types: placeholder as Registry['session.destroy']['types'],
   },
+  'dashboard': {
+    methods: ["GET","HEAD"],
+    pattern: '/dashboard',
+    tokens: [{"old":"/dashboard","type":0,"val":"dashboard","end":""}],
+    types: placeholder as Registry['dashboard']['types'],
+  },
+  'budget': {
+    methods: ["GET","HEAD"],
+    pattern: '/budget',
+    tokens: [{"old":"/budget","type":0,"val":"budget","end":""}],
+    types: placeholder as Registry['budget']['types'],
+  },
+  'depenses': {
+    methods: ["GET","HEAD"],
+    pattern: '/depenses',
+    tokens: [{"old":"/depenses","type":0,"val":"depenses","end":""}],
+    types: placeholder as Registry['depenses']['types'],
+  },
+  'credits': {
+    methods: ["GET","HEAD"],
+    pattern: '/credits',
+    tokens: [{"old":"/credits","type":0,"val":"credits","end":""}],
+    types: placeholder as Registry['credits']['types'],
+  },
+  'investissements': {
+    methods: ["GET","HEAD"],
+    pattern: '/investissements',
+    tokens: [{"old":"/investissements","type":0,"val":"investissements","end":""}],
+    types: placeholder as Registry['investissements']['types'],
+  },
+  'cryptos': {
+    methods: ["GET","HEAD"],
+    pattern: '/cryptos',
+    tokens: [{"old":"/cryptos","type":0,"val":"cryptos","end":""}],
+    types: placeholder as Registry['cryptos']['types'],
+  },
 } as const satisfies Record<string, AdonisEndpoint>
 
 export { routes }

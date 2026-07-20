@@ -104,6 +104,7 @@ L'utilisateur peut créer/modifier/supprimer des catégories avec : label, slug 
 Une catégorie **Autre** est créée par défaut. Les dépenses importées sans catégorie ou avec un slug inconnu sont automatiquement affectées à **Autre**.
 
 **Conséquences (testable) :**
+
 - La catégorie "Autre" existe dès la première connexion.
 - Une dépense CSV avec catégorie vide ou slug invalide tombe dans "Autre".
 - Le slug est unique et utilisé comme référence dans l'import CSV.
@@ -114,6 +115,7 @@ Une catégorie **Autre** est créée par défaut. Les dépenses importées sans 
 Un graphique camembert affiche la répartition des dépenses du mois par catégorie, avec comparaison réel vs budgété.
 
 **Conséquences (testable) :**
+
 - Chaque catégorie est une part du camembert avec son icône et pourcentage.
 - Au clic/survol : montant dépensé vs montant budgété.
 
@@ -124,6 +126,7 @@ Un graphique camembert affiche la répartition des dépenses du mois par catégo
 L'utilisateur peut définir une règle de dépense obligatoire avec : libellé, regex de matching (ex: `EDF.*`, `Loyer.*`), type (entrée/sortie), montant prévisionnel.
 
 **Conséquences (testable) :**
+
 - Une dépense importée dont le libellé match la regex est automatique marquée "obligatoire".
 - `[ASSUMPTION]` : Matching regex case-insensitive, appliqué au trimming du libellé.
 
@@ -132,6 +135,7 @@ L'utilisateur peut définir une règle de dépense obligatoire avec : libellé, 
 L'utilisateur voit la liste des dépenses obligatoires du mois, leur statut (débité/non débité), et le montant réel vs prévisionnel.
 
 **Conséquences (testable) :**
+
 - Les lignes débitées sont marquées visuellement.
 - L'utilisateur peut cocher manuellement une règle comme débitée.
 - Les totaux des charges obligatoires débitées et restantes sont affichés.
@@ -149,6 +153,7 @@ L'utilisateur voit la liste des dépenses obligatoires du mois, leur statut (dé
 L'utilisateur voit la liste avec les colonnes : date, libellé, montant, catégorie (slug → label affiché), type (+/-), description.
 
 **Conséquences (testable) :**
+
 - Tri par date (récent → ancien par défaut).
 - Le montant est formaté en euros.
 
@@ -157,6 +162,7 @@ L'utilisateur voit la liste avec les colonnes : date, libellé, montant, catégo
 Formulaire : date, libellé, montant, catégorie (sélection depuis les catégories définies), description (optionnelle).
 
 **Conséquences (testable) :**
+
 - La soumission crée la dépense et la liste se met à jour.
 - Les catégories disponibles sont celles créées via FR-1.
 
@@ -165,12 +171,14 @@ Formulaire : date, libellé, montant, catégorie (sélection depuis les catégor
 Import au format Crédit Agricole (séparateur `;`) avec catégorie en slug.
 
 **Format CSV attendu :**
+
 ```
 Date;Date valeur;Libellé;Débit euros;Crédit euros;Catégorie
 15/01/2026;15/01/2026;Loyer Carrefour;1200,50;;logement
 15/01/2026;15/01/2026;Salaire;3500,00;salaire
 16/01/2026;17/01/2026;Restaurant Le Bistrot;45,80;;alimentation
 ```
+
 - **Date** : format français `DD/MM/YYYY`
 - **Débit euros** : montant sortant (décimal avec `,`)
 - **Crédit euros** : montant entrant
@@ -178,6 +186,7 @@ Date;Date valeur;Libellé;Débit euros;Crédit euros;Catégorie
 - Une ligne avec `Débit` = sortie, `Crédit` = entrée
 
 **Conséquences (testable) :**
+
 - Parsing du CSV avec validation des colonnes.
 - Si catégorie slug absente ou inconnue : la dépense est créée sans catégorie (à assigner manuellement).
 
@@ -186,6 +195,7 @@ Date;Date valeur;Libellé;Débit euros;Crédit euros;Catégorie
 Filtres : journalier, hebdomadaire, mensuel (défaut), personnalisé.
 
 **Conséquences (testable) :**
+
 - La liste et les graphiques se mettent à jour selon la période.
 
 #### FR-9: Graphique des dépenses par jour
@@ -193,6 +203,7 @@ Filtres : journalier, hebdomadaire, mensuel (défaut), personnalisé.
 Graphique en barres du total dépensé par jour pour la période.
 
 **Conséquences (testable) :**
+
 - Moyenne mensuelle affichée en ligne de référence.
 
 ---
@@ -208,6 +219,7 @@ Graphique en barres du total dépensé par jour pour la période.
 Récapitulatif à gauche avec : total du remboursement, total des intérêts payés, total de l'apport initial (frais notaire, etc.). Pour chaque crédit : montant, apport, taux, durée, mensualité, intérêts totaux.
 
 **Conséquences (testable) :**
+
 - Calcul d'amortissement français (capital + intérêts).
 - Le coût total du crédit inclut l'apport initial + somme des mensualités.
 
@@ -216,6 +228,7 @@ Récapitulatif à gauche avec : total du remboursement, total des intérêts pay
 Popin avec : libellé, montant emprunté, apport initial/frais (ex: 7000€ notaire), taux annuel %, durée (mois), date de début. Mensualité calculée automatiquement ou saisie.
 
 **Conséquences (testable) :**
+
 - L'apport initial est ajouté au coût total du crédit pour le calcul du patrimoine.
 - `[ASSUMPTION]` : Formule d'amortissement classique (capital + intérêts composés).
 
@@ -224,6 +237,7 @@ Popin avec : libellé, montant emprunté, apport initial/frais (ex: 7000€ nota
 Au clic sur un crédit : modifier les paramètres ou supprimer (avec confirmation).
 
 **Conséquences (testable) :**
+
 - La modification recalcule le tableau d'amortissement.
 - La suppression retire le crédit du calcul du patrimoine.
 
@@ -240,6 +254,7 @@ Au clic sur un crédit : modifier les paramètres ou supprimer (avec confirmatio
 Liste (gauche) avec : nom, type (PEA, Assurance Vie, Compte Titres, CTO…), lieu de stockage (Trade Republic, Crédit Agricole, CIC Epargne Salariale, Macif…), évolution (%), valeur actuelle, plus/moins-value.
 
 **Conséquences (testable) :**
+
 - La plus/moins-value tient compte des frais du support.
 - Les prix actuels via API (à définir — voir Questions Ouvertes).
 
@@ -248,6 +263,7 @@ Liste (gauche) avec : nom, type (PEA, Assurance Vie, Compte Titres, CTO…), lie
 Popin avec : ID/symbole (ex: AAPL), titre, type, lieu de stockage, frais annuels %, description, lien externe (ex: site d'info du support). Prix actuel récupéré via API.
 
 **Conséquences (testable) :**
+
 - Le support est créé avec toutes ses métadonnées.
 - Les frais sont déduits du calcul de performance.
 
@@ -264,6 +280,7 @@ Date, quantité, prix unitaire, frais de vente. Enregistre la plus/moins-value r
 Au clic : historique complet des transactions, lieu de stockage, frais, lien externe cliquable vers une page d'info (ex: Yahoo Finance, site de l'entreprise).
 
 **Conséquences (testable) :**
+
 - Le détail affiche toutes les métadonnées du support.
 - Le lien externe ouvre dans un nouvel onglet.
 
@@ -316,6 +333,7 @@ Camembert de répartition.
 Indicateurs : solde bancaire, valeur investissements, valeur cryptos, total crédits (restant dû + apports), total charges obligatoires du mois, patrimoine net.
 
 **Conséquences (testable) :**
+
 - Le patrimoine net = (banque + investissements + crypto) - (crédits restants + apports initiaux).
 - Mise à jour après chaque modification dans les sections sous-jacentes.
 
@@ -328,6 +346,7 @@ Bouton "Importer CSV" → file picker → parse → dépenses créées.
 Prix actuels des cryptos (CoinGecko) et investissements (API à définir) au chargement.
 
 **Conséquences (testable) :**
+
 - Fallback au dernier prix connu avec indicateur visuel si API indisponible.
 
 #### FR-28: DCA quick-add investissement
@@ -361,7 +380,7 @@ Même mécanisme que FR-28 via CoinGecko.
 ### 6.1 Dans le périmètre
 
 - Budget : catégories + graphique répartition
-  - *Note : les règles dépenses obligatoires (FR-3) et suivi charges (FR-4) sont retirés du MVP — voir §4.1*
+  - _Note : les règles dépenses obligatoires (FR-3) et suivi charges (FR-4) sont retirés du MVP — voir §4.1_
 - Dépenses : CRUD + import CSV (format Crédit Agricole) + graphique journalier
 - Crédits immobiliers : CRUD avec apport initial + calcul intérêts
 - Investissements : CRUD supports avec type, lieu stockage, frais, API prix, lien externe, DCA quick-add

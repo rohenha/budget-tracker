@@ -26,5 +26,12 @@ router
 router
   .group(() => {
     router.post('logout', [controllers.Session, 'destroy'])
+
+    router.on('/dashboard').renderInertia('dashboard/index', {}).as('dashboard')
+    router.on('/budget').renderInertia('budget/index', {}).as('budget')
+    router.on('/depenses').renderInertia('depenses/index', {}).as('depenses')
+    router.on('/credits').renderInertia('credits/index', {}).as('credits')
+    router.on('/investissements').renderInertia('investissements/index', {}).as('investissements')
+    router.on('/cryptos').renderInertia('cryptos/index', {}).as('cryptos')
   })
   .use(middleware.auth())

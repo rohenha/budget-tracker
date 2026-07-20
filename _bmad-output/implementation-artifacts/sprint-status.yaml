@@ -50,7 +50,7 @@ story_location: /Users/rohenha/Sites/budget-tracker/_bmad-output/implementation-
 development_status:
   epic-1: backlog
   epic-1-retrospective: optional
-  1-0-mise-en-place-des-fondations-ui: backlog
+   1-0-mise-en-place-des-fondations-ui: review
   1-1-creation-et-configuration-des-categories: backlog
   1-2-graphique-de-repartition-par-categorie: backlog
 

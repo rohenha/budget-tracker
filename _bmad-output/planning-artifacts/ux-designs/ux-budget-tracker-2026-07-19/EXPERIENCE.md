@@ -60,14 +60,14 @@ Cryptos
 
 ## Voice and Tone
 
-| Contexte | Ton |
-|---|---|
-| Titres pages | Utilitaire : "Dashboard", "Dépenses" |
-| Messages vides | Directif mais pas culpabilisant : "Ajoute ta première dépense" |
-| Erreurs | Cause + action : "Vérifie le format CSV" |
-| Succès | Concis : "Dépense ajoutée" |
+| Contexte                   | Ton                                                            |
+| -------------------------- | -------------------------------------------------------------- |
+| Titres pages               | Utilitaire : "Dashboard", "Dépenses"                           |
+| Messages vides             | Directif mais pas culpabilisant : "Ajoute ta première dépense" |
+| Erreurs                    | Cause + action : "Vérifie le format CSV"                       |
+| Succès                     | Concis : "Dépense ajoutée"                                     |
 | Confirmation (suppression) | "Supprimer X ?" avec bouton "Confirmer" en variant destructive |
-| Général | Pas de tutoiement forcé, pas de brand voice héroïque |
+| Général                    | Pas de tutoiement forcé, pas de brand voice héroïque           |
 
 ## Component Patterns
 
@@ -80,19 +80,19 @@ Cryptos
 
 ## State Patterns
 
-| État | Comportement |
-|---|---|
-| **Chargement** | shadcn Skeleton sur les cartes et listes. Graphiques en shimmer. Conteneur parent `aria-busy="true"` |
-| **Vide (1ère connexion)** | Push CTA centré: "Ajoute ta première dépense" + bouton action |
-| **Vide (catégorie)** | "Aucune catégorie — crée-la pour commencer" + bouton |
-| **Vide (recherche/filtre)** | "Aucun résultat pour ce filtre" |
-| **Erreur API** | Toast `variant: destructive` avec message. Données utilisateur préservées |
-| **Erreur CSV** | Toast listant les lignes en erreur avec le champ invalide. `role="alert"` |
-| **Erreur validation formulaire** | Inline : message d'erreur sous le champ, `aria-describedby` lié à l'input, `aria-invalid="true"` |
-| **Suppression (confirmation)** | Dialog avec texte de confirmation + bouton "Confirmer" (destructive variant) + bouton "Annuler" |
-| **Données obsolètes (prix)** | FR-27 : fallback au dernier prix connu, indicateur visuel "Prix non mis à jour" sur la carte (badge warning) |
-| **Échec partiel** | Une API échoue, les autres réussissent. Toast pour l'erreur, données affichées pour les sources réussies |
-| **Mode déconnecté** | Redirect vers /login. Pas de cache local |
+| État                             | Comportement                                                                                                 |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| **Chargement**                   | shadcn Skeleton sur les cartes et listes. Graphiques en shimmer. Conteneur parent `aria-busy="true"`         |
+| **Vide (1ère connexion)**        | Push CTA centré: "Ajoute ta première dépense" + bouton action                                                |
+| **Vide (catégorie)**             | "Aucune catégorie — crée-la pour commencer" + bouton                                                         |
+| **Vide (recherche/filtre)**      | "Aucun résultat pour ce filtre"                                                                              |
+| **Erreur API**                   | Toast `variant: destructive` avec message. Données utilisateur préservées                                    |
+| **Erreur CSV**                   | Toast listant les lignes en erreur avec le champ invalide. `role="alert"`                                    |
+| **Erreur validation formulaire** | Inline : message d'erreur sous le champ, `aria-describedby` lié à l'input, `aria-invalid="true"`             |
+| **Suppression (confirmation)**   | Dialog avec texte de confirmation + bouton "Confirmer" (destructive variant) + bouton "Annuler"              |
+| **Données obsolètes (prix)**     | FR-27 : fallback au dernier prix connu, indicateur visuel "Prix non mis à jour" sur la carte (badge warning) |
+| **Échec partiel**                | Une API échoue, les autres réussissent. Toast pour l'erreur, données affichées pour les sources réussies     |
+| **Mode déconnecté**              | Redirect vers /login. Pas de cache local                                                                     |
 
 ## Interaction Primitives
 
@@ -124,12 +124,12 @@ Cryptos
 
 ## Responsive & Platform
 
-| Breakpoint | Comportement |
-|---|---|
-| `≥ lg` (1024px+) | Sidebar visible. Layout 2 colonnes (Crédits, Investissements). Tableaux complets |
-| `md` (768–1023px) | Sidebar réduite aux icônes. Layout 1 colonne |
-| `< md` (sm) | Sidebar → hamburger sheet. Dialog → full-screen. Graphiques empilés verticalement |
-| Touch | Tap pour ouvrir les détails (pas de hover-only). `focus-visible`rings visibles |
+| Breakpoint        | Comportement                                                                      |
+| ----------------- | --------------------------------------------------------------------------------- |
+| `≥ lg` (1024px+)  | Sidebar visible. Layout 2 colonnes (Crédits, Investissements). Tableaux complets  |
+| `md` (768–1023px) | Sidebar réduite aux icônes. Layout 1 colonne                                      |
+| `< md` (sm)       | Sidebar → hamburger sheet. Dialog → full-screen. Graphiques empilés verticalement |
+| Touch             | Tap pour ouvrir les détails (pas de hover-only). `focus-visible`rings visibles    |
 
 ## Key Flows
 

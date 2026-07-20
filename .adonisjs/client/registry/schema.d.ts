@@ -79,4 +79,76 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/session_controller').default['destroy']>>>
     }
   }
+  'dashboard': {
+    methods: ["GET","HEAD"]
+    pattern: '/dashboard'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
+  'budget': {
+    methods: ["GET","HEAD"]
+    pattern: '/budget'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
+  'depenses': {
+    methods: ["GET","HEAD"]
+    pattern: '/depenses'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
+  'credits': {
+    methods: ["GET","HEAD"]
+    pattern: '/credits'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
+  'investissements': {
+    methods: ["GET","HEAD"]
+    pattern: '/investissements'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
+  'cryptos': {
+    methods: ["GET","HEAD"]
+    pattern: '/cryptos'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
 }

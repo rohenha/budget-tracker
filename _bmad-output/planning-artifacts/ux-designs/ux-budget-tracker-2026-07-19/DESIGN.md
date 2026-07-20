@@ -24,40 +24,40 @@ Hérite de **shadcn/ui** (Base UI runtime + Tailwind v4 + CSS variables). Les to
 
 Dark mode activé par classe `.dark` sur `<html>`. Tous les tokens ont des paires light/dark. Les tokens `--chart-1` à `--chart-5` sont utilisés par Recharts.
 
-| Token | Light (oklch) | Dark (oklch) |
-|---|---|---|
-| `--background` | 1 0 0 | 0.148 0.004 228.8 |
-| `--foreground` | 0.148 0.004 228.8 | 0.987 0.002 197.1 |
-| `--card` | 1 0 0 | 0.218 0.008 223.9 |
-| `--card-foreground` | 0.148 0.004 228.8 | 0.987 0.002 197.1 |
-| `--popover` | 1 0 0 | 0.218 0.008 223.9 |
-| `--popover-foreground` | 0.148 0.004 228.8 | 0.987 0.002 197.1 |
-| `--primary` | 0.218 0.008 223.9 | 0.925 0.005 214.3 |
-| `--primary-foreground` | 0.987 0.002 197.1 | 0.218 0.008 223.9 |
-| `--secondary` | 0.963 0.002 197.1 | 0.275 0.011 216.9 |
-| `--secondary-foreground` | 0.218 0.008 223.9 | 0.987 0.002 197.1 |
-| `--muted` | 0.963 0.002 197.1 | 0.275 0.011 216.9 |
-| `--muted-foreground` | 0.56 0.021 213.5 | 0.723 0.014 214.4 |
-| `--accent` | 0.963 0.002 197.1 | 0.275 0.011 216.9 |
-| `--accent-foreground` | 0.218 0.008 223.9 | 0.987 0.002 197.1 |
-| `--destructive` | 0.577 0.245 27.325 | 0.704 0.191 22.216 |
-| `--destructive-foreground` | oklch(1 0 0) | oklch(1 0 0) |
-| `--border` | 0.925 0.005 214.3 | 1 0 0 / 10% |
-| `--input` | 0.925 0.005 214.3 | 1 0 0 / 15% |
-| `--ring` | 0.723 0.014 214.4 | 0.56 0.021 213.5 |
-| `--chart-1` | 0.872 0.007 219.6 | 0.872 0.007 219.6 |
-| `--chart-2` | 0.56 0.021 213.5 | 0.56 0.021 213.5 |
-| `--chart-3` | 0.45 0.017 213.2 | 0.45 0.017 213.2 |
-| `--chart-4` | 0.378 0.015 216 | 0.378 0.015 216 |
-| `--chart-5` | 0.275 0.011 216.9 | 0.275 0.011 216.9 |
-| `--sidebar` | 0.987 0.002 197.1 | 0.218 0.008 223.9 |
-| `--sidebar-foreground` | 0.148 0.004 228.8 | 0.987 0.002 197.1 |
-| `--sidebar-primary` | 0.218 0.008 223.9 | 0.488 0.243 264.376 |
-| `--sidebar-primary-foreground` | 0.987 0.002 197.1 | 0.987 0.002 197.1 |
-| `--sidebar-accent` | 0.963 0.002 197.1 | 0.275 0.011 216.9 |
-| `--sidebar-accent-foreground` | 0.218 0.008 223.9 | 0.987 0.002 197.1 |
-| `--sidebar-border` | 0.925 0.005 214.3 | 1 0 0 / 10% |
-| `--sidebar-ring` | 0.723 0.014 214.4 | 0.56 0.021 213.5 |
+| Token                          | Light (oklch)      | Dark (oklch)        |
+| ------------------------------ | ------------------ | ------------------- |
+| `--background`                 | 1 0 0              | 0.148 0.004 228.8   |
+| `--foreground`                 | 0.148 0.004 228.8  | 0.987 0.002 197.1   |
+| `--card`                       | 1 0 0              | 0.218 0.008 223.9   |
+| `--card-foreground`            | 0.148 0.004 228.8  | 0.987 0.002 197.1   |
+| `--popover`                    | 1 0 0              | 0.218 0.008 223.9   |
+| `--popover-foreground`         | 0.148 0.004 228.8  | 0.987 0.002 197.1   |
+| `--primary`                    | 0.218 0.008 223.9  | 0.925 0.005 214.3   |
+| `--primary-foreground`         | 0.987 0.002 197.1  | 0.218 0.008 223.9   |
+| `--secondary`                  | 0.963 0.002 197.1  | 0.275 0.011 216.9   |
+| `--secondary-foreground`       | 0.218 0.008 223.9  | 0.987 0.002 197.1   |
+| `--muted`                      | 0.963 0.002 197.1  | 0.275 0.011 216.9   |
+| `--muted-foreground`           | 0.56 0.021 213.5   | 0.723 0.014 214.4   |
+| `--accent`                     | 0.963 0.002 197.1  | 0.275 0.011 216.9   |
+| `--accent-foreground`          | 0.218 0.008 223.9  | 0.987 0.002 197.1   |
+| `--destructive`                | 0.577 0.245 27.325 | 0.704 0.191 22.216  |
+| `--destructive-foreground`     | oklch(1 0 0)       | oklch(1 0 0)        |
+| `--border`                     | 0.925 0.005 214.3  | 1 0 0 / 10%         |
+| `--input`                      | 0.925 0.005 214.3  | 1 0 0 / 15%         |
+| `--ring`                       | 0.723 0.014 214.4  | 0.56 0.021 213.5    |
+| `--chart-1`                    | 0.872 0.007 219.6  | 0.872 0.007 219.6   |
+| `--chart-2`                    | 0.56 0.021 213.5   | 0.56 0.021 213.5    |
+| `--chart-3`                    | 0.45 0.017 213.2   | 0.45 0.017 213.2    |
+| `--chart-4`                    | 0.378 0.015 216    | 0.378 0.015 216     |
+| `--chart-5`                    | 0.275 0.011 216.9  | 0.275 0.011 216.9   |
+| `--sidebar`                    | 0.987 0.002 197.1  | 0.218 0.008 223.9   |
+| `--sidebar-foreground`         | 0.148 0.004 228.8  | 0.987 0.002 197.1   |
+| `--sidebar-primary`            | 0.218 0.008 223.9  | 0.488 0.243 264.376 |
+| `--sidebar-primary-foreground` | 0.987 0.002 197.1  | 0.987 0.002 197.1   |
+| `--sidebar-accent`             | 0.963 0.002 197.1  | 0.275 0.011 216.9   |
+| `--sidebar-accent-foreground`  | 0.218 0.008 223.9  | 0.987 0.002 197.1   |
+| `--sidebar-border`             | 0.925 0.005 214.3  | 1 0 0 / 10%         |
+| `--sidebar-ring`               | 0.723 0.014 214.4  | 0.56 0.021 213.5    |
 
 Note: `--muted-foreground` en light mode (~3.4:1) ne passe pas WCAG AA pour du texte normal (<18px). Acceptable pour textes secondaires, placeholders, timestamps. À ne pas utiliser pour des labels interactifs.
 
@@ -90,10 +90,12 @@ Note: `--muted-foreground` en light mode (~3.4:1) ne passe pas WCAG AA pour du t
 ## Components
 
 Tous les composants suivent shadcn/ui/Base UI. Composants actuellement disponibles:
+
 - Button (`variant`: default, outline, secondary, ghost, destructive, link)
 - Input, Label, Field, Separator
 
 Pour ce projet on ajoutera:
+
 - **Card** — en-tête + contenu + pied. Cartes indicateurs dashboard, cartes récap
 - **Dialog** — popins ajout/édition. Full-screen sur mobile. Focus trap (Base UI), auto-focus premier champ, retour focus sur le bouton déclencheur à la fermeture
 - **Select** — filtres (mois, catégorie)

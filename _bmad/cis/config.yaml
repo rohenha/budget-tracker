@@ -8,6 +8,6 @@ visual_tools: intermediate
 # Core Configuration Values
 project_name: budget-tracker
 document_output_language: English
-output_folder: "{project-root}/_bmad-output"
+output_folder: '{project-root}/_bmad-output'
 user_name: Rohenha
 communication_language: French
