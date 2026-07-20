@@ -4,7 +4,7 @@
  */
 
 export const controllers = {
-  Categories: () => import('#controllers/categories_controller'),
   NewAccount: () => import('#controllers/new_account_controller'),
   Session: () => import('#controllers/session_controller'),
+  Categories: () => import('#controllers/categories_controller'),
 }

@@ -5,7 +5,6 @@ import type { HttpContext } from '@adonisjs/core/http'
 export default class CategoriesController {
   async index({ inertia, auth }: HttpContext) {
     const user = auth.user!
-    await this.ensureDefaultCategorie(user.id)
     const categories = await Categorie.query().where('userId', user.id).orderBy('createdAt', 'asc')
     return inertia.render('budget/index', {
       categories: categories.map((c) => c.serialize()) as any,
@@ -66,18 +65,5 @@ export default class CategoriesController {
     await categorie.delete()
     session.flash('success', 'Catégorie supprimée avec succès')
     response.redirect().toRoute('budget')
-  }
-
-  private async ensureDefaultCategorie(userId: number) {
-    const exists = await Categorie.query().where('userId', userId).where('slug', 'autre').first()
-    if (!exists) {
-      await Categorie.create({
-        userId,
-        label: 'Autre',
-        slug: 'autre',
-        icon: 'Circle',
-        color: '#6b7280',
-      })
-    }
   }
 }
