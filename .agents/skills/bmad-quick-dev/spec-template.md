@@ -37,10 +37,10 @@ context: [] # optional: `{project-root}/`-prefixed paths to project-wide standar
 
 <!-- If no meaningful I/O scenarios exist, DELETE THIS ENTIRE SECTION. Do not write "N/A" or "None". -->
 
-| Scenario | Input / State | Expected Output / Behavior | Error Handling |
-|----------|--------------|---------------------------|----------------|
-| HAPPY_PATH | INPUT | OUTCOME | N/A |
-| ERROR_CASE | INPUT | OUTCOME | ERROR_HANDLING |
+| Scenario   | Input / State | Expected Output / Behavior | Error Handling |
+| ---------- | ------------- | -------------------------- | -------------- |
+| HAPPY_PATH | INPUT         | OUTCOME                    | N/A            |
+| ERROR_CASE | INPUT         | OUTCOME                    | ERROR_HANDLING |
 
 </frozen-after-approval>
 
@@ -58,9 +58,11 @@ context: [] # optional: `{project-root}/`-prefixed paths to project-wide standar
 <!-- AC covers system-level behaviors not captured by the I/O Matrix. Do not duplicate I/O scenarios here. -->
 
 **Execution:**
+
 - [ ] `FILE` -- ACTION -- RATIONALE
 
 **Acceptance Criteria:**
+
 - Given PRECONDITION, when ACTION, then EXPECTED_RESULT
 
 ## Spec Change Log
@@ -83,7 +85,9 @@ DESIGN_RATIONALE_AND_EXAMPLES
 <!-- How the agent confirms its own work. Prefer CLI commands. When no CLI check applies, state what to inspect manually. -->
 
 **Commands:**
+
 - `COMMAND` -- expected: SUCCESS_CRITERIA
 
 **Manual checks (if no CLI):**
+
 - WHAT_TO_INSPECT_AND_EXPECTED_STATE

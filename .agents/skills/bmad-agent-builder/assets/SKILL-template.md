@@ -3,7 +3,9 @@
   Use this for agents without persistent memory. No Three Laws, no Sacred Truth, no sanctum.
   For memory/autonomous agents, use SKILL-template-bootloader.md instead.
 -->
+
 ---
+
 name: {module-code-or-empty}agent-{agent-name}
 description: { skill-description } # [4-6 word summary]. [trigger phrases]
 ---
@@ -40,6 +42,7 @@ description: { skill-description } # [4-6 word summary]. [trigger phrases]
 ## On Activation
 
 {if-customizable}
+
 ### Step 1: Resolve the Agent Block
 
 Run: `uv run {project-root}/_bmad/scripts/resolve_customization.py --skill {skill-root} --key agent`
@@ -71,7 +74,7 @@ Load available config from `{project-root}/_bmad/config.yaml` and `{project-root
 - `{communication_language}` ({default}) — use for all communications
 - `{document_output_language}` ({default}) — use for generated document content
   {/if-standalone}
-{if-customizable}
+  {if-customizable}
 
 ### Step 5: Execute Append Steps
 
@@ -85,6 +88,6 @@ Greet the user and offer to show available capabilities.
 
 {Succinct routing table — each capability routes to a progressive disclosure file in references/:}
 
-| Capability        | Route                               |
-| ----------------- | ----------------------------------- |
+| Capability        | Route                             |
+| ----------------- | --------------------------------- |
 | {Capability Name} | Load `references/{capability}.md` |

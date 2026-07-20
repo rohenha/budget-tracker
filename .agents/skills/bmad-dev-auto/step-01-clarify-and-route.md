@@ -16,6 +16,7 @@ spec_file: '' # set at runtime for both routes before leaving this step
 Use the invocation prompt as the intent.
 
 If the invocation prompt explicitly points to an existing spec file with recognized `status` frontmatter, set `spec_file`, then **EARLY EXIT** to the appropriate step:
+
 - `draft` → `./step-02-plan.md`
 - `ready-for-dev` or `in-progress` → `./step-03-implement.md`
 - `in-review` → `./step-04-review.md`

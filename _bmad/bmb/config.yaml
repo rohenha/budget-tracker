@@ -3,12 +3,12 @@
 # Version: 6.10.0
 # Date: 2026-07-19T09:23:57.360Z
 
-bmad_builder_output_folder: "{project-root}/skills"
-bmad_builder_reports: "{project-root}/skills/reports"
+bmad_builder_output_folder: '{project-root}/skills'
+bmad_builder_reports: '{project-root}/skills/reports'
 
 # Core Configuration Values
 project_name: budget-tracker
 document_output_language: English
-output_folder: "{project-root}/_bmad-output"
+output_folder: '{project-root}/_bmad-output'
 user_name: Rohenha
 communication_language: French

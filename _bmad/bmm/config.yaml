@@ -3,14 +3,14 @@
 # Version: 6.10.0
 # Date: 2026-07-19T09:23:57.360Z
 
-planning_artifacts: "{project-root}/_bmad-output/planning-artifacts"
-implementation_artifacts: "{project-root}/_bmad-output/implementation-artifacts"
-project_knowledge: "{project-root}/docs"
+planning_artifacts: '{project-root}/_bmad-output/planning-artifacts'
+implementation_artifacts: '{project-root}/_bmad-output/implementation-artifacts'
+project_knowledge: '{project-root}/docs'
 user_skill_level: intermediate
 
 # Core Configuration Values
 project_name: budget-tracker
 document_output_language: English
-output_folder: "{project-root}/_bmad-output"
+output_folder: '{project-root}/_bmad-output'
 user_name: Rohenha
 communication_language: French

@@ -39,22 +39,27 @@ Bien calibré hobby/solo. 6 feature areas ambitieux mais réaliste. Détail appr
 ## Findings
 
 ### HIGH — Ventes non traitées pour Investissements et Cryptos
+
 - **§4.5, §4.6, QO#4**
 - FR-20 à FR-27 décrivent uniquement des achats. §6.1 dit "CRUD complet" mais sans ventes. Un portfolio tracker a besoin des plus/moins-values réalisées.
 - **Fix:** Ajouter des FRs pour les ventes OU ajouter explicitement dans Non-Goals : "Pas de gestion des ventes en v1".
 
 ### HIGH — Algorithme de matching rattrapage automatique sous-spécifié
+
 - **FR-13 (§4.3)**
 - "Le système compare le libellé" n'est pas implantable tel quel. Exact ? Case-insensitive ? Substring ? Fuzzy ?
 - **Fix:** Spécifier la stratégie (ex: "case-insensitive exact match; partial matches suggérées mais pas auto-liées").
 
 ### HIGH — Format CSV d'import non défini
+
 - **FR-8 (§4.2), QO#3**
 - Feature core (importer depuis spreadsheets = la thèse) sans colonnes définies.
 - **Fix:** Ajouter une subsection sous FR-8 avec colonnes attendues, types, exemples. Si TBD, le dire explicitement avec deadline.
 
 ### MEDIUM — Pas d'export / portabilité
+
 - Aucune feature d'export alors que §1 promet "l'utilisateur garde le contrôle total de ses données". Ajouter FR pour CSV export.
 
 ### MEDIUM — Pas de considérations sécurité
+
 - CSV parsing = vecteur d'injection. Stockage clés API. Aucune mention nulle part.

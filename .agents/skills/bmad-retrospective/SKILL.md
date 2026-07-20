@@ -8,6 +8,7 @@ description: 'Post-epic review to extract lessons and assess success. Use when t
 **Goal:** Post-epic review to extract lessons and assess success.
 
 **Your Role:** Developer facilitating retrospective.
+
 - No time estimates — NEVER mention hours, days, weeks, months, or ANY time-based predictions. AI has fundamentally changed development speed.
 - Communicate all responses in {communication_language} and language MUST be tailored to {user_skill_level}
 - Generate all documents in {document_output_language}
@@ -81,13 +82,13 @@ Activation is complete. If `activation_steps_prepend` or `activation_steps_appen
 
 ## Input Files
 
-| Input | Description | Path Pattern(s) | Load Strategy |
-|-------|-------------|------------------|---------------|
-| epics | The completed epic for retrospective | whole: `{planning_artifacts}/*epic*.md`, sharded_index: `{planning_artifacts}/*epic*/index.md`, sharded_single: `{planning_artifacts}/*epic*/epic-{{epic_num}}.md` | SELECTIVE_LOAD |
-| previous_retrospective | Previous epic's retrospective (optional) | `{implementation_artifacts}/**/epic-{{prev_epic_num}}-retro-*.md` | SELECTIVE_LOAD |
-| architecture | System architecture for context | whole: `{planning_artifacts}/*architecture*.md`, sharded: `{planning_artifacts}/*architecture*/*.md` | FULL_LOAD |
-| prd | Product requirements for context | whole: `{planning_artifacts}/*prd*.md`, sharded: `{planning_artifacts}/*prd*/*.md` | FULL_LOAD |
-| document_project | Brownfield project documentation (optional) | sharded: `{planning_artifacts}/*.md` | INDEX_GUIDED |
+| Input                  | Description                                 | Path Pattern(s)                                                                                                                                                    | Load Strategy  |
+| ---------------------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------- |
+| epics                  | The completed epic for retrospective        | whole: `{planning_artifacts}/*epic*.md`, sharded_index: `{planning_artifacts}/*epic*/index.md`, sharded_single: `{planning_artifacts}/*epic*/epic-{{epic_num}}.md` | SELECTIVE_LOAD |
+| previous_retrospective | Previous epic's retrospective (optional)    | `{implementation_artifacts}/**/epic-{{prev_epic_num}}-retro-*.md`                                                                                                  | SELECTIVE_LOAD |
+| architecture           | System architecture for context             | whole: `{planning_artifacts}/*architecture*.md`, sharded: `{planning_artifacts}/*architecture*/*.md`                                                               | FULL_LOAD      |
+| prd                    | Product requirements for context            | whole: `{planning_artifacts}/*prd*.md`, sharded: `{planning_artifacts}/*prd*/*.md`                                                                                 | FULL_LOAD      |
+| document_project       | Brownfield project documentation (optional) | sharded: `{planning_artifacts}/*.md`                                                                                                                               | INDEX_GUIDED   |
 
 ## Required Inputs
 
@@ -482,6 +483,7 @@ Alice (Product Owner): "Good thinking - helps us connect what we learned to what
 - Deployment or environment setup
 
   <output>
+
 Amelia (Developer): "Alright, I've reviewed Epic {{next_epic_num}}: '{{next_epic_title}}'"
 
 Alice (Product Owner): "What are we looking at?"
@@ -1408,9 +1410,9 @@ Amelia (Developer): "See you all when prep work is done. Meeting adjourned!"
 
 ```yaml
 action_items:
-  - epic: {{epic_number}}
-    action: "{{action_description}}"
-    owner: "{{owner}}"
+  - epic: { { epic_number } }
+    action: '{{action_description}}'
+    owner: '{{owner}}'
     status: open
 ```
 

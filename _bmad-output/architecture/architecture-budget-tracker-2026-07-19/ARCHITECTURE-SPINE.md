@@ -61,43 +61,43 @@ Navigateur → Inertia HTTP → AdonisJS Router → Controller
 
 ## Consistency Conventions
 
-| Concern | Convention |
-| --- | --- |
-| Fichiers controllers | snake_case (`categorie_controller.ts`, `depense_controller.ts`) |
-| Models | PascalCase (`Categorie`, `Depense`, `Credit`) |
-| Routes | kebab-case, groupes par domaine (`/budget/categories`, `/depenses`) |
-| Tables Lucid | snake_case, pluriel (`categories`, `depenses`) |
-| Clés étrangères | `categorie_id` (snake_case) |
-| Validation | VineJS dans `app/validators/` |
-| Dates | Luxon `DateTime`, stockage MySQL DATETIME |
-| Slugs | auto-générés depuis le label, modifiable, unique |
-| Montants | DECIMAL(10,2) en base, formatés via Intl.NumberFormat en EUR en front |
-| Types montant | `type` ENUM('entree', 'sortie') |
-| Types support investissement | ENUM('PEA', 'AV', 'CTO') |
-| Messages flash | Sonner via Inertia shared props (`flash.success`, `flash.error`) |
-| Layout | `inertia/layouts/default.tsx` pour toutes les pages authentifiées |
+| Concern                      | Convention                                                            |
+| ---------------------------- | --------------------------------------------------------------------- |
+| Fichiers controllers         | snake_case (`categorie_controller.ts`, `depense_controller.ts`)       |
+| Models                       | PascalCase (`Categorie`, `Depense`, `Credit`)                         |
+| Routes                       | kebab-case, groupes par domaine (`/budget/categories`, `/depenses`)   |
+| Tables Lucid                 | snake_case, pluriel (`categories`, `depenses`)                        |
+| Clés étrangères              | `categorie_id` (snake_case)                                           |
+| Validation                   | VineJS dans `app/validators/`                                         |
+| Dates                        | Luxon `DateTime`, stockage MySQL DATETIME                             |
+| Slugs                        | auto-générés depuis le label, modifiable, unique                      |
+| Montants                     | DECIMAL(10,2) en base, formatés via Intl.NumberFormat en EUR en front |
+| Types montant                | `type` ENUM('entree', 'sortie')                                       |
+| Types support investissement | ENUM('PEA', 'AV', 'CTO')                                              |
+| Messages flash               | Sonner via Inertia shared props (`flash.success`, `flash.error`)      |
+| Layout                       | `inertia/layouts/default.tsx` pour toutes les pages authentifiées     |
 
 ## Stack
 
-| Name | Version |
-| --- | --- |
-| Node.js | >=24.0.0 |
-| AdonisJS | 7.3.3 |
-| React | 19.2.6 |
-| TypeScript | 6.0.3 |
-| Lucid ORM | 22.4.2 |
-| Inertia.js | 4.2.0 (AdonisJS) / 2.3.24 (React) |
-| Tailwind CSS | 4.3.3 |
-| Base UI (shadcn/ui) | 1.6.0 |
-| shadcn CLI | 4.13.1 |
-| MySQL | 8+ (driver mysql2 3.23.0) |
-| VineJS | 4.4.0 |
-| Luxon | 3.7.2 |
-| Lucide React | 1.25.0 |
-| Sonner | 2.0.7 |
-| yahoo-finance2 | 4.0.0 |
-| Recharts | 3.9.2 |
-| csv-parse | 7.0.1 |
+| Name                | Version                           |
+| ------------------- | --------------------------------- |
+| Node.js             | >=24.0.0                          |
+| AdonisJS            | 7.3.3                             |
+| React               | 19.2.6                            |
+| TypeScript          | 6.0.3                             |
+| Lucid ORM           | 22.4.2                            |
+| Inertia.js          | 4.2.0 (AdonisJS) / 2.3.24 (React) |
+| Tailwind CSS        | 4.3.3                             |
+| Base UI (shadcn/ui) | 1.6.0                             |
+| shadcn CLI          | 4.13.1                            |
+| MySQL               | 8+ (driver mysql2 3.23.0)         |
+| VineJS              | 4.4.0                             |
+| Luxon               | 3.7.2                             |
+| Lucide React        | 1.25.0                            |
+| Sonner              | 2.0.7                             |
+| yahoo-finance2      | 4.0.0                             |
+| Recharts            | 3.9.2                             |
+| csv-parse           | 7.0.1                             |
 
 ## Structural Seed
 
@@ -174,17 +174,17 @@ project-root/
 
 ## Capability → Architecture Map
 
-| Capability | Lives in | Governed by |
-| --- | --- | --- |
-| Budget / Catégories (FR-1→2) | `categorie_controller`, `Categorie` model, `budget/` page | AD-1 |
-| Dépenses (FR-5→9) | `depense_controller`, `Depense` model, `depenses/` page | AD-1, AD-2 |
-| Crédits (FR-10→12) | `credit_controller`, `Credit` model, `credits/` page | AD-1 |
-| Investissements (FR-13→18) | `support_investissement_controller`, `SupportInvestissement`/`AchatInvestissement`/`VenteInvestissement` models, `investissements/` page | AD-1, AD-3, AD-5 |
-| Cryptos (FR-19→24) | `crypto_controller`, `Crypto`/`AchatCrypto`/`VenteCrypto` models, `cryptos/` page | AD-1, AD-3, AD-5 |
-| Dashboard (FR-25→29) | `dashboard_controller`, `patrimoine_service`, `dashboard/` page | AD-1, AD-2, AD-3 |
-| Import CSV | `csv_import_service` + `depense_controller` | AD-2 |
-| Prix live | `prix_investissement_service` (yahoo-finance2), `prix_crypto_service` (CoinGecko) | AD-3 |
-| Graphiques | Recharts dans les pages concernées | AD-1 |
+| Capability                   | Lives in                                                                                                                                 | Governed by      |
+| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
+| Budget / Catégories (FR-1→2) | `categorie_controller`, `Categorie` model, `budget/` page                                                                                | AD-1             |
+| Dépenses (FR-5→9)            | `depense_controller`, `Depense` model, `depenses/` page                                                                                  | AD-1, AD-2       |
+| Crédits (FR-10→12)           | `credit_controller`, `Credit` model, `credits/` page                                                                                     | AD-1             |
+| Investissements (FR-13→18)   | `support_investissement_controller`, `SupportInvestissement`/`AchatInvestissement`/`VenteInvestissement` models, `investissements/` page | AD-1, AD-3, AD-5 |
+| Cryptos (FR-19→24)           | `crypto_controller`, `Crypto`/`AchatCrypto`/`VenteCrypto` models, `cryptos/` page                                                        | AD-1, AD-3, AD-5 |
+| Dashboard (FR-25→29)         | `dashboard_controller`, `patrimoine_service`, `dashboard/` page                                                                          | AD-1, AD-2, AD-3 |
+| Import CSV                   | `csv_import_service` + `depense_controller`                                                                                              | AD-2             |
+| Prix live                    | `prix_investissement_service` (yahoo-finance2), `prix_crypto_service` (CoinGecko)                                                        | AD-3             |
+| Graphiques                   | Recharts dans les pages concernées                                                                                                       | AD-1             |
 
 ## Deferred
 

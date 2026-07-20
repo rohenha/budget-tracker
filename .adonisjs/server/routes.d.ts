@@ -10,16 +10,34 @@ export type ScannedRoutes = {
     'session.create': { paramsTuple?: []; params?: {} }
     'session.store': { paramsTuple?: []; params?: {} }
     'session.destroy': { paramsTuple?: []; params?: {} }
+    'dashboard': { paramsTuple?: []; params?: {} }
+    'budget': { paramsTuple?: []; params?: {} }
+    'depenses': { paramsTuple?: []; params?: {} }
+    'credits': { paramsTuple?: []; params?: {} }
+    'investissements': { paramsTuple?: []; params?: {} }
+    'cryptos': { paramsTuple?: []; params?: {} }
   }
   GET: {
     'home': { paramsTuple?: []; params?: {} }
     'new_account.create': { paramsTuple?: []; params?: {} }
     'session.create': { paramsTuple?: []; params?: {} }
+    'dashboard': { paramsTuple?: []; params?: {} }
+    'budget': { paramsTuple?: []; params?: {} }
+    'depenses': { paramsTuple?: []; params?: {} }
+    'credits': { paramsTuple?: []; params?: {} }
+    'investissements': { paramsTuple?: []; params?: {} }
+    'cryptos': { paramsTuple?: []; params?: {} }
   }
   HEAD: {
     'home': { paramsTuple?: []; params?: {} }
     'new_account.create': { paramsTuple?: []; params?: {} }
     'session.create': { paramsTuple?: []; params?: {} }
+    'dashboard': { paramsTuple?: []; params?: {} }
+    'budget': { paramsTuple?: []; params?: {} }
+    'depenses': { paramsTuple?: []; params?: {} }
+    'credits': { paramsTuple?: []; params?: {} }
+    'investissements': { paramsTuple?: []; params?: {} }
+    'cryptos': { paramsTuple?: []; params?: {} }
   }
   POST: {
     'new_account.store': { paramsTuple?: []; params?: {} }

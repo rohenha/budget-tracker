@@ -65,9 +65,9 @@ Activation is complete. If `activation_steps_prepend` or `activation_steps_appen
 
 ## Input Files
 
-| Input | Path | Load Strategy |
-|-------|------|---------------|
-| Sprint status | `{sprint_status_file}` | FULL_LOAD |
+| Input         | Path                   | Load Strategy |
+| ------------- | ---------------------- | ------------- |
+| Sprint status | `{sprint_status_file}` | FULL_LOAD     |
 
 ## Execution
 
@@ -123,6 +123,7 @@ Run `/bmad:bmm:workflows:sprint-planning` to generate it, then rerun sprint-stat
 
   <check if="any status is unrecognized">
     <output>
+
 **Unknown status detected:**
 {{#each invalid_entries}}
 

@@ -25,11 +25,11 @@ guaranteed.
 Prefer the v3 class API:
 
 ```ts
-import YahooFinance from "yahoo-finance2";
+import YahooFinance from 'yahoo-finance2'
 
-const yahooFinance = new YahooFinance();
-const quote = await yahooFinance.quote("AAPL");
-console.log(quote?.regularMarketPrice, quote?.currency);
+const yahooFinance = new YahooFinance()
+const quote = await yahooFinance.quote('AAPL')
+console.log(quote?.regularMarketPrice, quote?.currency)
 ```
 
 Do not use old v1/v2 singleton patterns such as
@@ -86,7 +86,7 @@ per-call `queue` options when you need stricter rate behavior:
 ```ts
 const yahooFinance = new YahooFinance({
   queue: { concurrency: 2, interval: 250 },
-});
+})
 ```
 
 ## CLI and MCP
@@ -161,18 +161,22 @@ Tests that touch Yahoo HTTP responses should call `setupCache()` from
 `tests/common.ts`. Prefer the existing pattern:
 
 ```ts
-const YahooFinance = createTestYahooFinance({ modules: { quote } });
-const yf = new YahooFinance();
+const YahooFinance = createTestYahooFinance({ modules: { quote } })
+const yf = new YahooFinance()
 
-describe("quote", () => {
-  setupCache();
+describe('quote', () => {
+  setupCache()
 
-  it("passes validation", async (t, onFinish) => {
-    await yf.quote("AAPL", {}, {
-      devel: { id: "quote-AAPL", t, onFinish },
-    });
-  });
-});
+  it('passes validation', async (t, onFinish) => {
+    await yf.quote(
+      'AAPL',
+      {},
+      {
+        devel: { id: 'quote-AAPL', t, onFinish },
+      }
+    )
+  })
+})
 ```
 
 Use fixture ids that match the module and scenario. `FETCH_DEVEL=nocache` forces
