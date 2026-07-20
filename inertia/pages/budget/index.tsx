@@ -1,3 +1,4 @@
+import AuthLayout from '~/layouts/auth'
 import PageState from '~/components/page_state'
 
 export default function Budget() {
@@ -16,3 +17,5 @@ export default function Budget() {
     </div>
   )
 }
+
+Budget.layout = AuthLayout

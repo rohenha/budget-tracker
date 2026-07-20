@@ -1,11 +1,11 @@
 import { client } from '~/client'
-import { type ReactElement } from 'react'
-import Layout from '~/layouts/default'
-import { type Data } from '@generated/data'
 import ReactDOMServer from 'react-dom/server'
-import { createInertiaApp } from '@inertiajs/react'
 import { TuyauProvider } from '@adonisjs/inertia/react'
+import { createInertiaApp } from '@inertiajs/react'
 import { resolvePageComponent } from '@adonisjs/inertia/helpers'
+
+import DefaultLayout from '~/layouts/default'
+import RootLayout from '~/layouts/root'
 
 export default function render(page: any) {
   return createInertiaApp({
@@ -15,13 +15,15 @@ export default function render(page: any) {
       return resolvePageComponent(
         `./pages/${name}.tsx`,
         import.meta.glob('./pages/**/*.tsx', { eager: true }),
-        (resolvedPage: ReactElement<Data.SharedProps>) => <Layout children={resolvedPage} />
+        DefaultLayout
       )
     },
     setup: ({ App, props }) => {
       return (
         <TuyauProvider client={client}>
-          <App {...props} />
+          <RootLayout>
+            <App {...props} />
+          </RootLayout>
         </TuyauProvider>
       )
     },

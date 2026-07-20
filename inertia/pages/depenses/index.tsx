@@ -1,3 +1,4 @@
+import AuthLayout from '~/layouts/auth'
 import PageState from '~/components/page_state'
 
 export default function Depenses() {
@@ -13,3 +14,5 @@ export default function Depenses() {
     </div>
   )
 }
+
+Depenses.layout = AuthLayout
