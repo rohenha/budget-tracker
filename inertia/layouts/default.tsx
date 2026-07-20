@@ -3,10 +3,11 @@ import { Button } from '~/components/ui/button'
 import { type ReactElement } from 'react'
 import { Form, Link } from '@adonisjs/inertia/react'
 import ThemeToggle from '~/components/theme_toggle'
+import RootLayout from '~/layouts/root'
 
 export default function PublicLayout({ children }: { children: ReactElement<Data.SharedProps> }) {
   return (
-    <>
+    <RootLayout>
       <header className="flex items-center justify-between py-4 px-2 fixed top-0 left-0 w-full z-3 bg-background">
         <Link route="home" className="text-sm font-semibold">
           Budget tracker
@@ -33,6 +34,6 @@ export default function PublicLayout({ children }: { children: ReactElement<Data
       <main id="main-content" className="pt-24">
         {children}
       </main>
-    </>
+    </RootLayout>
   )
 }

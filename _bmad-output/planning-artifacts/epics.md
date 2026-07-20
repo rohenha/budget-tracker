@@ -264,9 +264,9 @@ So que naviguer confortablement sur tous les écrans.
 **When** il s'agit d'un texte interactif (<18px)
 **Then** ce token n'est pas utilisé — réservé aux placeholders, timestamps, textes secondaires non interactifs (UX-DR22)
 
-**Given** un composant PageState global est défini
+**Given** un composant page_state global est défini
 **When** une page a besoin d'afficher un état loading, empty ou error
-**Then** PageState est utilisé avec les props loading, empty (titre + message + CTA), error (message + action), children
+**Then** page_state est utilisé avec les props loading, empty (titre + message + CTA), error (message + action), children
 **And** chaque page personnalise le texte du titre et message empty/error via les props
 **And** l'état loading utilise shadcn Skeleton avec aria-busy="true"
 **And** l'état error utilise shadcn Toast (variant destructive) pour les erreurs API/CSV

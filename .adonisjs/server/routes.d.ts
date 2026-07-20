@@ -12,6 +12,9 @@ export type ScannedRoutes = {
     'session.destroy': { paramsTuple?: []; params?: {} }
     'dashboard': { paramsTuple?: []; params?: {} }
     'budget': { paramsTuple?: []; params?: {} }
+    'categories.store': { paramsTuple?: []; params?: {} }
+    'categories.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'categories.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'depenses': { paramsTuple?: []; params?: {} }
     'credits': { paramsTuple?: []; params?: {} }
     'investissements': { paramsTuple?: []; params?: {} }
@@ -43,6 +46,13 @@ export type ScannedRoutes = {
     'new_account.store': { paramsTuple?: []; params?: {} }
     'session.store': { paramsTuple?: []; params?: {} }
     'session.destroy': { paramsTuple?: []; params?: {} }
+    'categories.store': { paramsTuple?: []; params?: {} }
+  }
+  PATCH: {
+    'categories.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+  }
+  DELETE: {
+    'categories.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
 }
 declare module '@adonisjs/core/types/http' {

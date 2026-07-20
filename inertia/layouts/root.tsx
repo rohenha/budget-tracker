@@ -1,13 +1,17 @@
-import { Toaster } from 'sonner'
-// import { usePage } from '@inertiajs/react'
-// import { useEffect } from 'react'
+import { Toaster, toast } from 'sonner'
+import { usePage } from '@inertiajs/react'
+import { useEffect } from 'react'
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  // const { url } = usePage()
-
-  // useEffect(() => {
-  //   import('sonner').then(({ toast }) => toast.dismiss())
-  // }, [url])
+  const { url, props } = usePage()
+  const flash = props.flash as { success?: string; error?: string } | undefined
+  useEffect(() => {
+    if (flash?.success) toast.success(flash.success)
+    if (flash?.error) toast.error(flash.error)
+  }, [flash])
+  useEffect(() => {
+    toast.dismiss()
+  }, [url])
   return (
     <>
       <a

@@ -28,7 +28,16 @@ router
     router.post('logout', [controllers.Session, 'destroy'])
 
     router.on('/dashboard').renderInertia('dashboard/index', {}).as('dashboard')
-    router.on('/budget').renderInertia('budget/index', {}).as('budget')
+
+    router
+      .group(() => {
+        router.get('/', [controllers.Categories, 'index']).as('budget')
+        router.post('/', [controllers.Categories, 'store']).as('categories.store')
+        router.patch('/:id', [controllers.Categories, 'update']).as('categories.update')
+        router.delete('/:id', [controllers.Categories, 'destroy']).as('categories.destroy')
+      })
+      .prefix('/categories')
+
     router.on('/depenses').renderInertia('depenses/index', {}).as('depenses')
     router.on('/credits').renderInertia('credits/index', {}).as('credits')
     router.on('/investissements').renderInertia('investissements/index', {}).as('investissements')

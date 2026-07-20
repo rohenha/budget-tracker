@@ -14,6 +14,11 @@ export interface ApiDefinition {
   }
   dashboard: typeof routes['dashboard']
   budget: typeof routes['budget']
+  categories: {
+    store: typeof routes['categories.store']
+    update: typeof routes['categories.update']
+    destroy: typeof routes['categories.destroy']
+  }
   depenses: typeof routes['depenses']
   credits: typeof routes['credits']
   investissements: typeof routes['investissements']
