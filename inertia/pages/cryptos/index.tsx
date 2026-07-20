@@ -1,4 +1,3 @@
-import AuthLayout from '~/layouts/auth'
 import PageState from '~/components/page_state'
 
 export default function Cryptos() {
@@ -12,5 +11,3 @@ export default function Cryptos() {
     </div>
   )
 }
-
-Cryptos.layout = AuthLayout

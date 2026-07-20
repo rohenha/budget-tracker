@@ -1,4 +1,3 @@
-import AuthLayout from '~/layouts/auth'
 import PageState from '~/components/page_state'
 
 export default function Investissements() {
@@ -12,5 +11,3 @@ export default function Investissements() {
     </div>
   )
 }
-
-Investissements.layout = AuthLayout
