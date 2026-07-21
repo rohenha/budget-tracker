@@ -1,3 +1,5 @@
+import { DateTime } from 'luxon'
+import db from '@adonisjs/lucid/services/db'
 import Categorie from '#models/categorie'
 import { createCategorieValidator, updateCategorieValidator } from '#validators/categorie'
 import type { HttpContext } from '@adonisjs/core/http'
@@ -6,8 +8,38 @@ export default class CategoriesController {
   async index({ inertia, auth }: HttpContext) {
     const user = auth.user!
     const categories = await Categorie.query().where('userId', user.id).orderBy('createdAt', 'asc')
+
+    const now = DateTime.now()
+    const startOfMonth = now.startOf('month').toSQLDate()
+    const endOfMonth = now.endOf('month').toSQLDate()
+
+    const rows = await db
+      .from('depenses')
+      .select('categorie_id')
+      .sum('montant as spent')
+      .where('user_id', user.id)
+      .where('type', 'sortie')
+      .whereBetween('date', [startOfMonth!, endOfMonth!])
+      .groupBy('categorie_id')
+
+    const categorySpending = categories.map((c) => {
+      const row = rows.find((r: any) => r.categorie_id === c.id)
+      return {
+        categorieId: c.id,
+        label: c.label,
+        icon: c.icon,
+        color: c.color,
+        budget: c.budget != null ? Number(c.budget) : null,
+        spent: row ? Number(row.spent) : 0,
+      }
+    })
+
     return inertia.render('budget/index', {
-      categories: categories.map((c) => c.serialize()) as any,
+      categories: categories.map((c) => ({
+        ...c.serialize(),
+        budget: c.budget != null ? Number(c.budget) : null,
+      })) as any,
+      categorySpending,
     })
   }
 

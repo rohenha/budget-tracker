@@ -19,7 +19,11 @@ export interface ApiDefinition {
     update: typeof routes['categories.update']
     destroy: typeof routes['categories.destroy']
   }
-  depenses: typeof routes['depenses']
+  depenses: typeof routes['depenses'] & {
+    store: typeof routes['depenses.store']
+    update: typeof routes['depenses.update']
+    destroy: typeof routes['depenses.destroy']
+  }
   credits: typeof routes['credits']
   investissements: typeof routes['investissements']
   cryptos: typeof routes['cryptos']

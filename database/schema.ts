@@ -7,6 +7,54 @@
 import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 
+export class CategorySchema extends BaseModel {
+  static $columns = ['budget', 'color', 'createdAt', 'icon', 'id', 'label', 'slug', 'updatedAt', 'userId'] as const
+  $columns = CategorySchema.$columns
+  @column()
+  declare budget: string | null
+  @column()
+  declare color: string
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare icon: string
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare label: string
+  @column()
+  declare slug: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column()
+  declare userId: number
+}
+
+export class DepenseSchema extends BaseModel {
+  static $columns = ['categorieId', 'createdAt', 'date', 'description', 'id', 'libelle', 'montant', 'type', 'updatedAt', 'userId'] as const
+  $columns = DepenseSchema.$columns
+  @column()
+  declare categorieId: number | null
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column.date()
+  declare date: DateTime
+  @column()
+  declare description: string | null
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare libelle: string
+  @column()
+  declare montant: string
+  @column()
+  declare type: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column()
+  declare userId: number
+}
+
 export class UserSchema extends BaseModel {
   static $columns = ['createdAt', 'email', 'fullName', 'id', 'password', 'updatedAt'] as const
   $columns = UserSchema.$columns

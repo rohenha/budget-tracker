@@ -13,9 +13,13 @@ import {
 import AddCategoryDialog from '~/components/budget/add_category_dialog'
 import EditCategoryDialog from '~/components/budget/edit_category_dialog'
 import DeleteCategoryDialog from '~/components/budget/delete_category_dialog'
+import CategoryPieChart, { type CategorySpending } from '~/components/budget/category_pie_chart'
 import { getIcon, formatBudget, type Categorie } from '~/components/budget/constants'
 
-export default function Budget({ categories }: InertiaProps<{ categories: Categorie[] }>) {
+export default function Budget({
+  categories,
+  categorySpending = [],
+}: InertiaProps<{ categories: Categorie[]; categorySpending: CategorySpending[] }>) {
   const [addOpen, setAddOpen] = useState(false)
   const [editId, setEditId] = useState<number | null>(null)
   const [deleteId, setDeleteId] = useState<number | null>(null)
@@ -35,6 +39,8 @@ export default function Budget({ categories }: InertiaProps<{ categories: Catego
           </Button>
         )}
       </div>
+
+      <CategoryPieChart data={categorySpending} />
 
       <AddCategoryDialog open={addOpen} onOpenChange={setAddOpen} />
 
