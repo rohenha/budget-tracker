@@ -42,11 +42,18 @@ export default function Budget({
         )}
       </div>
 
-      <CategoryPieChart
-        data={categorySpending}
-        title="Répartition des dépenses"
-        description="Aucune dépense ce mois-ci"
-      />
+      <div className="grid lg:grid-cols-2 gap-2">
+        <CategoryPieChart
+          data={categorySpending}
+          title="Répartition des entrées"
+          description="Aucune entrée ce mois-ci"
+        />
+        <CategoryPieChart
+          data={categorySpending}
+          title="Répartition des dépenses"
+          description="Aucune dépense ce mois-ci"
+        />
+      </div>
 
       <AddCategoryDialog open={addOpen} onOpenChange={setAddOpen} />
 

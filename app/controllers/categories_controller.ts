@@ -7,7 +7,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 export default class CategoriesController {
   async index({ inertia, auth }: HttpContext) {
     const user = auth.user!
-    const categories = await Categorie.query().where('userId', user.id).orderBy('createdAt', 'asc')
+    const categories = await Categorie.query().where('userId', user.id).orderBy('type', 'asc')
 
     const now = DateTime.now()
     const startOfMonth = now.startOf('month').toSQLDate()
