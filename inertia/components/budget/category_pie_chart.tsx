@@ -1,3 +1,4 @@
+import React from 'react'
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts'
 import { Card, CardHeader, CardTitle, CardContent } from '~/components/ui/card'
 import { getIcon, formatBudget } from '~/components/budget/constants'
@@ -7,6 +8,8 @@ export type CategorySpending = {
   label: string
   icon: string
   color: string
+  slug: string
+  type: 'entree' | 'sortie'
   budget: number | null
   spent: number
 }
@@ -15,25 +18,38 @@ type Props = {
   data: CategorySpending[]
   title: string
   description?: string
+  label: string
 }
 
-function CustomTooltip({ active, payload }: any) {
+function CustomTooltip({
+  active,
+  payload,
+  label,
+}: {
+  active: boolean
+  payload: Array<{ payload: CategorySpending }>
+  label: string
+}) {
   if (!active || !payload?.length) return null
   const item = payload[0].payload as CategorySpending
-  const Icon = getIcon(item.icon)
   return (
     <div className="rounded-lg border bg-popover px-3 py-2 text-sm shadow-md">
       <div className="flex items-center gap-2 font-medium">
-        <Icon className="size-4" style={{ color: item.color }} />
+        {React.createElement(getIcon(item.icon), {
+          className: 'size-4',
+          style: { color: item.color },
+        })}
         {item.label}
       </div>
-      <div className="text-muted-foreground">Dépensé : {formatBudget(item.spent)}</div>
+      <div className="text-muted-foreground">
+        {label} : {formatBudget(item.spent)}
+      </div>
       <div className="text-muted-foreground">Budgété : {formatBudget(item.budget)}</div>
     </div>
   )
 }
 
-export default function CategoryPieChart({ data, title, description }: Props) {
+export default function CategoryPieChart({ data, title, description, label }: Props) {
   const hasSpending = data.some((d) => d.spent > 0)
   const totalSpent = data.reduce((sum, d) => sum + d.spent, 0)
   const totalBudget = data.reduce((sum, d) => sum + (d.budget ?? 0), 0)
@@ -56,7 +72,7 @@ export default function CategoryPieChart({ data, title, description }: Props) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Répartition des dépenses</CardTitle>
+        <CardTitle>{title}</CardTitle>
         <p className="text-sm text-muted-foreground">
           Budgété : {formatBudget(totalBudget)} — Réel : {formatBudget(totalSpent)}
         </p>
@@ -74,13 +90,12 @@ export default function CategoryPieChart({ data, title, description }: Props) {
                 outerRadius={100}
                 innerRadius={50}
                 paddingAngle={2}
-                accessibilityLayer
               >
                 {data.map((entry) => (
                   <Cell key={entry.categorieId} fill={entry.color} />
                 ))}
               </Pie>
-              <Tooltip content={<CustomTooltip />} />
+              <Tooltip content={(props: any) => <CustomTooltip {...props} label={label} />} />
             </PieChart>
           </ResponsiveContainer>
         </div>

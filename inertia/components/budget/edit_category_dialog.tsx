@@ -12,7 +12,9 @@ import { NativeSelect, NativeSelectOption } from '~/components/ui/native-select'
 import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'
 import { Field, FieldContent, FieldError, FieldLabel } from '~/components/ui/field'
-import { getIcon, type Categorie } from '~/components/budget/constants'
+import { getIcon } from '~/components/budget/constants'
+import { type CategorySpending } from '~/components/budget/category_pie_chart'
+
 import { useState } from 'react'
 
 export default function EditCategoryDialog({
@@ -20,7 +22,7 @@ export default function EditCategoryDialog({
   open,
   onOpenChange,
 }: {
-  categorie: Categorie
+  categorie: CategorySpending
   open: boolean
   onOpenChange: (v: boolean) => void
 }) {
@@ -32,7 +34,7 @@ export default function EditCategoryDialog({
       <DialogContent>
         <Form
           route="categories.update"
-          routeParams={{ id: categorie.id }}
+          routeParams={{ id: categorie.categorieId }}
           onSuccess={() => onOpenChange(false)}
         >
           {({ errors }) => (

@@ -8,14 +8,14 @@ import {
   DialogTitle,
 } from '~/components/ui/dialog'
 import { Button } from '~/components/ui/button'
-import type { Categorie } from '~/components/budget/constants'
+import { type CategorySpending } from '~/components/budget/category_pie_chart'
 
 export default function DeleteCategoryDialog({
   categorie,
   open,
   onOpenChange,
 }: {
-  categorie: Categorie
+  categorie: CategorySpending
   open: boolean
   onOpenChange: (v: boolean) => void
 }) {
@@ -24,7 +24,7 @@ export default function DeleteCategoryDialog({
       <DialogContent>
         <Form
           route="categories.destroy"
-          routeParams={{ id: categorie.id }}
+          routeParams={{ id: categorie.categorieId }}
           onSuccess={() => onOpenChange(false)}
         >
           {() => (

@@ -16,15 +16,29 @@ import AddCategoryDialog from '~/components/budget/add_category_dialog'
 import EditCategoryDialog from '~/components/budget/edit_category_dialog'
 import DeleteCategoryDialog from '~/components/budget/delete_category_dialog'
 import CategoryPieChart, { type CategorySpending } from '~/components/budget/category_pie_chart'
-import { getIcon, formatBudget, type Categorie } from '~/components/budget/constants'
+import { getIcon, formatBudget } from '~/components/budget/constants'
 
 export default function Budget({
-  categories,
+  // categories,
   categorySpending = [],
-}: InertiaProps<{ categories: Categorie[]; categorySpending: CategorySpending[] }>) {
+  categoryEntry = [],
+}: InertiaProps<{
+  // categories: Categorie[]
+  categorySpending: CategorySpending[]
+  categoryEntry: CategorySpending[]
+}>) {
   const [addOpen, setAddOpen] = useState(false)
   const [editId, setEditId] = useState<number | null>(null)
   const [deleteId, setDeleteId] = useState<number | null>(null)
+
+  // const getEntrySpent = (row: CategorySpending[], categoryId: number): string => {
+  //   for (const item of row) {
+  //     if (item.categorieId === categoryId) {
+  //       return formatBudget(item.spent)
+  //     }
+  //   }
+  //   return '-'
+  // }
 
   return (
     <div className="flex flex-col gap-4">
@@ -35,7 +49,7 @@ export default function Budget({
             Gestion des catégories et budget prévisionnel
           </p>
         </div>
-        {categories.length > 0 && (
+        {(categorySpending.length > 0 || categoryEntry.length > 0) && (
           <Button size="sm" onClick={() => setAddOpen(true)}>
             Ajouter catégorie
           </Button>
@@ -44,12 +58,14 @@ export default function Budget({
 
       <div className="grid lg:grid-cols-2 gap-2">
         <CategoryPieChart
-          data={categorySpending}
-          title="Répartition des entrées"
-          description="Aucune entrée ce mois-ci"
+          data={categoryEntry}
+          label="Rentrées"
+          title="Répartition des rentrées"
+          description="Aucune rentrée ce mois-ci"
         />
         <CategoryPieChart
           data={categorySpending}
+          label="Dépensé"
           title="Répartition des dépenses"
           description="Aucune dépense ce mois-ci"
         />
@@ -59,11 +75,11 @@ export default function Budget({
 
       <PageState
         empty={
-          categories.length > 0
+          categoryEntry.length > 0 || categorySpending.length > 0
             ? null
             : {
                 title: 'Aucune catégorie',
-                message: 'Configure tes premières catégories de dépenses',
+                message: 'Configure tes premières catégories de dépenses et rentrées',
                 action: { label: 'Ajouter catégorie', onClick: () => setAddOpen(true) },
               }
         }
@@ -76,14 +92,15 @@ export default function Budget({
               <TableHead>Slug</TableHead>
               <TableHead>Type</TableHead>
               <TableHead className="text-right">Budget mensuel</TableHead>
+              <TableHead className="text-right">Réel</TableHead>
               <TableHead className="w-20" />
             </TableRow>
           </TableHeader>
           <TableBody>
-            {categories.map((cat) => {
+            {[...categoryEntry, ...categorySpending].map((cat) => {
               const Icon = getIcon(cat.icon)
               return (
-                <TableRow key={cat.id}>
+                <TableRow key={cat.categorieId}>
                   <TableCell>
                     <Icon className="size-4" style={{ color: cat.color }} />
                   </TableCell>
@@ -95,31 +112,48 @@ export default function Budget({
                   <TableCell className="text-right font-medium">
                     {formatBudget(cat.budget)}
                   </TableCell>
+                  {cat.type === 'entree' ? (
+                    <TableCell
+                      className={`text-right font-medium ${cat.budget && cat.budget <= cat.spent ? 'text-green-700' : 'text-red-700'}`}
+                    >
+                      {formatBudget(cat.spent)}
+                    </TableCell>
+                  ) : (
+                    <TableCell
+                      className={`text-right font-medium ${cat.budget && cat.budget >= cat.spent ? 'text-green-700' : 'text-red-700'}`}
+                    >
+                      {formatBudget(cat.spent)}
+                    </TableCell>
+                  )}
                   <TableCell>
                     <div className="flex items-center gap-1">
-                      <Button variant="ghost" size="icon-sm" onClick={() => setEditId(cat.id)}>
+                      <Button
+                        variant="ghost"
+                        size="icon-sm"
+                        onClick={() => setEditId(cat.categorieId)}
+                      >
                         <span className="sr-only">Modifier</span>
                         <SquarePen />
                       </Button>
                       <EditCategoryDialog
                         categorie={cat}
-                        open={editId === cat.id}
-                        onOpenChange={(o) => setEditId(o ? cat.id : null)}
+                        open={editId === cat.categorieId}
+                        onOpenChange={(o) => setEditId(o ? cat.categorieId : null)}
                       />
                       {cat.slug !== 'autre' && (
                         <>
                           <Button
                             variant="destructive"
                             size="icon-sm"
-                            onClick={() => setDeleteId(cat.id)}
+                            onClick={() => setDeleteId(cat.categorieId)}
                           >
                             <span className="sr-only">Supprimer</span>
                             <Trash2 />
                           </Button>
                           <DeleteCategoryDialog
                             categorie={cat}
-                            open={deleteId === cat.id}
-                            onOpenChange={(o) => setDeleteId(o ? cat.id : null)}
+                            open={deleteId === cat.categorieId}
+                            onOpenChange={(o) => setDeleteId(o ? cat.categorieId : null)}
                           />
                         </>
                       )}

@@ -3,6 +3,16 @@ import db from '@adonisjs/lucid/services/db'
 import Categorie from '#models/categorie'
 import { createCategorieValidator, updateCategorieValidator } from '#validators/categorie'
 import type { HttpContext } from '@adonisjs/core/http'
+type CategorySpending = {
+  categorieId: number
+  label: string
+  icon: string
+  color: string
+  slug: string
+  type: 'entree' | 'sortie'
+  budget: number | null
+  spent: number
+}
 
 export default class CategoriesController {
   async index({ inertia, auth }: HttpContext) {
@@ -18,29 +28,34 @@ export default class CategoriesController {
       .select('categorie_id')
       .sum('montant as spent')
       .where('user_id', user.id)
-      .where('type', 'sortie')
       .whereBetween('date', [startOfMonth!, endOfMonth!])
       .groupBy('categorie_id')
 
-    const categorySpending = categories.map((c) => {
+    const categorySpending = [] as CategorySpending[]
+    const categoryEntry = [] as CategorySpending[]
+    categories.forEach((c) => {
       const row = rows.find((r: any) => r.categorie_id === c.id)
-      return {
+      const data = {
         categorieId: c.id,
         label: c.label,
-        icon: c.icon,
-        color: c.color,
+        icon: c.icon ?? '',
+        color: c.color ?? '',
         type: c.type,
+        slug: c.slug,
         budget: c.budget !== null ? Number(c.budget) : null,
         spent: row ? Number(row.spent) : 0,
+      }
+
+      if (c.type === 'entree') {
+        categoryEntry.push(data)
+      } else {
+        categorySpending.push(data)
       }
     })
 
     return inertia.render('budget/index', {
-      categories: categories.map((c) => ({
-        ...c.serialize(),
-        budget: c.budget !== null ? Number(c.budget) : null,
-      })) as any,
       categorySpending,
+      categoryEntry,
     })
   }
 
