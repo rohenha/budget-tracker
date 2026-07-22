@@ -10,6 +10,8 @@ import {
   TableRow,
   TableCell,
 } from '~/components/ui/table'
+import { Trash2, SquarePen } from 'lucide-react'
+import TypeBadge from '~/components/depenses/type_badge'
 import AddCategoryDialog from '~/components/budget/add_category_dialog'
 import EditCategoryDialog from '~/components/budget/edit_category_dialog'
 import DeleteCategoryDialog from '~/components/budget/delete_category_dialog'
@@ -40,7 +42,11 @@ export default function Budget({
         )}
       </div>
 
-      <CategoryPieChart data={categorySpending} />
+      <CategoryPieChart
+        data={categorySpending}
+        title="Répartition des dépenses"
+        description="Aucune dépense ce mois-ci"
+      />
 
       <AddCategoryDialog open={addOpen} onOpenChange={setAddOpen} />
 
@@ -61,6 +67,7 @@ export default function Budget({
               <TableHead className="w-8" />
               <TableHead>Catégorie</TableHead>
               <TableHead>Slug</TableHead>
+              <TableHead>Type</TableHead>
               <TableHead className="text-right">Budget mensuel</TableHead>
               <TableHead className="w-20" />
             </TableRow>
@@ -75,6 +82,9 @@ export default function Budget({
                   </TableCell>
                   <TableCell className="font-medium">{cat.label}</TableCell>
                   <TableCell className="text-muted-foreground">{cat.slug}</TableCell>
+                  <TableCell>
+                    <TypeBadge type={cat.type} />
+                  </TableCell>
                   <TableCell className="text-right font-medium">
                     {formatBudget(cat.budget)}
                   </TableCell>
@@ -82,19 +92,7 @@ export default function Budget({
                     <div className="flex items-center gap-1">
                       <Button variant="ghost" size="icon-sm" onClick={() => setEditId(cat.id)}>
                         <span className="sr-only">Modifier</span>
-                        <svg
-                          className="size-4"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                          />
-                        </svg>
+                        <SquarePen />
                       </Button>
                       <EditCategoryDialog
                         categorie={cat}
@@ -104,24 +102,12 @@ export default function Budget({
                       {cat.slug !== 'autre' && (
                         <>
                           <Button
-                            variant="ghost"
+                            variant="destructive"
                             size="icon-sm"
                             onClick={() => setDeleteId(cat.id)}
                           >
                             <span className="sr-only">Supprimer</span>
-                            <svg
-                              className="size-4"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                              />
-                            </svg>
+                            <Trash2 />
                           </Button>
                           <DeleteCategoryDialog
                             categorie={cat}

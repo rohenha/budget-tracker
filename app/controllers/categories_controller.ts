@@ -29,7 +29,8 @@ export default class CategoriesController {
         label: c.label,
         icon: c.icon,
         color: c.color,
-        budget: c.budget != null ? Number(c.budget) : null,
+        type: c.type,
+        budget: c.budget !== null ? Number(c.budget) : null,
         spent: row ? Number(row.spent) : 0,
       }
     })
@@ -37,7 +38,7 @@ export default class CategoriesController {
     return inertia.render('budget/index', {
       categories: categories.map((c) => ({
         ...c.serialize(),
-        budget: c.budget != null ? Number(c.budget) : null,
+        budget: c.budget !== null ? Number(c.budget) : null,
       })) as any,
       categorySpending,
     })
@@ -50,6 +51,7 @@ export default class CategoriesController {
     await Categorie.create({
       userId: user.id,
       label: payload.label,
+      type: payload.type,
       slug,
       icon: payload.icon,
       budget: payload.budget ?? null,
@@ -71,6 +73,7 @@ export default class CategoriesController {
       (payload.label ? await Categorie.generateSlug(payload.label, categorie.id) : undefined)
     categorie.merge({
       ...(payload.label !== undefined ? { label: payload.label } : {}),
+      ...(payload.type !== undefined ? { type: payload.type } : {}),
       ...(slug !== undefined ? { slug } : {}),
       ...(payload.icon !== undefined ? { icon: payload.icon } : {}),
       ...(payload.budget !== undefined ? { budget: payload.budget } : {}),

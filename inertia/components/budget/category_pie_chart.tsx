@@ -13,6 +13,8 @@ export type CategorySpending = {
 
 type Props = {
   data: CategorySpending[]
+  title: string
+  description?: string
 }
 
 function CustomTooltip({ active, payload }: any) {
@@ -31,9 +33,8 @@ function CustomTooltip({ active, payload }: any) {
   )
 }
 
-export default function CategoryPieChart({ data }: Props) {
+export default function CategoryPieChart({ data, title, description }: Props) {
   const hasSpending = data.some((d) => d.spent > 0)
-  console.log(data)
   const totalSpent = data.reduce((sum, d) => sum + d.spent, 0)
   const totalBudget = data.reduce((sum, d) => sum + (d.budget ?? 0), 0)
 
@@ -41,13 +42,13 @@ export default function CategoryPieChart({ data }: Props) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Répartition des dépenses</CardTitle>
+          <CardTitle>{title}</CardTitle>
         </CardHeader>
-        <CardContent>
-          <p className="py-8 text-center text-sm text-muted-foreground">
-            Aucune dépense ce mois-ci
-          </p>
-        </CardContent>
+        {description && (
+          <CardContent>
+            <p className="py-8 text-center text-sm text-muted-foreground">{description}</p>
+          </CardContent>
+        )}
       </Card>
     )
   }

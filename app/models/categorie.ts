@@ -24,6 +24,9 @@ export default class Categorie extends BaseModel {
   declare budget: number | null
 
   @column()
+  declare type: 'entree' | 'sortie'
+
+  @column()
   declare color: string
 
   @column.dateTime({ autoCreate: true })

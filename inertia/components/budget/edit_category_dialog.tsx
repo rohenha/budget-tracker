@@ -7,10 +7,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from '~/components/ui/dialog'
+import TypeBadge from '~/components/depenses/type_badge'
+import { NativeSelect, NativeSelectOption } from '~/components/ui/native-select'
 import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'
 import { Field, FieldContent, FieldError, FieldLabel } from '~/components/ui/field'
 import { getIcon, type Categorie } from '~/components/budget/constants'
+import { useState } from 'react'
 
 export default function EditCategoryDialog({
   categorie,
@@ -22,6 +25,7 @@ export default function EditCategoryDialog({
   onOpenChange: (v: boolean) => void
 }) {
   const Icon = getIcon(categorie.icon)
+  const [typeState, setTypeState] = useState(categorie.type)
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -77,24 +81,38 @@ export default function EditCategoryDialog({
                     <FieldError errors={[{ message: errors.color }]} />
                   </FieldContent>
                 </Field>
+                <Field>
+                  <FieldLabel>Type</FieldLabel>
+                  <FieldContent className="flex flex-row items-center gap-2">
+                    <NativeSelect
+                      name="type"
+                      defaultValue={categorie.type}
+                      onChange={(e) => setTypeState(e.target.value as 'entree' | 'sortie')}
+                    >
+                      <NativeSelectOption value="entree">Entrée</NativeSelectOption>
+                      <NativeSelectOption value="sortie">Sortie</NativeSelectOption>
+                    </NativeSelect>
+                    <TypeBadge type={typeState} />
+                  </FieldContent>
+                </Field>
+                <DialogFooter>
+                  <div className="flex items-center gap-1 mr-auto">
+                    <Icon className="size-4" style={{ color: categorie.color }} />
+                    <span className="text-xs text-muted-foreground">{categorie.icon}</span>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => onOpenChange(false)}
+                  >
+                    Annuler
+                  </Button>
+                  <Button type="submit" size="sm">
+                    Enregistrer
+                  </Button>
+                </DialogFooter>
               </div>
-              <DialogFooter>
-                <div className="flex items-center gap-1 mr-auto">
-                  <Icon className="size-4" style={{ color: categorie.color }} />
-                  <span className="text-xs text-muted-foreground">{categorie.icon}</span>
-                </div>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => onOpenChange(false)}
-                >
-                  Annuler
-                </Button>
-                <Button type="submit" size="sm">
-                  Enregistrer
-                </Button>
-              </DialogFooter>
             </>
           )}
         </Form>

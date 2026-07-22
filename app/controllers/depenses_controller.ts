@@ -11,11 +11,15 @@ import type { HttpContext } from '@adonisjs/core/http'
 export default class DepensesController {
   async index({ inertia, auth, request }: HttpContext) {
     const user = auth.user!
-    const { periode, dateDebut, dateFin } = await request.validateUsing(indexDepenseValidator)
+    let { periode, dateDebut, dateFin } = await request.validateUsing(indexDepenseValidator)
 
     const now = DateTime.now()
     let startDate: string
     let endDate: string
+
+    if (!periode) {
+      periode = 'month'
+    }
 
     switch (periode) {
       case 'today':
