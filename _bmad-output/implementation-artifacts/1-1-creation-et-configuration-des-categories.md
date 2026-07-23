@@ -105,4 +105,4 @@ So that structurer mes finances par catégorie.
 
 ## Status
 
-review
+done

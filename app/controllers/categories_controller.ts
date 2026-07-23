@@ -1,13 +1,61 @@
+import { DateTime } from 'luxon'
+import db from '@adonisjs/lucid/services/db'
 import Categorie from '#models/categorie'
 import { createCategorieValidator, updateCategorieValidator } from '#validators/categorie'
 import type { HttpContext } from '@adonisjs/core/http'
+type CategorySpending = {
+  categorieId: number
+  label: string
+  icon: string
+  color: string
+  slug: string
+  type: 'entree' | 'sortie'
+  budget: number | null
+  spent: number
+}
 
 export default class CategoriesController {
   async index({ inertia, auth }: HttpContext) {
     const user = auth.user!
-    const categories = await Categorie.query().where('userId', user.id).orderBy('createdAt', 'asc')
+    const categories = await Categorie.query().where('userId', user.id).orderBy('type', 'asc')
+
+    const now = DateTime.now()
+    const startOfMonth = now.startOf('month').toSQLDate()
+    const endOfMonth = now.endOf('month').toSQLDate()
+
+    const rows = await db
+      .from('depenses')
+      .select('categorie_id')
+      .sum('montant as spent')
+      .where('user_id', user.id)
+      .whereBetween('date', [startOfMonth!, endOfMonth!])
+      .groupBy('categorie_id')
+
+    const categorySpending = [] as CategorySpending[]
+    const categoryEntry = [] as CategorySpending[]
+    categories.forEach((c) => {
+      const row = rows.find((r: any) => r.categorie_id === c.id)
+      const data = {
+        categorieId: c.id,
+        label: c.label,
+        icon: c.icon ?? '',
+        color: c.color ?? '',
+        type: c.type,
+        slug: c.slug,
+        budget: c.budget !== null ? Number(c.budget) : null,
+        spent: row ? Number(row.spent) : 0,
+      }
+
+      if (c.type === 'entree') {
+        categoryEntry.push(data)
+      } else {
+        categorySpending.push(data)
+      }
+    })
+
     return inertia.render('budget/index', {
-      categories: categories.map((c) => c.serialize()) as any,
+      categorySpending,
+      categoryEntry,
     })
   }
 
@@ -18,6 +66,7 @@ export default class CategoriesController {
     await Categorie.create({
       userId: user.id,
       label: payload.label,
+      type: payload.type,
       slug,
       icon: payload.icon,
       budget: payload.budget ?? null,
@@ -39,6 +88,7 @@ export default class CategoriesController {
       (payload.label ? await Categorie.generateSlug(payload.label, categorie.id) : undefined)
     categorie.merge({
       ...(payload.label !== undefined ? { label: payload.label } : {}),
+      ...(payload.type !== undefined ? { type: payload.type } : {}),
       ...(slug !== undefined ? { slug } : {}),
       ...(payload.icon !== undefined ? { icon: payload.icon } : {}),
       ...(payload.budget !== undefined ? { budget: payload.budget } : {}),

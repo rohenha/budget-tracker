@@ -16,6 +16,9 @@ export type ScannedRoutes = {
     'categories.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'categories.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'depenses': { paramsTuple?: []; params?: {} }
+    'depenses.store': { paramsTuple?: []; params?: {} }
+    'depenses.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'depenses.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'credits': { paramsTuple?: []; params?: {} }
     'investissements': { paramsTuple?: []; params?: {} }
     'cryptos': { paramsTuple?: []; params?: {} }
@@ -47,12 +50,15 @@ export type ScannedRoutes = {
     'session.store': { paramsTuple?: []; params?: {} }
     'session.destroy': { paramsTuple?: []; params?: {} }
     'categories.store': { paramsTuple?: []; params?: {} }
+    'depenses.store': { paramsTuple?: []; params?: {} }
   }
   PATCH: {
     'categories.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'depenses.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   DELETE: {
     'categories.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'depenses.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
 }
 declare module '@adonisjs/core/types/http' {

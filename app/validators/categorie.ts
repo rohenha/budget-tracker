@@ -5,7 +5,11 @@ export const createCategorieValidator = vine.create({
   slug: vine.string().trim().minLength(1).maxLength(100).optional(),
   icon: vine.string().trim().minLength(1).maxLength(50),
   budget: vine.number().min(0).optional(),
-  color: vine.string().trim().regex(/^#[0-9a-fA-F]{6}$/),
+  type: vine.enum(['entree', 'sortie']),
+  color: vine
+    .string()
+    .trim()
+    .regex(/^#[0-9a-fA-F]{6}$/),
 })
 
 export const updateCategorieValidator = vine.create({
@@ -13,5 +17,10 @@ export const updateCategorieValidator = vine.create({
   slug: vine.string().trim().minLength(1).maxLength(100).optional(),
   icon: vine.string().trim().minLength(1).maxLength(50).optional(),
   budget: vine.number().min(0).optional(),
-  color: vine.string().trim().regex(/^#[0-9a-fA-F]{6}$/).optional(),
+  type: vine.enum(['entree', 'sortie']).optional(),
+  color: vine
+    .string()
+    .trim()
+    .regex(/^#[0-9a-fA-F]{6}$/)
+    .optional(),
 })

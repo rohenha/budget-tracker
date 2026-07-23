@@ -31,6 +31,7 @@ export type Categorie = {
   userId: number
   label: string
   slug: string
+  type: 'entree' | 'sortie'
   icon: string
   budget: number | null
   color: string

@@ -24,6 +24,7 @@ export default class NewAccountController {
         label: 'Autre',
         slug: 'autre',
         icon: 'Circle',
+        type: 'sortie',
         color: '#6b7280',
       })
     }

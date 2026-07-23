@@ -78,6 +78,24 @@ const routes = {
     tokens: [{"old":"/depenses","type":0,"val":"depenses","end":""}],
     types: placeholder as Registry['depenses']['types'],
   },
+  'depenses.store': {
+    methods: ["POST"],
+    pattern: '/depenses',
+    tokens: [{"old":"/depenses","type":0,"val":"depenses","end":""}],
+    types: placeholder as Registry['depenses.store']['types'],
+  },
+  'depenses.update': {
+    methods: ["PATCH"],
+    pattern: '/depenses/:id',
+    tokens: [{"old":"/depenses/:id","type":0,"val":"depenses","end":""},{"old":"/depenses/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['depenses.update']['types'],
+  },
+  'depenses.destroy': {
+    methods: ["DELETE"],
+    pattern: '/depenses/:id',
+    tokens: [{"old":"/depenses/:id","type":0,"val":"depenses","end":""},{"old":"/depenses/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['depenses.destroy']['types'],
+  },
   'credits': {
     methods: ["GET","HEAD"],
     pattern: '/credits',

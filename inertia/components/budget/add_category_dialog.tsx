@@ -8,6 +8,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from '~/components/ui/dialog'
+import TypeBadge from '~/components/depenses/type_badge'
+import { NativeSelect, NativeSelectOption } from '~/components/ui/native-select'
 import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'
 import { Field, FieldContent, FieldError, FieldLabel } from '~/components/ui/field'
@@ -24,7 +26,7 @@ export default function AddCategoryDialog({
   const [icon, setIcon] = useState('Circle')
   const [search, setSearch] = useState('')
   const filtered = ICON_NAMES.filter((n) => n.toLowerCase().includes(search.toLowerCase()))
-
+  const [typeState, setTypeState] = useState('sortie' as 'entree' | 'sortie')
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
@@ -104,20 +106,34 @@ export default function AddCategoryDialog({
                     <FieldError errors={[{ message: errors.color }]} />
                   </FieldContent>
                 </Field>
+                <Field>
+                  <FieldLabel>Type</FieldLabel>
+                  <FieldContent className="flex flex-row items-center gap-2">
+                    <NativeSelect
+                      name="type"
+                      defaultValue="sortie"
+                      onChange={(e) => setTypeState(e.target.value as 'entree' | 'sortie')}
+                    >
+                      <NativeSelectOption value="entree">Entrée</NativeSelectOption>
+                      <NativeSelectOption value="sortie">Sortie</NativeSelectOption>
+                    </NativeSelect>
+                    <TypeBadge type={typeState} />
+                  </FieldContent>
+                </Field>
+                <DialogFooter>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => onOpenChange(false)}
+                  >
+                    Annuler
+                  </Button>
+                  <Button type="submit" size="sm">
+                    Ajouter
+                  </Button>
+                </DialogFooter>
               </div>
-              <DialogFooter>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => onOpenChange(false)}
-                >
-                  Annuler
-                </Button>
-                <Button type="submit" size="sm">
-                  Ajouter
-                </Button>
-              </DialogFooter>
             </>
           )}
         </Form>
