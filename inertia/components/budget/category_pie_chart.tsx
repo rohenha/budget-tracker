@@ -83,11 +83,11 @@ export default function CategoryPieChart({
         <CardTitle>{title}</CardTitle>
         <p className="text-sm text-muted-foreground">
           Budgété :{' '}
-          <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium bg-primary text-white">
+          <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium bg-primary text-primary-foreground">
             {formatBudget(totalBudget)}
           </span>{' '}
           — Réel :{' '}
-          <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium bg-primary text-white">
+          <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium bg-primary text-primary-foreground">
             {formatBudget(totalSpent)}
           </span>
         </p>
