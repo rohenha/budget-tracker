@@ -17,6 +17,7 @@ import EditCategoryDialog from '~/components/budget/edit_category_dialog'
 import DeleteCategoryDialog from '~/components/budget/delete_category_dialog'
 import CategoryPieChart, { type CategorySpending } from '~/components/budget/category_pie_chart'
 import { getIcon, formatBudget } from '~/components/budget/constants'
+import ProgressBadge from '~/components/depenses/progress_badge'
 
 export default function Budget({
   // categories,
@@ -30,15 +31,6 @@ export default function Budget({
   const [addOpen, setAddOpen] = useState(false)
   const [editId, setEditId] = useState<number | null>(null)
   const [deleteId, setDeleteId] = useState<number | null>(null)
-
-  // const getEntrySpent = (row: CategorySpending[], categoryId: number): string => {
-  //   for (const item of row) {
-  //     if (item.categorieId === categoryId) {
-  //       return formatBudget(item.spent)
-  //     }
-  //   }
-  //   return '-'
-  // }
 
   return (
     <div className="flex flex-col gap-4">
@@ -62,12 +54,14 @@ export default function Budget({
           label="Rentrées"
           title="Répartition des rentrées"
           description="Aucune rentrée ce mois-ci"
+          spending={false}
         />
         <CategoryPieChart
           data={categorySpending}
           label="Dépensé"
           title="Répartition des dépenses"
           description="Aucune dépense ce mois-ci"
+          spending={true}
         />
       </div>
 
@@ -90,9 +84,9 @@ export default function Budget({
               <TableHead className="w-8" />
               <TableHead>Catégorie</TableHead>
               <TableHead>Slug</TableHead>
-              <TableHead>Type</TableHead>
               <TableHead className="text-right">Budget mensuel</TableHead>
               <TableHead className="text-right">Réel</TableHead>
+              <TableHead className="text-center w-10">Type</TableHead>
               <TableHead className="w-20" />
             </TableRow>
           </TableHeader>
@@ -106,29 +100,32 @@ export default function Budget({
                   </TableCell>
                   <TableCell className="font-medium">{cat.label}</TableCell>
                   <TableCell className="text-muted-foreground">{cat.slug}</TableCell>
-                  <TableCell>
-                    <TypeBadge type={cat.type} />
-                  </TableCell>
                   <TableCell className="text-right font-medium">
                     {formatBudget(cat.budget)}
                   </TableCell>
                   {cat.type === 'entree' ? (
-                    <TableCell
-                      className={`text-right font-medium ${cat.budget && cat.budget <= cat.spent ? 'text-green-700' : 'text-red-700'}`}
-                    >
-                      {formatBudget(cat.spent)}
+                    <TableCell className="text-right">
+                      <ProgressBadge
+                        text={formatBudget(cat.spent)}
+                        type={!cat.budget ? 'neutral' : cat.budget <= cat.spent ? 'up' : 'down'}
+                      />
                     </TableCell>
                   ) : (
-                    <TableCell
-                      className={`text-right font-medium ${cat.budget && cat.budget >= cat.spent ? 'text-green-700' : 'text-red-700'}`}
-                    >
-                      {formatBudget(cat.spent)}
+                    <TableCell className="text-right">
+                      <ProgressBadge
+                        text={formatBudget(cat.spent)}
+                        type={!cat.budget ? 'neutral' : cat.budget >= cat.spent ? 'up' : 'down'}
+                        reverse={true}
+                      />
                     </TableCell>
                   )}
                   <TableCell>
+                    <TypeBadge type={cat.type} />
+                  </TableCell>
+                  <TableCell>
                     <div className="flex items-center gap-1">
                       <Button
-                        variant="ghost"
+                        variant="secondary"
                         size="icon-sm"
                         onClick={() => setEditId(cat.categorieId)}
                       >

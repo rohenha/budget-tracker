@@ -2,6 +2,7 @@ import React from 'react'
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts'
 import { Card, CardHeader, CardTitle, CardContent } from '~/components/ui/card'
 import { getIcon, formatBudget } from '~/components/budget/constants'
+import ProgressBadge from '~/components/depenses/progress_badge'
 
 export type CategorySpending = {
   categorieId: number
@@ -19,6 +20,7 @@ type Props = {
   title: string
   description?: string
   label: string
+  spending: boolean
 }
 
 function CustomTooltip({
@@ -49,7 +51,13 @@ function CustomTooltip({
   )
 }
 
-export default function CategoryPieChart({ data, title, description, label }: Props) {
+export default function CategoryPieChart({
+  data,
+  title,
+  description,
+  label,
+  spending = true,
+}: Props) {
   const hasSpending = data.some((d) => d.spent > 0)
   const totalSpent = data.reduce((sum, d) => sum + d.spent, 0)
   const totalBudget = data.reduce((sum, d) => sum + (d.budget ?? 0), 0)
@@ -74,7 +82,34 @@ export default function CategoryPieChart({ data, title, description, label }: Pr
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <p className="text-sm text-muted-foreground">
-          Budgété : {formatBudget(totalBudget)} — Réel : {formatBudget(totalSpent)}
+          Budgété :{' '}
+          <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium bg-primary text-white">
+            {formatBudget(totalBudget)}
+          </span>{' '}
+          — Réel :{' '}
+          <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium bg-primary text-white">
+            {formatBudget(totalSpent)}
+          </span>
+        </p>
+        <p className="text-sm text-muted-foreground">
+          Balance :{' '}
+          {spending ? (
+            <ProgressBadge
+              text={formatBudget(totalBudget - totalSpent)}
+              type={
+                totalBudget === totalSpent ? 'neutral' : totalBudget <= totalSpent ? 'up' : 'down'
+              }
+              reverse={false}
+            />
+          ) : (
+            <ProgressBadge
+              text={formatBudget(totalSpent - totalBudget)}
+              type={
+                totalBudget === totalSpent ? 'neutral' : totalBudget <= totalSpent ? 'up' : 'down'
+              }
+              reverse={false}
+            />
+          )}
         </p>
       </CardHeader>
       <CardContent>
