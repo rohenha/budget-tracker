@@ -6,6 +6,7 @@ import PageState from '~/components/page_state'
 import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'
 import { Label } from '~/components/ui/label'
+import { Field, FieldLabel } from '~/components/ui/field'
 import {
   Select,
   SelectContent,
@@ -33,6 +34,7 @@ type Filters = {
   periode: string | undefined
   dateDebut: string
   dateFin: string
+  category: string | undefined
 }
 
 const PERIODE_OPTIONS = [
@@ -61,10 +63,13 @@ export default function Depenses({
   const [deleteId, setDeleteId] = useState<number | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [periode, setPeriode] = useState(filters.periode)
+  const [category, setCategory] = useState(filters.category ?? '')
   const [dateDebut, setDateDebut] = useState(filters.dateDebut ?? '')
   const [dateFin, setDateFin] = useState(filters.dateFin ?? '')
   const isCustom = periode === 'custom'
   const items = depenses.data ?? []
+
+  console.log(depenses)
 
   function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
@@ -85,7 +90,6 @@ export default function Depenses({
       { preserveState: true, preserveScroll: true }
     )
   }
-  // '(value: string | null, eventDetails: SelectRootChangeEventDetails) => void'
 
   function handlePeriodeChange(value: string | null) {
     if (!value) {
@@ -93,8 +97,21 @@ export default function Depenses({
     }
     setPeriode(value)
     if (value !== 'custom') {
-      router.get('/depenses', { periode: value }, { preserveState: true, preserveScroll: true })
+      router.get(
+        '/depenses',
+        { periode: value, category: category },
+        { preserveState: true, preserveScroll: true }
+      )
     }
+  }
+
+  function handleCategoryChange(value: string | null) {
+    setCategory(value ?? '')
+    router.get(
+      '/depenses',
+      { category: value, periode: periode },
+      { preserveState: true, preserveScroll: true }
+    )
   }
 
   return (
@@ -126,10 +143,30 @@ export default function Depenses({
       <AddDepenseDialog open={addOpen} onOpenChange={setAddOpen} categories={categories} />
 
       <div className="flex flex-wrap items-end gap-3">
-        <div className="flex flex-col gap-1.5">
-          <Label htmlFor="periode" className="text-xs">
+        <Field className="flex flex-col gap-1.5 max-w-40">
+          <FieldLabel htmlFor="periode" className="text-xs">
+            Catégorie
+          </FieldLabel>
+          <Select value={category} onValueChange={handleCategoryChange}>
+            <SelectTrigger id="category" className="w-36">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value="">-</SelectItem>
+                {categories.map((cat) => (
+                  <SelectItem key={cat.id} value={cat.slug}>
+                    {cat.label}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </Field>
+        <Field className="flex flex-col gap-1.5 max-w-40">
+          <FieldLabel htmlFor="periode" className="text-xs">
             Période
-          </Label>
+          </FieldLabel>
           <Select value={periode} onValueChange={handlePeriodeChange}>
             <SelectTrigger id="periode" className="w-36">
               <SelectValue />
@@ -144,7 +181,7 @@ export default function Depenses({
               </SelectGroup>
             </SelectContent>
           </Select>
-        </div>
+        </Field>
 
         {isCustom && (
           <>
