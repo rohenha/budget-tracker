@@ -44,6 +44,11 @@ router
         router.post('/', [controllers.Depenses, 'store']).as('depenses.store')
         router.patch('/:id', [controllers.Depenses, 'update']).as('depenses.update')
         router.delete('/:id', [controllers.Depenses, 'destroy']).as('depenses.destroy')
+        router.post('/import', [controllers.DepensesImport, 'upload']).as('depenses.import.upload')
+        router.get('/import', [controllers.DepensesImport, 'review']).as('depenses.import')
+        router
+          .post('/import/validate', [controllers.Depenses, 'storeBatch'])
+          .as('depenses.import.validate')
       })
       .prefix('/depenses')
 

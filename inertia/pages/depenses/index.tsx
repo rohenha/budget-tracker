@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { router } from '@inertiajs/react'
-import { Plus } from 'lucide-react'
+import { Plus, Upload, SquarePen, Trash2 } from 'lucide-react'
 import type { InertiaProps } from '~/types'
 import PageState from '~/components/page_state'
 import { Button } from '~/components/ui/button'
@@ -23,19 +23,11 @@ import {
   TableCell,
 } from '~/components/ui/table'
 import AddDepenseDialog from '~/components/depenses/add_depense_dialog'
+import EditDepenseDialog from '~/components/depenses/edit_depense_dialog'
+import DeleteDepenseDialog from '~/components/depenses/delete_depense_dialog'
 import { getIcon, formatBudget, type Categorie } from '~/components/budget/constants'
-
-type Depense = {
-  id: number
-  userId: number
-  categorieId: number | null
-  libelle: string
-  montant: number
-  type: 'entree' | 'sortie'
-  description: string | null
-  date: string
-  categorie: Categorie | null
-}
+import { toast } from 'sonner'
+import type { Depense } from '~/components/depenses/constants'
 
 type Filters = {
   periode: string | undefined
@@ -65,11 +57,26 @@ export default function Depenses({
   filters: Filters
 }>) {
   const [addOpen, setAddOpen] = useState(false)
+  const [editId, setEditId] = useState<number | null>(null)
+  const [deleteId, setDeleteId] = useState<number | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const [periode, setPeriode] = useState(filters.periode)
   const [dateDebut, setDateDebut] = useState(filters.dateDebut ?? '')
   const [dateFin, setDateFin] = useState(filters.dateFin ?? '')
   const isCustom = periode === 'custom'
   const items = depenses.data ?? []
+
+  function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const formData = new FormData()
+    formData.append('file', file)
+    router.post('/depenses/import', formData, {
+      onSuccess: () => {},
+      onError: (errors) => toast.error(errors.message ?? "Erreur lors de l'import"),
+    })
+    if (fileInputRef.current) fileInputRef.current.value = ''
+  }
 
   function applyFilters() {
     router.get(
@@ -97,10 +104,23 @@ export default function Depenses({
           <h1>Dépenses</h1>
           <p className="text-sm text-muted-foreground">Suivi des dépenses et revenus</p>
         </div>
-        <Button size="sm" onClick={() => setAddOpen(true)}>
-          <Plus className="size-4" />
-          Ajouter
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button size="sm" variant="outline" onClick={() => fileInputRef.current?.click()}>
+            <Upload className="size-4 mr-2" />
+            Importer CSV
+          </Button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".csv"
+            className="hidden"
+            onChange={handleFileSelect}
+          />
+          <Button size="sm" onClick={() => setAddOpen(true)}>
+            <Plus className="size-4" />
+            Ajouter
+          </Button>
+        </div>
       </div>
 
       <AddDepenseDialog open={addOpen} onOpenChange={setAddOpen} categories={categories} />
@@ -174,6 +194,7 @@ export default function Depenses({
               <TableHead className="text-right">Montant</TableHead>
               <TableHead>Catégorie</TableHead>
               <TableHead>Description</TableHead>
+              <TableHead className="w-20" />
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -207,6 +228,37 @@ export default function Depenses({
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground max-w-40 truncate">
                     {depense.description ?? '—'}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-1">
+                      <Button
+                        variant="secondary"
+                        size="icon-sm"
+                        onClick={() => setEditId(depense.id)}
+                      >
+                        <span className="sr-only">Modifier</span>
+                        <SquarePen />
+                      </Button>
+                      <EditDepenseDialog
+                        depense={depense}
+                        categories={categories}
+                        open={editId === depense.id}
+                        onOpenChange={(o) => setEditId(o ? depense.id : null)}
+                      />
+                      <Button
+                        variant="destructive"
+                        size="icon-sm"
+                        onClick={() => setDeleteId(depense.id)}
+                      >
+                        <span className="sr-only">Supprimer</span>
+                        <Trash2 />
+                      </Button>
+                      <DeleteDepenseDialog
+                        depense={depense}
+                        open={deleteId === depense.id}
+                        onOpenChange={(o) => setDeleteId(o ? depense.id : null)}
+                      />
+                    </div>
                   </TableCell>
                 </TableRow>
               )

@@ -29,6 +29,7 @@ type FormDialogProps = {
     | 'depenses.store'
     | 'depenses.update'
     | 'depenses.destroy'
+    | 'depenses.import.upload'
     | 'credits'
     | 'investissements'
     | 'cryptos'
