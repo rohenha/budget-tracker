@@ -10,8 +10,7 @@ export const createDepenseValidator = vine.create({
   date: vine.string(),
   libelle: vine.string().trim().minLength(1).maxLength(255),
   montant: vine.number().min(0.01),
-  type: vine.enum(['entree', 'sortie']),
-  categorieId: vine.number().optional(),
+  categorieId: vine.number().exists({ table: 'categories', column: 'id' }),
   description: vine.string().trim().maxLength(1000).optional(),
 })
 

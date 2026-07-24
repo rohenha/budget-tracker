@@ -1,11 +1,19 @@
 import { useState } from 'react'
 import { router } from '@inertiajs/react'
+import { Plus } from 'lucide-react'
 import type { InertiaProps } from '~/types'
 import PageState from '~/components/page_state'
 import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'
 import { Label } from '~/components/ui/label'
-import { Select, SelectPopup, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '~/components/ui/select'
 import {
   Table,
   TableHeader,
@@ -14,7 +22,7 @@ import {
   TableRow,
   TableCell,
 } from '~/components/ui/table'
-import TypeBadge from '~/components/depenses/type_badge'
+import AddDepenseDialog from '~/components/depenses/add_depense_dialog'
 import { getIcon, formatBudget, type Categorie } from '~/components/budget/constants'
 
 type Depense = {
@@ -56,6 +64,7 @@ export default function Depenses({
   categories: Categorie[]
   filters: Filters
 }>) {
+  const [addOpen, setAddOpen] = useState(false)
   const [periode, setPeriode] = useState(filters.periode)
   const [dateDebut, setDateDebut] = useState(filters.dateDebut ?? '')
   const [dateFin, setDateFin] = useState(filters.dateFin ?? '')
@@ -88,7 +97,13 @@ export default function Depenses({
           <h1>Dépenses</h1>
           <p className="text-sm text-muted-foreground">Suivi des dépenses et revenus</p>
         </div>
+        <Button size="sm" onClick={() => setAddOpen(true)}>
+          <Plus className="size-4" />
+          Ajouter
+        </Button>
       </div>
+
+      <AddDepenseDialog open={addOpen} onOpenChange={setAddOpen} categories={categories} />
 
       <div className="flex flex-wrap items-end gap-3">
         <div className="flex flex-col gap-1.5">
@@ -99,13 +114,15 @@ export default function Depenses({
             <SelectTrigger id="periode" className="w-36">
               <SelectValue />
             </SelectTrigger>
-            <SelectPopup>
-              {PERIODE_OPTIONS.map((opt) => (
-                <SelectItem key={opt.value} value={opt.value}>
-                  {opt.label}
-                </SelectItem>
-              ))}
-            </SelectPopup>
+            <SelectContent>
+              <SelectGroup>
+                {PERIODE_OPTIONS.map((opt) => (
+                  <SelectItem key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
           </Select>
         </div>
 
@@ -156,7 +173,6 @@ export default function Depenses({
               <TableHead>Libellé</TableHead>
               <TableHead className="text-right">Montant</TableHead>
               <TableHead>Catégorie</TableHead>
-              <TableHead>Type</TableHead>
               <TableHead>Description</TableHead>
             </TableRow>
           </TableHeader>
@@ -188,9 +204,6 @@ export default function Depenses({
                     ) : (
                       <span className="text-sm text-muted-foreground">—</span>
                     )}
-                  </TableCell>
-                  <TableCell>
-                    <TypeBadge type={depense.type} />
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground max-w-40 truncate">
                     {depense.description ?? '—'}
