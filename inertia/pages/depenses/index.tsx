@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react'
 import { router } from '@inertiajs/react'
-import { Plus, Upload, SquarePen, Trash2 } from 'lucide-react'
+import { Plus, Upload, SquarePen, Trash2, RotateCcw, ChevronLeft, ChevronRight } from 'lucide-react'
 import type { InertiaProps } from '~/types'
 import PageState from '~/components/page_state'
 import { Button } from '~/components/ui/button'
@@ -23,6 +23,12 @@ import {
   TableRow,
   TableCell,
 } from '~/components/ui/table'
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+} from '~/components/ui/pagination'
 import AddDepenseDialog from '~/components/depenses/add_depense_dialog'
 import EditDepenseDialog from '~/components/depenses/edit_depense_dialog'
 import DeleteDepenseDialog from '~/components/depenses/delete_depense_dialog'
@@ -54,7 +60,7 @@ export default function Depenses({
   categories,
   filters,
 }: InertiaProps<{
-  depenses: { data: Depense[]; meta: any }
+  depenses: { data: Depense[]; meta: any; links: any[] }
   categories: Categorie[]
   filters: Filters
 }>) {
@@ -68,8 +74,6 @@ export default function Depenses({
   const [dateFin, setDateFin] = useState(filters.dateFin ?? '')
   const isCustom = periode === 'custom'
   const items = depenses.data ?? []
-
-  console.log(depenses)
 
   function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
@@ -110,6 +114,18 @@ export default function Depenses({
     router.get(
       '/depenses',
       { category: value, periode: periode },
+      { preserveState: true, preserveScroll: true }
+    )
+  }
+
+  function handleResetFilters() {
+    setCategory('')
+    setPeriode('month')
+    setDateDebut('')
+    setDateFin('')
+    router.get(
+      '/depenses',
+      { category: '', periode: 'month' },
       { preserveState: true, preserveScroll: true }
     )
   }
@@ -214,6 +230,13 @@ export default function Depenses({
             </Button>
           </>
         )}
+
+        {(periode !== 'month' || category) && (
+          <Button size="sm" variant="outline" onClick={handleResetFilters}>
+            <RotateCcw className="size-4 mr-2" />
+            Réinitialiser
+          </Button>
+        )}
       </div>
 
       <PageState
@@ -302,6 +325,50 @@ export default function Depenses({
             })}
           </TableBody>
         </Table>
+        {depenses.meta && depenses.meta.last_page > 1 && (
+          <div className="mt-4 flex justify-center">
+            <Pagination>
+              <PaginationContent>
+                {depenses.meta.current_page > 1 && (
+                  <PaginationItem>
+                    <PaginationLink
+                      onClick={() => router.get(depenses.links[0]?.url)}
+                      size="default"
+                    >
+                      <ChevronLeft data-icon="inline-start" />
+                      <span className="hidden sm:block">Précédent</span>
+                    </PaginationLink>
+                  </PaginationItem>
+                )}
+                {Array.from({ length: depenses.meta.last_page }, (_, i) => i + 1).map((page) => (
+                  <PaginationItem key={page}>
+                    <PaginationLink
+                      onClick={() =>
+                        router.get(depenses.links.find((l: any) => l.page === page)?.url)
+                      }
+                      isActive={page === depenses.meta.current_page}
+                    >
+                      {page}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+                {depenses.meta.current_page < depenses.meta.last_page && (
+                  <PaginationItem>
+                    <PaginationLink
+                      onClick={() =>
+                        router.get(depenses.links[depenses.links.length - 1]?.url)
+                      }
+                      size="default"
+                    >
+                      <span className="hidden sm:block">Suivant</span>
+                      <ChevronRight data-icon="inline-end" />
+                    </PaginationLink>
+                  </PaginationItem>
+                )}
+              </PaginationContent>
+            </Pagination>
+          </div>
+        )}
       </PageState>
     </div>
   )
