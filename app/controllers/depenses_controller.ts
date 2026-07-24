@@ -60,12 +60,16 @@ export default class DepensesController {
   async store({ request, response, auth, session }: HttpContext) {
     const user = auth.user!
     const payload = await request.validateUsing(createDepenseValidator)
+    const categorie = await Categorie.query()
+      .where('id', payload.categorieId)
+      .where('userId', user.id)
+      .firstOrFail()
     await Depense.create({
       userId: user.id,
-      categorieId: payload.categorieId ?? null,
+      categorieId: payload.categorieId,
       libelle: payload.libelle,
       montant: payload.montant,
-      type: payload.type,
+      type: categorie.type,
       description: payload.description ?? null,
       date: DateTime.fromISO(payload.date),
     })

@@ -54,10 +54,10 @@ development_status:
    1-1-creation-et-configuration-des-categories: done
   1-2-graphique-de-repartition-par-categorie: done
 
-  epic-2: backlog
+  epic-2: in-progress
   epic-2-retrospective: optional
-  2-1-liste-et-filtres-des-depenses: review
-  2-2-ajout-manuel-dune-depense: backlog
+   2-1-liste-et-filtres-des-depenses: done
+   2-2-ajout-manuel-dune-depense: done
   2-3-import-csv-avec-revue-et-edition: backlog
   2-4-graphique-des-depenses-par-jour: backlog
 
