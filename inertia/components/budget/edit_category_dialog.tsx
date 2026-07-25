@@ -1,19 +1,10 @@
 import { useState } from 'react'
-import TypeBadge from '~/components/depenses/type_badge'
-// import { NativeSelect, NativeSelectOption } from '~/components/ui/native-select'
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '~/components/ui/select'
 import { Input } from '~/components/ui/input'
 import { Field, FieldContent, FieldError, FieldLabel } from '~/components/ui/field'
 import { getIcon } from '~/components/budget/constants'
 import { type CategorySpending } from '~/components/budget/category_pie_chart'
 import FormDialog from '~/components/shared/form_dialog'
+import TypeExpenseSelect from '~/components/ui/type_expense_select'
 
 export default function EditCategoryDialog({
   categorie,
@@ -26,6 +17,7 @@ export default function EditCategoryDialog({
 }) {
   const Icon = getIcon(categorie.icon)
   const [typeState, setTypeState] = useState(categorie.type)
+  const [iconColor, setIconColor] = useState(categorie.color || '#6366f1')
 
   return (
     <FormDialog
@@ -67,12 +59,12 @@ export default function EditCategoryDialog({
           <Field>
             <FieldLabel>Couleur</FieldLabel>
             <FieldContent>
-              <Input
+              <input
                 type="color"
                 name="color"
-                defaultValue={categorie.color}
-                className="h-7 w-14 p-0.5"
-                aria-invalid={!!errors.color}
+                defaultValue={categorie.color || '#6366f1'}
+                onChange={(e) => setIconColor(e.target.value)}
+                className="h-7 w-14 rounded border border-input bg-transparent p-0.5"
               />
               <FieldError errors={[{ message: errors.color }]} />
             </FieldContent>
@@ -80,31 +72,17 @@ export default function EditCategoryDialog({
           <Field>
             <FieldLabel>Type</FieldLabel>
             <FieldContent className="flex flex-row items-center gap-2">
-              <Select
-                defaultValue={categorie.type}
-                onValueChange={(v) => setTypeState(v as 'entree' | 'sortie')}
-              >
-                <SelectTrigger id="periode" className="w-36">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectItem value="entree" className="text-green-700">
-                      Entrée
-                    </SelectItem>
-                    <SelectItem value="sortie" className="text-red-700">
-                      Sortie
-                    </SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-              <TypeBadge type={typeState} />
+              <TypeExpenseSelect
+                value={typeState}
+                onValueChange={setTypeState}
+                errors={errors.type}
+              />
               <input type="hidden" name="type" value={typeState} />
               <FieldError errors={[{ message: errors.type }]} />
             </FieldContent>
           </Field>
           <div className="flex items-center gap-1 text-xs text-muted-foreground">
-            <Icon className="size-4" style={{ color: categorie.color }} />
+            <Icon className="size-4" style={{ color: iconColor }} />
             <span>{categorie.icon}</span>
           </div>
         </>

@@ -1,25 +1,30 @@
 import { DateTime } from 'luxon'
 import Depense from '#models/depense'
 import Categorie from '#models/categorie'
+import Database from '@adonisjs/lucid/services/db'
 import {
   indexDepenseValidator,
   createDepenseValidator,
   updateDepenseValidator,
+  importBatchValidator,
 } from '#validators/depense'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class DepensesController {
   async index({ inertia, auth, request }: HttpContext) {
     const user = auth.user!
-    let { periode, dateDebut, dateFin } = await request.validateUsing(indexDepenseValidator)
+    let {
+      periode = 'month',
+      dateDebut,
+      dateFin,
+      category = '',
+      page = 1,
+      range = 25,
+    } = await request.validateUsing(indexDepenseValidator)
 
     const now = DateTime.now()
     let startDate: string
     let endDate: string
-
-    if (!periode) {
-      periode = 'month'
-    }
 
     switch (periode) {
       case 'today':
@@ -41,19 +46,43 @@ export default class DepensesController {
         break
     }
 
-    const depenses = await Depense.query()
+    const categories = await Categorie.query().where('userId', user.id).orderBy('createdAt', 'asc')
+
+    let categoryId = null
+    if (category) {
+      const categoryItem = categories.find((cat) => cat.slug === category)
+      if (categoryItem) {
+        categoryId = categoryItem.id
+      }
+    }
+
+    const query = Depense.query()
       .where('userId', user.id)
       .whereBetween('date', [startDate, endDate])
       .preload('categorie')
       .orderBy('date', 'desc')
-      .paginate(request.input('page', 1), 20)
 
-    const categories = await Categorie.query().where('userId', user.id).orderBy('createdAt', 'asc')
+    if (categoryId) {
+      query.where('categorieId', categoryId)
+    }
+
+    const depenses = await query.paginate(page, range)
+
+    depenses.baseUrl('/depenses')
+
+    const paginationMeta = depenses.getMeta()
+    const pagination = {
+      previousPage: paginationMeta.previousPageUrl,
+      currentPage: paginationMeta.currentPage,
+      nextPage: paginationMeta.nextPageUrl,
+      links: depenses.getUrlsForRange(1, depenses.lastPage),
+    }
 
     return inertia.render('depenses/index', {
       depenses: depenses.serialize() as any,
       categories: categories.map((c) => c.serialize()) as any,
-      filters: { periode, dateDebut: startDate, dateFin: endDate },
+      pagination,
+      filters: { periode, dateDebut: startDate, dateFin: endDate, category, range },
     })
   }
 
@@ -71,9 +100,45 @@ export default class DepensesController {
       montant: payload.montant,
       type: categorie.type,
       description: payload.description ?? null,
-      date: DateTime.fromISO(payload.date),
+      date: DateTime.fromJSDate(payload.date.toJSDate()),
     })
     session.flash('success', 'Dépense ajoutée')
+    response.redirect().toRoute('depenses')
+  }
+
+  async storeBatch({ request, response, auth, session }: HttpContext) {
+    const user = auth.user!
+    const payload = await request.validateUsing(importBatchValidator)
+
+    const userCategories = await Categorie.query().where('userId', user.id)
+    const validCategoryIds = new Set(userCategories.map((c) => c.id))
+
+    await Database.transaction(async (trx) => {
+      for (const tx of payload.transactions) {
+        let type: 'entree' | 'sortie' = tx.type
+        if (tx.categorieId !== undefined && tx.categorieId !== null) {
+          if (!validCategoryIds.has(tx.categorieId)) {
+            throw new Error(`Catégorie ${tx.categorieId} n'appartient pas à l'utilisateur`)
+          }
+          const cat = userCategories.find((c) => c.id === tx.categorieId)!
+          type = cat.type
+        }
+        await Depense.create(
+          {
+            userId: user.id,
+            categorieId: tx.categorieId ?? null,
+            libelle: tx.libelle,
+            montant: tx.montant,
+            type,
+            description: tx.description ?? null,
+            date: DateTime.fromJSDate(tx.date.toJSDate()),
+          },
+          { client: trx }
+        )
+      }
+    })
+
+    session.flash('success', `${payload.transactions.length} dépenses importées`)
     response.redirect().toRoute('depenses')
   }
 
@@ -85,7 +150,7 @@ export default class DepensesController {
       .firstOrFail()
     const payload = await request.validateUsing(updateDepenseValidator)
 
-    if (payload.date !== undefined) depense.date = DateTime.fromISO(payload.date)
+    if (payload.date !== undefined) depense.date = DateTime.fromJSDate(payload.date.toJSDate())
     if (payload.libelle !== undefined) depense.libelle = payload.libelle
     if (payload.montant !== undefined) depense.montant = payload.montant
     if (payload.type !== undefined) depense.type = payload.type

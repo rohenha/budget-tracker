@@ -187,6 +187,42 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/depenses_controller').default['destroy']>>>
     }
   }
+  'depenses.import.upload': {
+    methods: ["POST"]
+    pattern: '/depenses/import'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/depense').importUploadValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/depense').importUploadValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/depenses_import_controller').default['upload']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/depenses_import_controller').default['upload']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'depenses.import': {
+    methods: ["GET","HEAD"]
+    pattern: '/depenses/import'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/depenses_import_controller').default['review']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/depenses_import_controller').default['review']>>>
+    }
+  }
+  'depenses.import.validate': {
+    methods: ["POST"]
+    pattern: '/depenses/import/validate'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/depense').importBatchValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/depense').importBatchValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/depenses_controller').default['storeBatch']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/depenses_controller').default['storeBatch']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
   'credits': {
     methods: ["GET","HEAD"]
     pattern: '/credits'

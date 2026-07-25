@@ -108,9 +108,9 @@ export function SidebarLayout({
           <SidebarTrigger />
           <ThemeToggle className="text-sidebar-foreground" />
         </header>
-        <main id="main-content" className="flex-1 p-4">
+        <div id="main-content" className="flex-1 p-4">
           {children}
-        </main>
+        </div>
       </SidebarInset>
     </SidebarProvider>
   )

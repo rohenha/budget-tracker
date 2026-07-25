@@ -19,6 +19,9 @@ export type ScannedRoutes = {
     'depenses.store': { paramsTuple?: []; params?: {} }
     'depenses.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'depenses.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'depenses.import.upload': { paramsTuple?: []; params?: {} }
+    'depenses.import': { paramsTuple?: []; params?: {} }
+    'depenses.import.validate': { paramsTuple?: []; params?: {} }
     'credits': { paramsTuple?: []; params?: {} }
     'investissements': { paramsTuple?: []; params?: {} }
     'cryptos': { paramsTuple?: []; params?: {} }
@@ -30,6 +33,7 @@ export type ScannedRoutes = {
     'dashboard': { paramsTuple?: []; params?: {} }
     'budget': { paramsTuple?: []; params?: {} }
     'depenses': { paramsTuple?: []; params?: {} }
+    'depenses.import': { paramsTuple?: []; params?: {} }
     'credits': { paramsTuple?: []; params?: {} }
     'investissements': { paramsTuple?: []; params?: {} }
     'cryptos': { paramsTuple?: []; params?: {} }
@@ -41,6 +45,7 @@ export type ScannedRoutes = {
     'dashboard': { paramsTuple?: []; params?: {} }
     'budget': { paramsTuple?: []; params?: {} }
     'depenses': { paramsTuple?: []; params?: {} }
+    'depenses.import': { paramsTuple?: []; params?: {} }
     'credits': { paramsTuple?: []; params?: {} }
     'investissements': { paramsTuple?: []; params?: {} }
     'cryptos': { paramsTuple?: []; params?: {} }
@@ -51,6 +56,8 @@ export type ScannedRoutes = {
     'session.destroy': { paramsTuple?: []; params?: {} }
     'categories.store': { paramsTuple?: []; params?: {} }
     'depenses.store': { paramsTuple?: []; params?: {} }
+    'depenses.import.upload': { paramsTuple?: []; params?: {} }
+    'depenses.import.validate': { paramsTuple?: []; params?: {} }
   }
   PATCH: {
     'categories.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
