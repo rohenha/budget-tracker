@@ -78,11 +78,38 @@ export default class DepensesController {
       links: depenses.getUrlsForRange(1, depenses.lastPage),
     }
 
+    const dailyQuery = Depense.query()
+      .where('userId', user.id)
+      .where('type', 'sortie')
+      .whereBetween('date', [startDate, endDate])
+      .select('date')
+      .count('* as count')
+      .sum('montant as total')
+      .groupBy('date')
+      .orderBy('date', 'asc')
+
+    if (categoryId) {
+      dailyQuery.where('categorieId', categoryId)
+    }
+
+    const dailyData = await dailyQuery
+
+    const dailyChartData = dailyData.map((d: any) => ({
+      date: d.$extras.date,
+      total: Number(d.$extras.total),
+    }))
+
+    const totalPeriod = dailyChartData.reduce((sum, d) => sum + d.total, 0)
+    const dayCount = DateTime.fromSQL(endDate!).diff(DateTime.fromSQL(startDate!), 'days').days + 1
+    const dailyAverage = dayCount > 0 ? totalPeriod / dayCount : 0
+
     return inertia.render('depenses/index', {
       depenses: depenses.serialize() as any,
       categories: categories.map((c) => c.serialize()) as any,
       pagination,
       filters: { periode, dateDebut: startDate, dateFin: endDate, category, range },
+      dailyChartData,
+      dailyAverage,
     })
   }
 

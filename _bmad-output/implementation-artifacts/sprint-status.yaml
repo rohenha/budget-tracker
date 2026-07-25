@@ -41,7 +41,7 @@
 # - Retrospective appends its action items to action_items; sprint-status surfaces open ones
 
 generated: 2026-07-19
-last_updated: 2026-07-24
+last_updated: 2026-07-25
 project: budget-tracker
 project_key: NOKEY
 tracking_system: file-system
@@ -59,7 +59,7 @@ development_status:
    2-1-liste-et-filtres-des-depenses: done
    2-2-ajout-manuel-dune-depense: done
   2-3-import-csv-avec-revue-et-edition: done
-  2-4-graphique-des-depenses-par-jour: backlog
+  2-4-graphique-des-depenses-par-jour: review
 
   epic-3: backlog
   epic-3-retrospective: optional
