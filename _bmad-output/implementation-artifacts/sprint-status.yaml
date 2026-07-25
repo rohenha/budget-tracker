@@ -58,7 +58,7 @@ development_status:
   epic-2-retrospective: optional
    2-1-liste-et-filtres-des-depenses: done
    2-2-ajout-manuel-dune-depense: done
-  2-3-import-csv-avec-revue-et-edition: ready-for-dev
+  2-3-import-csv-avec-revue-et-edition: done
   2-4-graphique-des-depenses-par-jour: backlog
 
   epic-3: backlog

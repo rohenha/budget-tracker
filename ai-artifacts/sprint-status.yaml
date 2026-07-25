@@ -7,17 +7,17 @@ epics:
     stories:
       - id: '2.1'
         title: 'Import CSV avec revue et édition'
-        status: ready-for-dev
+        status: done
         parent: 2
         file: implementation-artifacts/stories/2-1-import-csv-avec-revue-et-edition.md
 
       - id: '2.2'
         title: 'Import CSV avec revue et édition'
-        status: ready-for-dev
+        status: donce
         parent: 2
         file: implementation-artifacts/stories/2-2-import-csv-avec-revue-et-edition.md
       - id: '2.3'
         title: 'Import CSV avec revue et édition'
-        status: ready-for-dev
+        status: done
         parent: 2
         file: implementation-artifacts/stories/2-3-import-csv-avec-revue-et-edition.md

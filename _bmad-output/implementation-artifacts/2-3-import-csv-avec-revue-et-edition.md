@@ -6,7 +6,6 @@ baseline_commit: NO_VCS
 
 **Epic:** Epic 2 — Gestion des Dépenses
 **Story Key:** 2-3-import-csv-avec-revue-et-edition
-**Status:** ready-for-dev
 
 ## Story
 
