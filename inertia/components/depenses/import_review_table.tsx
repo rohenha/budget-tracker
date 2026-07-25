@@ -254,7 +254,9 @@ export default function ImportReviewTable({
                     <div className="flex items-center gap-1">
                       <Input
                         value={row.description ?? ''}
-                        onChange={(e) => onUpdateField(index, 'description', e.target.value || null)}
+                        onChange={(e) =>
+                          onUpdateField(index, 'description', e.target.value || null)
+                        }
                         onKeyDown={(e) => handleKeyDown(e, index, 'description')}
                         autoFocus
                         placeholder="Optionnel"

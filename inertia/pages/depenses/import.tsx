@@ -11,7 +11,9 @@ import {
   DialogTitle,
 } from '~/components/ui/dialog'
 import { toast } from 'sonner'
-import ImportReviewTable, { type EditableTransaction } from '~/components/depenses/import_review_table'
+import ImportReviewTable, {
+  type EditableTransaction,
+} from '~/components/depenses/import_review_table'
 import type { InertiaProps } from '~/types'
 import type { Categorie } from '~/components/budget/constants'
 
@@ -162,8 +164,8 @@ export default function ImportReview({
           <DialogHeader>
             <DialogTitle>Confirmer l&apos;import avec erreurs</DialogTitle>
             <DialogDescription>
-              {errorCount} ligne(s) contiennent des erreurs. Seules les {validRows.length}{' '}
-              ligne(s) valides seront enregistrées. Continuer ?
+              {errorCount} ligne(s) contiennent des erreurs. Seules les {validRows.length} ligne(s)
+              valides seront enregistrées. Continuer ?
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -188,11 +190,7 @@ export default function ImportReview({
           <X className="size-4 mr-2" />
           Annuler
         </Button>
-        <Button
-          size="sm"
-          onClick={handleValidate}
-          disabled={submitting || validRows.length === 0}
-        >
+        <Button size="sm" onClick={handleValidate} disabled={submitting || validRows.length === 0}>
           {submitting && <Loader2 className="size-4 mr-2 animate-spin" />}
           <Check className="size-4 mr-2" />
           Valider ({validRows.length})
