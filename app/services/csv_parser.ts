@@ -39,26 +39,35 @@ function parseDate(dateStr: string): { date: string | null; error?: string } {
   return { date: date.toISOString().split('T')[0], error: undefined }
 }
 
+function removeDelimiterOnlyLines(raw: string): string {
+  return raw
+    .replace(/\r\n/g, '\n')
+    .split('\n')
+    .filter((line) => !/^;*$/.test(line))
+    .join('\n')
+}
+
 export function parseCreditAgricoleCsv(raw: string): ParsedTransaction[] {
-  const cleaned = stripBom(raw)
+  const cleaned = removeDelimiterOnlyLines(stripBom(raw))
+
   const records = parse(cleaned, {
     delimiter: ';',
     columns: true,
     skip_empty_lines: true,
-    trim: true,
     relax_quotes: true,
+    relax_column_count: true,
   }) as Record<string, string>[]
 
   const transactions: ParsedTransaction[] = []
 
   for (const record of records) {
-    const dateOp = record["Date d'opération"] || record['Date operation'] || ''
-    const libelle = record['Libellé'] || record['Libelle'] || ''
-    const debit = record['Débit'] || record['Debit'] || ''
-    const credit = record['Crédit'] || record['Credit'] || ''
-    const description = record['Description'] || null
+    const dateOp = record['Date'] ?? ''
+    const libelle = record['Libellé'] ?? record['Libelle'] ?? ''
+    const debit = record['Débit euros'] ?? record['Débit'] ?? record['Debit'] ?? ''
+    const credit = record['Crédit euros'] ?? record['Crédit'] ?? record['Credit'] ?? ''
 
     const { date, error: dateError } = parseDate(dateOp)
+
     const montantDebit = parseAmount(debit)
     const montantCredit = parseAmount(credit)
     const montant = montantDebit > 0 ? montantDebit : montantCredit
@@ -74,7 +83,7 @@ export function parseCreditAgricoleCsv(raw: string): ParsedTransaction[] {
       libelle: libelle.trim(),
       montant,
       type,
-      description: description?.trim() ?? null,
+      description: null,
       dateError,
     })
   }

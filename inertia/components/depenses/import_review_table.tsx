@@ -19,6 +19,7 @@ import {
 import { formatBudget, getIcon, type Categorie } from '~/components/budget/constants'
 import { AlertTriangle } from 'lucide-react'
 import { cn } from '~/lib/utils'
+import CategorySelect from '~/components/ui/category_select'
 
 type ParsedTransaction = {
   rawDate: string
@@ -238,9 +239,10 @@ export default function ImportReviewTable({
                     />
                   ) : (
                     <div
-                      className="cursor-pointer hover:bg-accent rounded px-1 py-0.5 text-right tabular-nums"
+                      className={`cursor-pointer hover:bg-accent rounded px-1 py-0.5 text-right tabular-nums${row.type === 'entree' ? ' text-green-700' : ' text-red-700'}`}
                       onClick={() => startEdit(index, 'montant')}
                     >
+                      {row.type === 'sortie' ? '-' : '+'}
                       {formatBudget(row.montant)}
                     </div>
                   )}
@@ -274,32 +276,13 @@ export default function ImportReviewTable({
 
                 <TableCell>
                   {row.editingField === 'categorieId' ? (
-                    <Select
-                      value={String(row.categorieId ?? '')}
+                    <CategorySelect
+                      value={row.categorieId}
+                      categories={categories}
                       onValueChange={(v) =>
                         commitEdit(index, 'categorieId', v ? Number.parseInt(v, 10) : undefined)
                       }
-                    >
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Sélectionner" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectItem value="">— Aucune —</SelectItem>
-                          {categories.map((cat) => {
-                            const Icon = getIcon(cat.icon)
-                            return (
-                              <SelectItem key={cat.id} value={String(cat.id)}>
-                                <div className="flex items-center gap-2">
-                                  <Icon className="size-4" style={{ color: cat.color }} />
-                                  <span>{cat.label}</span>
-                                </div>
-                              </SelectItem>
-                            )
-                          })}
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
+                    />
                   ) : (
                     <div
                       className="cursor-pointer hover:bg-accent rounded px-1 py-0.5"

@@ -1,18 +1,10 @@
 import { useState } from 'react'
 import { Input } from '~/components/ui/input'
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '~/components/ui/select'
 import { Field, FieldContent, FieldError, FieldLabel } from '~/components/ui/field'
 import FormDialog from '~/components/shared/form_dialog'
-import { getIcon } from '~/components/budget/constants'
 import type { Categorie } from '~/components/budget/constants'
 import type { Depense } from '~/components/depenses/constants'
+import CategorySelect from '~/components/ui/category_select'
 
 export default function EditDepenseDialog({
   open,
@@ -84,26 +76,12 @@ export default function EditDepenseDialog({
           <Field>
             <FieldLabel>Catégorie</FieldLabel>
             <FieldContent>
-              <Select value={categorieId} onValueChange={(v) => setCategorieId(v ?? '')}>
-                <SelectTrigger className="w-full" aria-invalid={!!errors.categorieId}>
-                  <SelectValue placeholder="Sélectionner" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    {categories.map((cat) => {
-                      const Icon = getIcon(cat.icon)
-                      return (
-                        <SelectItem key={cat.id} value={String(cat.id)}>
-                          <div className="flex items-center gap-2">
-                            <Icon className="size-4" style={{ color: cat.color }} />
-                            <span>{cat.label}</span>
-                          </div>
-                        </SelectItem>
-                      )
-                    })}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+              <CategorySelect
+                value={categorieId}
+                categories={categories}
+                onValueChange={(v) => setCategorieId(v ?? '')}
+                errors={errors.categorieId}
+              />
               <input type="hidden" name="categorieId" value={categorieId} />
               <FieldError errors={[{ message: errors.categorieId }]} />
             </FieldContent>

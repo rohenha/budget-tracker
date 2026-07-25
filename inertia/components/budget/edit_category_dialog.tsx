@@ -81,10 +81,11 @@ export default function EditCategoryDialog({
             <FieldLabel>Type</FieldLabel>
             <FieldContent className="flex flex-row items-center gap-2">
               <Select
+                data-invalid={!!errors.type}
                 defaultValue={categorie.type}
                 onValueChange={(v) => setTypeState(v as 'entree' | 'sortie')}
               >
-                <SelectTrigger id="periode" className="w-36">
+                <SelectTrigger id="periode" className="w-36" aria-invalid={!!errors.categorieId}>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>

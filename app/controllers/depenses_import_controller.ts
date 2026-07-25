@@ -11,12 +11,10 @@ export default class DepensesImportController {
     const content = await fs.readFile(file.filePath!, 'utf-8')
     const transactions = parseCreditAgricoleCsv(content)
     const errorCount = transactions.filter((t) => t.dateError).length
-
     if (transactions.length === 0) {
       session.flash('error', 'Le fichier CSV est vide ou ne contient aucune transaction valide')
       return response.redirect().toRoute('depenses')
     }
-
     session.flash('importData', {
       transactions,
       fileName: file.clientName,
@@ -28,7 +26,7 @@ export default class DepensesImportController {
 
   async review({ inertia, session, auth, response }: HttpContext) {
     const user = auth.user!
-    const importData = session.pull('importData') as
+    const importData = session.flashMessages.get('importData') as
       { transactions: any[]; fileName: string; errorCount: number } | undefined
 
     if (!importData) {

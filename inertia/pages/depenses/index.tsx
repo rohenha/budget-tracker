@@ -76,7 +76,7 @@ export default function Depenses({
     },
     {
       label: 'Description',
-      className: 'text-sm text-muted-foreground max-w-40 truncate',
+      className: 'text-xsm text-muted-foreground max-w-40 truncate',
       render: (d: Depense) => d.description ?? '—',
     },
   ]

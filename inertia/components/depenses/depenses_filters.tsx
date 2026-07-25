@@ -99,7 +99,15 @@ export default function DepensesFilters({ filters, categories }: DepensesFilters
         </FieldLabel>
         <Select value={filters.category} onValueChange={handleCategoryChange}>
           <SelectTrigger id="category" className="w-36">
-            <SelectValue />
+            <SelectValue>
+              {(() => {
+                if (filters.category === '') {
+                  return 'Toutes'
+                }
+                const cat = categories.find((c) => c.slug === filters.category)
+                return cat ? cat.label : '-'
+              })()}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
