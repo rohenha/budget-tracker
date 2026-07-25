@@ -92,6 +92,7 @@ So that structurer mes finances par catégorie.
 - Edit dialog pre-fills all fields, delete prevents removing "Autre"
 
 ## File List
+
 - `database/migrations/1761885935169_create_categories_table.ts`
 - `app/models/categorie.ts`
 - `app/controllers/categories_controller.ts`

@@ -18,6 +18,7 @@ declare module '@adonisjs/inertia/types' {
     'credits/index': ExtractProps<(typeof import('../../inertia/pages/credits/index.tsx'))['default']>
     'cryptos/index': ExtractProps<(typeof import('../../inertia/pages/cryptos/index.tsx'))['default']>
     'dashboard/index': ExtractProps<(typeof import('../../inertia/pages/dashboard/index.tsx'))['default']>
+    'depenses/import': ExtractProps<(typeof import('../../inertia/pages/depenses/import.tsx'))['default']>
     'depenses/index': ExtractProps<(typeof import('../../inertia/pages/depenses/index.tsx'))['default']>
     'errors/not_found': ExtractProps<(typeof import('../../inertia/pages/errors/not_found.tsx'))['default']>
     'errors/server_error': ExtractProps<(typeof import('../../inertia/pages/errors/server_error.tsx'))['default']>

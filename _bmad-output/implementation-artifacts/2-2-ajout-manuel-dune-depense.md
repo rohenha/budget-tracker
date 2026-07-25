@@ -99,7 +99,9 @@ Chaque dialog catégorie suit ce pattern manuellement :
           <div className="flex flex-col gap-4">
             {/* fields */}
             <DialogFooter>
-              <Button variant="outline" onClick={() => onOpenChange(false)}>Annuler</Button>
+              <Button variant="outline" onClick={() => onOpenChange(false)}>
+                Annuler
+              </Button>
               <Button type="submit">Ajouter</Button>
             </DialogFooter>
           </div>
@@ -115,6 +117,7 @@ Chaque dialog catégorie suit ce pattern manuellement :
 #### `FormDialog`
 
 Props:
+
 - `open: boolean`
 - `onOpenChange: (v: boolean) => void`
 - `route: string` — nom de la route Inertia
@@ -130,6 +133,7 @@ Le composant wrappe le contenu dans `Form` + `Dialog` + gère Header/Footer.
 #### `DeleteDialog`
 
 Props:
+
 - `open: boolean`
 - `onOpenChange: (v: boolean) => void`
 - `route: string`
@@ -140,6 +144,7 @@ Props:
 #### `IconPicker`
 
 Props:
+
 - `value: string` — icône sélectionnée
 - `onChange: (icon: string) => void`
 - `error?: string`
@@ -148,6 +153,7 @@ Props:
 
 Route: `depenses.store`
 Champs:
+
 - `date` (date, défaut aujourd'hui, required)
 - `libelle` (string, required, max 255)
 - `montant` (decimal > 0, required)
@@ -156,6 +162,7 @@ Champs:
 - `description` (string, nullable, max 500)
 
 Validation VineJS:
+
 - `date`: `schema.date()`
 - `libelle`: `schema.string({ trim: true, maxLength: 255 })`
 - `montant`: `schema.number([rules.unsigned(), rules.range(0.01, 999999.99)])`
@@ -168,6 +175,7 @@ Validation VineJS:
 Le bouton "Ajouter" est placé dans le header de la page, à droite du titre. Quand le dialog est ouvert, les filtres et la liste restent visibles derrière.
 
 Après soumission réussie :
+
 1. Dialog se ferme
 2. Toast succès "Dépense ajoutée"
 3. La liste Inertia se re-render avec la nouvelle dépense (grâce à l'Inertia redirect du controller)

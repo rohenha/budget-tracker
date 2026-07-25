@@ -96,6 +96,24 @@ const routes = {
     tokens: [{"old":"/depenses/:id","type":0,"val":"depenses","end":""},{"old":"/depenses/:id","type":1,"val":"id","end":""}],
     types: placeholder as Registry['depenses.destroy']['types'],
   },
+  'depenses.import.upload': {
+    methods: ["POST"],
+    pattern: '/depenses/import',
+    tokens: [{"old":"/depenses/import","type":0,"val":"depenses","end":""},{"old":"/depenses/import","type":0,"val":"import","end":""}],
+    types: placeholder as Registry['depenses.import.upload']['types'],
+  },
+  'depenses.import': {
+    methods: ["GET","HEAD"],
+    pattern: '/depenses/import',
+    tokens: [{"old":"/depenses/import","type":0,"val":"depenses","end":""},{"old":"/depenses/import","type":0,"val":"import","end":""}],
+    types: placeholder as Registry['depenses.import']['types'],
+  },
+  'depenses.import.validate': {
+    methods: ["POST"],
+    pattern: '/depenses/import/validate',
+    tokens: [{"old":"/depenses/import/validate","type":0,"val":"depenses","end":""},{"old":"/depenses/import/validate","type":0,"val":"import","end":""},{"old":"/depenses/import/validate","type":0,"val":"validate","end":""}],
+    types: placeholder as Registry['depenses.import.validate']['types'],
+  },
   'credits': {
     methods: ["GET","HEAD"],
     pattern: '/credits',

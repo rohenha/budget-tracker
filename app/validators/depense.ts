@@ -4,6 +4,9 @@ export const indexDepenseValidator = vine.create({
   periode: vine.enum(['today', 'week', 'month', 'custom']).optional(),
   dateDebut: vine.string().optional(),
   dateFin: vine.string().optional(),
+  category: vine.string().optional(),
+  page: vine.number().optional(),
+  range: vine.number().optional(),
 })
 
 export const createDepenseValidator = vine.create({
