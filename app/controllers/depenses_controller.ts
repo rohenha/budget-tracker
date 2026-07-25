@@ -13,15 +13,18 @@ import type { HttpContext } from '@adonisjs/core/http'
 export default class DepensesController {
   async index({ inertia, auth, request }: HttpContext) {
     const user = auth.user!
-    let { periode, dateDebut, dateFin } = await request.validateUsing(indexDepenseValidator)
+    let {
+      periode = 'month',
+      dateDebut,
+      dateFin,
+      category = '',
+      page = 1,
+      range = 25,
+    } = await request.validateUsing(indexDepenseValidator)
 
     const now = DateTime.now()
     let startDate: string
     let endDate: string
-
-    if (!periode) {
-      periode = 'month'
-    }
 
     switch (periode) {
       case 'today':
@@ -43,19 +46,43 @@ export default class DepensesController {
         break
     }
 
-    const depenses = await Depense.query()
+    const categories = await Categorie.query().where('userId', user.id).orderBy('createdAt', 'asc')
+
+    let categoryId = null
+    if (category) {
+      const categoryItem = categories.find((cat) => cat.slug === category)
+      if (categoryItem) {
+        categoryId = categoryItem.id
+      }
+    }
+
+    const query = Depense.query()
       .where('userId', user.id)
       .whereBetween('date', [startDate, endDate])
       .preload('categorie')
       .orderBy('date', 'desc')
-      .paginate(request.input('page', 1), 20)
 
-    const categories = await Categorie.query().where('userId', user.id).orderBy('createdAt', 'asc')
+    if (categoryId) {
+      query.where('categorieId', categoryId)
+    }
+
+    const depenses = await query.paginate(page, range)
+
+    depenses.baseUrl('/depenses')
+
+    const paginationMeta = depenses.getMeta()
+    const pagination = {
+      previousPage: paginationMeta.previousPageUrl,
+      currentPage: paginationMeta.currentPage,
+      nextPage: paginationMeta.nextPageUrl,
+      links: depenses.getUrlsForRange(1, depenses.lastPage),
+    }
 
     return inertia.render('depenses/index', {
       depenses: depenses.serialize() as any,
       categories: categories.map((c) => c.serialize()) as any,
-      filters: { periode, dateDebut: startDate, dateFin: endDate },
+      pagination,
+      filters: { periode, dateDebut: startDate, dateFin: endDate, category, range },
     })
   }
 
