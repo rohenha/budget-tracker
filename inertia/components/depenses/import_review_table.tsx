@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import {
   Table,
   TableHeader,
@@ -8,18 +7,11 @@ import {
   TableCell,
 } from '~/components/ui/table'
 import { Input } from '~/components/ui/input'
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '~/components/ui/select'
 import { formatBudget, getIcon, type Categorie } from '~/components/budget/constants'
-import { AlertTriangle } from 'lucide-react'
+import { AlertTriangle, Check } from 'lucide-react'
 import { cn } from '~/lib/utils'
 import CategorySelect from '~/components/ui/category_select'
+import TypeExpenseSelect from '~/components/ui/type_expense_select'
 
 type ParsedTransaction = {
   rawDate: string
@@ -32,33 +24,26 @@ type ParsedTransaction = {
   categorieId?: number
 }
 
-type EditableTransaction = ParsedTransaction & {
+export type EditableTransaction = ParsedTransaction & {
   editingField?: string | null
   originalValues: Record<string, any>
 }
 
 export default function ImportReviewTable({
-  transactions,
+  rows,
   categories,
+  onStartEdit,
+  onUpdateField,
+  onCommitEdit,
+  onCancelEdit,
 }: {
-  transactions: ParsedTransaction[]
+  rows: EditableTransaction[]
   categories: Categorie[]
+  onStartEdit: (index: number, field: keyof EditableTransaction) => void
+  onUpdateField: (index: number, field: keyof EditableTransaction, value: any) => void
+  onCommitEdit: (index: number, field: keyof EditableTransaction, value?: any) => void
+  onCancelEdit: (index: number) => void
 }) {
-  const [rows, setRows] = useState<EditableTransaction[]>(
-    transactions.map((t) => ({
-      ...t,
-      editingField: null,
-      originalValues: {
-        date: t.date,
-        libelle: t.libelle,
-        montant: t.montant,
-        type: t.type,
-        description: t.description,
-        categorieId: undefined,
-      },
-    }))
-  )
-
   const isRowEdited = (row: EditableTransaction) => {
     const o = row.originalValues
     return (
@@ -71,64 +56,16 @@ export default function ImportReviewTable({
     )
   }
 
-  const startEdit = (index: number, field: string) => {
-    setRows((prev) =>
-      prev.map((r, i) =>
-        i === index ? { ...r, editingField: field } : { ...r, editingField: null }
-      )
-    )
-  }
-
-  const commitEdit = (index: number, field: keyof EditableTransaction, value: any) => {
-    setRows((prev) =>
-      prev.map((r, i) =>
-        i === index
-          ? {
-              ...r,
-              [field]: value,
-              editingField: null,
-              originalValues: {
-                ...r.originalValues,
-                [field]: r.originalValues[field] === undefined ? r[field] : r.originalValues[field],
-              },
-            }
-          : r
-      )
-    )
-  }
-
-  const cancelEdit = (index: number) => {
-    setRows((prev) =>
-      prev.map((r, i) =>
-        i === index
-          ? {
-              ...r,
-              date: r.originalValues.date,
-              libelle: r.originalValues.libelle,
-              montant: r.originalValues.montant,
-              type: r.originalValues.type,
-              description: r.originalValues.description,
-              categorieId: r.originalValues.categorieId,
-              editingField: null,
-            }
-          : { ...r, editingField: null }
-      )
-    )
-  }
-
-  const handleBlur = (index: number, _field: string) => {
-    const row = rows[index]
-    if (row.editingField) {
-      cancelEdit(index)
-    }
-  }
-
-  const handleKeyDown = (e: React.KeyboardEvent, _index: number, _field: string) => {
+  const handleKeyDown = (
+    e: React.KeyboardEvent,
+    index: number,
+    field: keyof EditableTransaction
+  ) => {
     if (e.key === 'Enter') {
-      const target = e.currentTarget as HTMLElement
-      target.blur()
+      e.preventDefault()
+      onCommitEdit(index, field)
     } else if (e.key === 'Escape') {
-      cancelEdit(_index)
+      onCancelEdit(index)
     }
   }
 
@@ -169,8 +106,7 @@ export default function ImportReviewTable({
                     <Input
                       type="date"
                       value={row.date ?? ''}
-                      onChange={(e) => commitEdit(index, 'date', e.target.value)}
-                      onBlur={() => handleBlur(index, 'date')}
+                      onChange={(e) => onCommitEdit(index, 'date', e.target.value)}
                       onKeyDown={(e) => handleKeyDown(e, index, 'date')}
                       autoFocus
                       className={cn(
@@ -184,7 +120,7 @@ export default function ImportReviewTable({
                         'cursor-pointer hover:bg-accent rounded px-1 py-0.5',
                         row.dateError && 'border-destructive bg-destructive/10'
                       )}
-                      onClick={() => startEdit(index, 'date')}
+                      onClick={() => onStartEdit(index, 'date')}
                     >
                       {row.date ? new Date(row.date).toLocaleDateString('fr-FR') : row.rawDate}
                       {row.dateError && (
@@ -204,18 +140,26 @@ export default function ImportReviewTable({
 
                 <TableCell>
                   {row.editingField === 'libelle' ? (
-                    <Input
-                      value={row.libelle}
-                      onChange={(e) => commitEdit(index, 'libelle', e.target.value)}
-                      onBlur={() => handleBlur(index, 'libelle')}
-                      onKeyDown={(e) => handleKeyDown(e, index, 'libelle')}
-                      autoFocus
-                      className="w-full"
-                    />
+                    <div className="flex items-center gap-1">
+                      <Input
+                        value={row.libelle}
+                        onChange={(e) => onUpdateField(index, 'libelle', e.target.value)}
+                        onKeyDown={(e) => handleKeyDown(e, index, 'libelle')}
+                        autoFocus
+                        className="w-full"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => onCommitEdit(index, 'libelle')}
+                        className="shrink-0 rounded p-0.5 text-green-600 hover:bg-green-100 hover:text-green-700 transition-colors"
+                      >
+                        <Check className="size-4" />
+                      </button>
+                    </div>
                   ) : (
                     <div
                       className="cursor-pointer hover:bg-accent rounded px-1 py-0.5"
-                      onClick={() => startEdit(index, 'libelle')}
+                      onClick={() => onStartEdit(index, 'libelle')}
                     >
                       {row.libelle}
                     </div>
@@ -224,23 +168,31 @@ export default function ImportReviewTable({
 
                 <TableCell className="text-right">
                   {row.editingField === 'montant' ? (
-                    <Input
-                      type="number"
-                      step="0.01"
-                      min="0.01"
-                      value={row.montant}
-                      onChange={(e) =>
-                        commitEdit(index, 'montant', Number.parseFloat(e.target.value) || 0)
-                      }
-                      onBlur={() => handleBlur(index, 'montant')}
-                      onKeyDown={(e) => handleKeyDown(e, index, 'montant')}
-                      autoFocus
-                      className="w-24 text-right"
-                    />
+                    <div className="flex items-center gap-1 justify-end">
+                      <Input
+                        type="number"
+                        step="0.01"
+                        min="0.01"
+                        value={row.montant}
+                        onChange={(e) =>
+                          onUpdateField(index, 'montant', Number.parseFloat(e.target.value) || 0)
+                        }
+                        onKeyDown={(e) => handleKeyDown(e, index, 'montant')}
+                        autoFocus
+                        className="w-24 text-right"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => onCommitEdit(index, 'montant')}
+                        className="shrink-0 rounded p-0.5 text-green-600 hover:bg-green-100 hover:text-green-700 transition-colors"
+                      >
+                        <Check className="size-4" />
+                      </button>
+                    </div>
                   ) : (
                     <div
                       className={`cursor-pointer hover:bg-accent rounded px-1 py-0.5 text-right tabular-nums${row.type === 'entree' ? ' text-green-700' : ' text-red-700'}`}
-                      onClick={() => startEdit(index, 'montant')}
+                      onClick={() => onStartEdit(index, 'montant')}
                     >
                       {row.type === 'sortie' ? '-' : '+'}
                       {formatBudget(row.montant)}
@@ -250,24 +202,14 @@ export default function ImportReviewTable({
 
                 <TableCell>
                   {row.editingField === 'type' ? (
-                    <Select
+                    <TypeExpenseSelect
                       value={row.type}
-                      onValueChange={(v) => commitEdit(index, 'type', v as 'entree' | 'sortie')}
-                    >
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectItem value="entree">Entrée</SelectItem>
-                          <SelectItem value="sortie">Sortie</SelectItem>
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
+                      onValueChange={(v) => onCommitEdit(index, 'type', v)}
+                    />
                   ) : (
                     <div
                       className="cursor-pointer hover:bg-accent rounded px-1 py-0.5"
-                      onClick={() => startEdit(index, 'type')}
+                      onClick={() => onStartEdit(index, 'type')}
                     >
                       {row.type === 'entree' ? 'Entrée' : 'Sortie'}
                     </div>
@@ -280,13 +222,13 @@ export default function ImportReviewTable({
                       value={row.categorieId}
                       categories={categories}
                       onValueChange={(v) =>
-                        commitEdit(index, 'categorieId', v ? Number.parseInt(v, 10) : undefined)
+                        onCommitEdit(index, 'categorieId', v ? Number.parseInt(v, 10) : undefined)
                       }
                     />
                   ) : (
                     <div
                       className="cursor-pointer hover:bg-accent rounded px-1 py-0.5"
-                      onClick={() => startEdit(index, 'categorieId')}
+                      onClick={() => onStartEdit(index, 'categorieId')}
                     >
                       {row.categorieId ? (
                         (() => {
@@ -309,19 +251,27 @@ export default function ImportReviewTable({
 
                 <TableCell className="max-w-40">
                   {row.editingField === 'description' ? (
-                    <Input
-                      value={row.description ?? ''}
-                      onChange={(e) => commitEdit(index, 'description', e.target.value || null)}
-                      onBlur={() => handleBlur(index, 'description')}
-                      onKeyDown={(e) => handleKeyDown(e, index, 'description')}
-                      autoFocus
-                      placeholder="Optionnel"
-                      className="w-full"
-                    />
+                    <div className="flex items-center gap-1">
+                      <Input
+                        value={row.description ?? ''}
+                        onChange={(e) => onUpdateField(index, 'description', e.target.value || null)}
+                        onKeyDown={(e) => handleKeyDown(e, index, 'description')}
+                        autoFocus
+                        placeholder="Optionnel"
+                        className="w-full"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => onCommitEdit(index, 'description')}
+                        className="shrink-0 rounded p-0.5 text-green-600 hover:bg-green-100 hover:text-green-700 transition-colors"
+                      >
+                        <Check className="size-4" />
+                      </button>
+                    </div>
                   ) : (
                     <div
                       className="cursor-pointer hover:bg-accent rounded px-1 py-0.5 max-w-40 truncate"
-                      onClick={() => startEdit(index, 'description')}
+                      onClick={() => onStartEdit(index, 'description')}
                     >
                       {row.description ?? '—'}
                     </div>
