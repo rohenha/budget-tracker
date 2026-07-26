@@ -14,6 +14,7 @@ import DataPagination, { type PaginationSource } from '~/components/ui/data-pagi
 import AddDepenseDialog from '~/components/depenses/add_depense_dialog'
 import EditDepenseDialog from '~/components/depenses/edit_depense_dialog'
 import DeleteDepenseDialog from '~/components/depenses/delete_depense_dialog'
+import DailyExpensesChart from '~/components/depenses/daily_expenses_chart'
 
 function formatDate(date: string) {
   const d = new Date(date)
@@ -25,11 +26,15 @@ export default function Depenses({
   categories,
   filters,
   pagination,
+  dailyChartData,
+  dailyAverage,
 }: InertiaProps<{
   depenses: { data: Depense[]; meta: { current_page: number; last_page: number }; links: any[] }
   categories: Categorie[]
   filters: Filters
   pagination: PaginationSource
+  dailyChartData: Array<{ date: string; total: number }>
+  dailyAverage: number
 }>) {
   const [addOpen, setAddOpen] = useState(false)
   const [editId, setEditId] = useState<number | null>(null)
@@ -140,6 +145,8 @@ export default function Depenses({
       </div>
 
       <DepensesFilters filters={filters} categories={categories} />
+
+      <DailyExpensesChart data={dailyChartData} average={dailyAverage} />
 
       <PageState
         empty={
