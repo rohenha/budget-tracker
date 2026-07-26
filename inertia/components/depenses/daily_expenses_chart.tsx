@@ -25,7 +25,6 @@ type Props = {
 function CustomTooltip({
   active,
   payload,
-  label,
 }: {
   active: boolean
   payload: Array<{ payload: DailyTotal }>
@@ -33,12 +32,30 @@ function CustomTooltip({
 }) {
   if (!active || !payload?.length) return null
   const item = payload[0].payload as DailyTotal
-  const formattedDate = DateTime.fromISO(item.date).toFormat('dddd dd MMMM')
+  const formattedDate = DateTime.fromISO(item.date).setLocale('fr').toFormat('dddd dd MMMM')
   return (
     <div className="rounded-lg border bg-popover px-3 py-2 text-sm shadow-md">
       <div className="font-medium">{formattedDate}</div>
       <div className="text-muted-foreground">{formatBudget(item.total)}</div>
     </div>
+  )
+}
+
+function AvgLabel({ x, y, value }: { x?: number; y?: number; value?: string | number }) {
+  return (
+    <g>
+      <rect
+        x={Number(x) - 4}
+        y={Number(y) - 10}
+        width={130}
+        height={22}
+        fill="white"
+        rx={4}
+      />
+      <text x={Number(x)} y={Number(y)} fill="hsl(var(--destructive))" fontSize={12} dy={3}>
+        {value}
+      </text>
+    </g>
   )
 }
 
@@ -86,11 +103,9 @@ export default function DailyExpensesChart({ data, average }: Props) {
                   y={average}
                   stroke="hsl(var(--destructive))"
                   strokeDasharray="3 3"
-                  label={{
-                    value: `Moyenne : ${formatBudget(average)}`,
-                    position: 'insideTopRight',
-                    fontSize: 12,
-                  }}
+                  label={
+                    <AvgLabel value={`Moyenne : ${formatBudget(average)}`} />
+                  }
                 />
               )}
             </BarChart>
