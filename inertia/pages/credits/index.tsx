@@ -31,13 +31,12 @@ export default function Credits({
 
   const editLoan = editId !== null ? loans.find((l) => l.id === editId) : null
 
-  const summaryCards = [
-    { label: 'Total emprunté', value: formatBudget(globalSummary.totalBorrowed) },
-    { label: 'Total intérêts', value: formatBudget(globalSummary.totalInterest) },
-    { label: 'Total remboursé', value: formatBudget(globalSummary.totalPaid) },
-    { label: 'Déjà remboursé', value: formatBudget(globalSummary.currentPaid) },
-    { label: 'Intérêts payés', value: formatBudget(globalSummary.currentInterest) },
-  ]
+  const totalPaidSoFar = globalSummary.currentPaid + globalSummary.currentInterest
+  const remainingTotal = globalSummary.totalPaid - totalPaidSoFar
+  const progressPct =
+    globalSummary.totalPaid > 0
+      ? Math.round((totalPaidSoFar / globalSummary.totalPaid) * 10) / 10
+      : 0
 
   const columns = [
     {
@@ -107,27 +106,64 @@ export default function Credits({
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        {summaryCards.map((card) => (
-          <Card key={card.label}>
-            <CardHeader>
-              <CardTitle>{card.label}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold tabular-nums">{card.value}</p>
-            </CardContent>
-          </Card>
-        ))}
+        <Card className="border-primary/20 bg-primary/5">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Total emprunté</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-3xl font-bold tabular-nums text-primary">
+              {formatBudget(globalSummary.totalBorrowed)}
+            </p>
+          </CardContent>
+        </Card>
+        <Card className="border-primary/20 bg-primary/5">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Déjà remboursé</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-3xl font-bold tabular-nums text-primary">
+              {formatBudget(totalPaidSoFar)}
+            </p>
+          </CardContent>
+        </Card>
+        <Card className="border-primary/20 bg-primary/5">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Reste à rembourser</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-3xl font-bold tabular-nums text-primary">
+              {formatBudget(remainingTotal)}
+            </p>
+          </CardContent>
+        </Card>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Paramètres des crédits</CardTitle>
+          <CardTitle>Récapitulatif</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-3 text-sm">
             <div>
-              <p className="text-xs text-muted-foreground">Montant emprunté</p>
-              {/* <p className="font-medium tabular-nums">{formatBudget(loan.borrowedAmount)}</p> */}
+<<<<<<< HEAD
+              <p className="text-xs text-muted-foreground">Total remboursé (prévisionnel)</p>
+              <p className="font-medium tabular-nums">{formatBudget(globalSummary.totalPaid)}</p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground">Total intérêts (prévisionnel)</p>
+              <p className="font-medium tabular-nums">{formatBudget(globalSummary.totalInterest)}</p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground">Principal déjà remboursé</p>
+              <p className="font-medium tabular-nums">{formatBudget(globalSummary.currentPaid)}</p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground">Intérêts déjà payés</p>
+              <p className="font-medium tabular-nums">{formatBudget(globalSummary.currentInterest)}</p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground">Progression</p>
+              <p className="font-medium tabular-nums">{progressPct}%</p>
             </div>
           </div>
         </CardContent>
