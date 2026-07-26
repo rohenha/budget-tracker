@@ -30,12 +30,12 @@ import {
 } from '~/components/ui/sidebar'
 
 const navItems = [
-  { route: 'dashboard' as const, label: 'Dashboard', icon: LayoutDashboard },
-  { route: 'budget' as const, label: 'Budget', icon: PiggyBank },
-  { route: 'depenses' as const, label: 'Dépenses', icon: Receipt },
-  { route: 'credits' as const, label: 'Crédits', icon: Landmark },
-  { route: 'investissements' as const, label: 'Investissements', icon: TrendingUp },
-  { route: 'cryptos' as const, label: 'Cryptos', icon: Bitcoin },
+  { route: 'dashboard' as const, label: 'Dashboard', icon: LayoutDashboard, href: '/dashboard' },
+  { route: 'budget' as const, label: 'Budget', icon: PiggyBank, href: '/categories' },
+  { route: 'depenses' as const, label: 'Dépenses', icon: Receipt, href: '/depenses' },
+  { route: 'loans' as const, label: 'Crédits', icon: Landmark, href: '/credits' },
+  { route: 'investissements' as const, label: 'Investissements', icon: TrendingUp, href: '/investissements' },
+  { route: 'cryptos' as const, label: 'Cryptos', icon: Bitcoin, href: '/cryptos' },
 ]
 
 function AppSidebar({ user }: { user: SharedProps['user'] }) {
@@ -54,7 +54,7 @@ function AppSidebar({ user }: { user: SharedProps['user'] }) {
           <SidebarGroupContent>
             <SidebarMenu>
               {navItems.map((item) => {
-                const isActive = url === `/${item.route}` || url.startsWith(`/${item.route}/`)
+                const isActive = url === item.href || url.startsWith(`${item.href}/`)
                 const Icon = item.icon
                 return (
                   <SidebarMenuItem key={item.route}>

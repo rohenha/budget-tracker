@@ -8,18 +8,7 @@ import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 
 export class CategorySchema extends BaseModel {
-  static $columns = [
-    'budget',
-    'color',
-    'createdAt',
-    'icon',
-    'id',
-    'label',
-    'slug',
-    'type',
-    'updatedAt',
-    'userId',
-  ] as const
+  static $columns = ['budget', 'color', 'createdAt', 'icon', 'id', 'label', 'slug', 'type', 'updatedAt', 'userId'] as const
   $columns = CategorySchema.$columns
   @column()
   declare budget: string | null
@@ -44,18 +33,7 @@ export class CategorySchema extends BaseModel {
 }
 
 export class DepenseSchema extends BaseModel {
-  static $columns = [
-    'categorieId',
-    'createdAt',
-    'date',
-    'description',
-    'id',
-    'libelle',
-    'montant',
-    'type',
-    'updatedAt',
-    'userId',
-  ] as const
+  static $columns = ['categorieId', 'createdAt', 'date', 'description', 'id', 'libelle', 'montant', 'type', 'updatedAt', 'userId'] as const
   $columns = DepenseSchema.$columns
   @column()
   declare categorieId: number | null
@@ -73,6 +51,33 @@ export class DepenseSchema extends BaseModel {
   declare montant: string
   @column()
   declare type: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column()
+  declare userId: number
+}
+
+export class LoanSchema extends BaseModel {
+  static $columns = ['borrowedAmount', 'createdAt', 'downPayment', 'durationMonths', 'id', 'interestRate', 'name', 'startDate', 'status', 'updatedAt', 'userId'] as const
+  $columns = LoanSchema.$columns
+  @column()
+  declare borrowedAmount: string
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare downPayment: string
+  @column()
+  declare durationMonths: number
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare interestRate: string
+  @column()
+  declare name: string
+  @column.date()
+  declare startDate: DateTime
+  @column()
+  declare status: string
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
   @column()

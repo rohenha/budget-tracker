@@ -114,11 +114,35 @@ const routes = {
     tokens: [{"old":"/depenses/import/validate","type":0,"val":"depenses","end":""},{"old":"/depenses/import/validate","type":0,"val":"import","end":""},{"old":"/depenses/import/validate","type":0,"val":"validate","end":""}],
     types: placeholder as Registry['depenses.import.validate']['types'],
   },
-  'credits': {
+  'loans': {
     methods: ["GET","HEAD"],
     pattern: '/credits',
     tokens: [{"old":"/credits","type":0,"val":"credits","end":""}],
-    types: placeholder as Registry['credits']['types'],
+    types: placeholder as Registry['loans']['types'],
+  },
+  'loans.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/credits/:id',
+    tokens: [{"old":"/credits/:id","type":0,"val":"credits","end":""},{"old":"/credits/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['loans.show']['types'],
+  },
+  'loans.store': {
+    methods: ["POST"],
+    pattern: '/credits',
+    tokens: [{"old":"/credits","type":0,"val":"credits","end":""}],
+    types: placeholder as Registry['loans.store']['types'],
+  },
+  'loans.update': {
+    methods: ["PATCH"],
+    pattern: '/credits/:id',
+    tokens: [{"old":"/credits/:id","type":0,"val":"credits","end":""},{"old":"/credits/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['loans.update']['types'],
+  },
+  'loans.destroy': {
+    methods: ["DELETE"],
+    pattern: '/credits/:id',
+    tokens: [{"old":"/credits/:id","type":0,"val":"credits","end":""},{"old":"/credits/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['loans.destroy']['types'],
   },
   'investissements': {
     methods: ["GET","HEAD"],

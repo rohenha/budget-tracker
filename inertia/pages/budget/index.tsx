@@ -10,7 +10,7 @@ import DeleteCategoryDialog from '~/components/budget/delete_category_dialog'
 import CategoryPieChart, { type CategorySpending } from '~/components/budget/category_pie_chart'
 import { getIcon, formatBudget } from '~/components/budget/constants'
 import ProgressBadge from '~/components/depenses/progress_badge'
-import DataTable from '~/components/ui/data-table'
+import DataTable from '~/components/ui/data_table'
 
 export default function Budget({
   categorySpending = [],
@@ -89,7 +89,7 @@ export default function Budget({
             Gestion des catégories et budget prévisionnel
           </p>
         </div>
-        {(items.length > 0) && (
+        {items.length > 0 && (
           <Button size="sm" onClick={() => setAddOpen(true)}>
             <Plus className="size-4" />
             Ajouter catégorie
@@ -122,7 +122,7 @@ export default function Budget({
             ? null
             : {
                 title: 'Aucune catégorie',
-                message: "Configure tes premières catégories de dépenses et rentrées",
+                message: 'Configure tes premières catégories de dépenses et rentrées',
                 action: { label: 'Ajouter catégorie', onClick: () => setAddOpen(true) },
               }
         }
@@ -138,11 +138,7 @@ export default function Budget({
       </PageState>
 
       {editItem && (
-        <EditCategoryDialog
-          categorie={editItem}
-          open
-          onOpenChange={(o) => !o && setEditId(null)}
-        />
+        <EditCategoryDialog categorie={editItem} open onOpenChange={(o) => !o && setEditId(null)} />
       )}
       {deleteItem && (
         <DeleteCategoryDialog

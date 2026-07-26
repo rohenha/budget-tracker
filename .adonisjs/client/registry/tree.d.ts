@@ -28,7 +28,12 @@ export interface ApiDefinition {
       validate: typeof routes['depenses.import.validate']
     }
   }
-  credits: typeof routes['credits']
+  loans: typeof routes['loans'] & {
+    show: typeof routes['loans.show']
+    store: typeof routes['loans.store']
+    update: typeof routes['loans.update']
+    destroy: typeof routes['loans.destroy']
+  }
   investissements: typeof routes['investissements']
   cryptos: typeof routes['cryptos']
 }
