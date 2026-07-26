@@ -95,13 +95,9 @@ export default class DepensesController {
     const dailyData = await dailyQuery
 
     const dailyChartData = dailyData.map((d: any) => ({
-      date: d.$extras.date,
+      date: d.$attributes.date,
       total: Number(d.$extras.total),
     }))
-
-    const totalPeriod = dailyChartData.reduce((sum, d) => sum + d.total, 0)
-    const dayCount = DateTime.fromSQL(endDate!).diff(DateTime.fromSQL(startDate!), 'days').days + 1
-    const dailyAverage = dayCount > 0 ? totalPeriod / dayCount : 0
 
     return inertia.render('depenses/index', {
       depenses: depenses.serialize() as any,
@@ -109,7 +105,6 @@ export default class DepensesController {
       pagination,
       filters: { periode, dateDebut: startDate, dateFin: endDate, category, range },
       dailyChartData,
-      dailyAverage,
     })
   }
 

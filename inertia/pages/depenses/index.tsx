@@ -27,14 +27,12 @@ export default function Depenses({
   filters,
   pagination,
   dailyChartData,
-  dailyAverage,
 }: InertiaProps<{
   depenses: { data: Depense[]; meta: { current_page: number; last_page: number }; links: any[] }
   categories: Categorie[]
   filters: Filters
   pagination: PaginationSource
   dailyChartData: Array<{ date: string; total: number }>
-  dailyAverage: number
 }>) {
   const [addOpen, setAddOpen] = useState(false)
   const [editId, setEditId] = useState<number | null>(null)
@@ -146,7 +144,7 @@ export default function Depenses({
 
       <DepensesFilters filters={filters} categories={categories} />
 
-      <DailyExpensesChart data={dailyChartData} average={dailyAverage} />
+      <DailyExpensesChart data={dailyChartData} />
 
       <PageState
         empty={
