@@ -1,0 +1,53 @@
+on:
+  workflow_call:
+    inputs:
+      image:
+        required: false
+        type: string
+        default: ubuntu-latest
+      environment:
+        required: true
+        type: string
+        default: preprod
+      node_version:
+        required: false
+        type: string
+        default: 24.13
+      build_script:
+        required: false
+        type: string
+        default: npm run build
+jobs:
+  build:
+    name: Build App
+    runs-on: ${{ inputs.image }}
+    environment: ${{ inputs.environment }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node_version }}
+          cache: npm
+
+      - name: Install dependencies
+        run: NODE_ENV=development npm install
+
+      - name: Build App
+        run: |
+          ${{ inputs.build_script }}
+        env:
+          SPACE: ${{ inputs.environment }}
+
+      - name: Install production dependencies in build
+        working-directory: build
+        run: npm ci --omit="dev"
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build
+          path: build
+          include-hidden-files: true

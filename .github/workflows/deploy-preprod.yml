@@ -1,0 +1,85 @@
+name: Deploy & Index content
+run-name: ${{ github.actor }} is deploying on ${{ github.ref_name }}
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - develop
+
+jobs:
+  build:
+    name: Build
+    uses: ./.github/workflows/build.yml
+    with:
+      environment: preprod
+      node_version: 24.14
+    secrets: inherit
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment: preprod
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download Build Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+          path: build
+
+      - name: Get runner's public IP
+        id: ip
+        uses: haythem/public-ip@v1.3
+
+      - name: Removing all whitelisted IP
+        run: |
+          curl -k --retry 3 --retry-delay 2 --retry-all-errors -sm 45 \
+          -H'Authorization: cpanel ${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_API_TOKEN }}' \
+          'https://${{ secrets.CPANEL_SERVER }}:2083/execute/SshWhitelist/remove_all'
+
+      - name: Whitelisting the runner IP
+        run: |
+          curl -k --retry 3 --retry-delay 2 --retry-all-errors -sm 45 \
+          -H'Authorization: cpanel ${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_API_TOKEN }}' \
+          'https://${{ secrets.CPANEL_SERVER }}:2083/execute/SshWhitelist/add?address=${{ steps.ip.outputs.ipv4 }}&port=22'
+
+      - name: Making sure the IP is whitelisted
+        run: |
+          curl -k --retry 3 --retry-delay 2 --retry-all-errors -sm 45 \
+          -H'Authorization: cpanel ${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_API_TOKEN }}' \
+          'https://${{ secrets.CPANEL_SERVER }}:2083/execute/SshWhitelist/list' | grep ${{ steps.ip.outputs.ipv4 }}
+
+      - name: Rsync to Distant Environment
+        uses: burnett01/rsync-deployments@5.2
+        with:
+          switches: -av --delete --exclude-from="./CI/exclude.txt"
+          path: build/
+          remote_path: /home/${{ secrets.CPANEL_USERNAME }}/${{ secrets.CPANEL_PATH }}
+          remote_host: ${{ secrets.CPANEL_SERVER }}
+          remote_user: ${{ secrets.CPANEL_USERNAME }}
+          remote_key: ${{ secrets.SSH_KEY }}
+          remote_port: 22
+
+      - name: Stop, run migrations and restart app
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.CPANEL_SERVER }}
+          username: ${{ secrets.CPANEL_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: 22
+          script: |
+            cloudlinux-selector stop --json --interpreter nodejs --user ${{ secrets.CPANEL_USERNAME }} --app-root ${{ secrets.CPANEL_PATH }}
+            ${{ secrets.CPANEL_APP_PATH }}
+            node ace migration:run --force
+            cloudlinux-selector restart --json --interpreter nodejs --user ${{ secrets.CPANEL_USERNAME }} --app-root ${{ secrets.CPANEL_PATH }}
+
+      - name: Cleaning artifacts
+        uses: geekyeggo/delete-artifact@v5
+        if: always()
+        with:
+          name: build
+          failOnError: false
