@@ -145,7 +145,6 @@ export default function Credits({
         <CardContent>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-3 text-sm">
             <div>
-<<<<<<< HEAD
               <p className="text-xs text-muted-foreground">Total remboursé (prévisionnel)</p>
               <p className="font-medium tabular-nums">{formatBudget(globalSummary.totalPaid)}</p>
             </div>
