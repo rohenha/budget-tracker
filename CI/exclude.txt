@@ -1,0 +1,12 @@
+- .git
+- .htaccess
+- .htpasswd
+- .env
+- startup.cjs
+- _bmad
+- _bmad-output
+- .adonisjs
+- _.agents
+- .github
+- .opencode
+- ai-artefacts
