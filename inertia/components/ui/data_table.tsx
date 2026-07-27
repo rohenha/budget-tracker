@@ -19,6 +19,7 @@ type DataTableProps<T> = {
   data: T[]
   columns: Column<T>[]
   keyExtractor: (item: T) => string | number
+  onRowClick?: (item: T) => void
   onEdit?: (item: T) => void
   onDelete?: (item: T) => void
   canDelete?: (item: T) => boolean
@@ -28,6 +29,7 @@ export default function DataTable<T>({
   data,
   columns,
   keyExtractor,
+  onRowClick,
   onEdit,
   onDelete,
   canDelete,
@@ -48,7 +50,20 @@ export default function DataTable<T>({
       </TableHeader>
       <TableBody>
         {data.map((item) => (
-          <TableRow key={keyExtractor(item)}>
+          <TableRow
+            key={keyExtractor(item)}
+            className={onRowClick ? 'cursor-pointer' : undefined}
+            onClick={
+              onRowClick
+                ? (e) => {
+                    const target = e.target as HTMLElement
+                    if (!target.closest('button')) {
+                      onRowClick(item)
+                    }
+                  }
+                : undefined
+            }
+          >
             {columns.map((col) => (
               <TableCell key={col.label} className={col.className}>
                 {col.render(item)}
@@ -58,21 +73,13 @@ export default function DataTable<T>({
               <TableCell>
                 <div className="flex items-center gap-1">
                   {onEdit && (
-                    <Button
-                      variant="secondary"
-                      size="icon-sm"
-                      onClick={() => onEdit(item)}
-                    >
+                    <Button variant="secondary" size="icon-sm" onClick={() => onEdit(item)}>
                       <span className="sr-only">Modifier</span>
                       <SquarePen />
                     </Button>
                   )}
                   {onDelete && (!canDelete || canDelete(item)) && (
-                    <Button
-                      variant="destructive"
-                      size="icon-sm"
-                      onClick={() => onDelete(item)}
-                    >
+                    <Button variant="destructive" size="icon-sm" onClick={() => onDelete(item)}>
                       <span className="sr-only">Supprimer</span>
                       <Trash2 />
                     </Button>

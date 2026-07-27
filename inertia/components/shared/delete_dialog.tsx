@@ -28,7 +28,9 @@ type DeleteDialogProps = {
     | 'depenses.store'
     | 'depenses.update'
     | 'depenses.destroy'
-    | 'credits'
+    | 'loans'
+    | 'loans.store'
+    | 'loans.destroy'
     | 'investissements'
     | 'cryptos'
   routeParams: Record<string, any>
