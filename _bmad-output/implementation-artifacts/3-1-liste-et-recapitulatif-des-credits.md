@@ -2,7 +2,7 @@
 
 ## Status
 
-review
+done
 
 ## Story
 
@@ -134,20 +134,21 @@ opencode (deepseek-v4-flash-free)
 
 ### Completion Notes
 
-Story 3.1 fully implemented:
+Story 3.1 fully implemented and validated (done):
 
 - Migration `create_loans_table.ts` with user_id FK, name, borrowed_amount, down_payment, interest_rate, duration_months, status (active/paid), start_date
-- `app/models/loan.ts` with amortization logic: monthlyPayment (annuity formula), totalInterest, totalPaid, remainingBalance, schedule()
-- `app/validators/loan.ts` with storeLoanValidator
-- `app/controllers/loans_controller.ts` with index (loans + globalSummary), show (selectedLoan + schedule), store
-- Routes updated: `/credits` group with LoansController (index, show, store)
+- `app/models/loan.ts` with amortization logic: monthlyPayment (annuity formula), totalInterest, totalPaid, remainingBalance, schedule(), settled()
+- `app/validators/loan.ts` with storeLoanValidator and updateLoanValidator
+- `app/controllers/loans_controller.ts` with CRUD: index (loans + globalSummary), show (single loan + schedule + settled), store, update, destroy
+- Routes updated: `/credits` group with all 5 REST routes
 - Updated sidebar to use 'loans' route, active URL detection via href
-- Added 'loans' / 'loans.store' to form_dialog.tsx and delete_dialog.tsx route types
-- Added onRowClick to DataTable component
-- Frontend: inertia/pages/credits/index.tsx with global summary cards, DataTable with row click, detail Sheet with amortization schedule, add dialog, empty state
+- Added route types 'loans' / 'loans.store' / 'loans.update' / 'loans.destroy' to form_dialog.tsx and delete_dialog.tsx
+- Added onRowClick to DataTable component; renamed data-table.tsx → data_table.tsx
+- Frontend index page: 3 featured global summary cards (total emprunté, déjà remboursé, reste à rembourser) + compact récapitulatif card
+- Frontend show page: dedicated `/credits/:id` page with 3 featured cards (restant dû, mensualité, déjà remboursé) + compact paramètres card + amortization schedule DataTable + Edit/Delete buttons
+- AddLoanDialog, EditLoanDialog, DeleteLoanDialog components
 - `inertia/components/credits/constants.ts` with Loan, GlobalSummary, InstallmentRow types
-- `inertia/components/credits/add_loan_dialog.tsx` with FormDialog for loan creation
-- All tests pass (5/5), typecheck passes, migration applied, lint clean
+- All tests pass, typecheck passes, migration applied
 
 ### Files Modified
 

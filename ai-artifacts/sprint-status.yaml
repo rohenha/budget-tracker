@@ -1,1 +1,46 @@
-fatal: path 'ai-artifacts/sprint-status.yaml' exists on disk, but not in 'HEAD'
+generated: 2026-07-26
+last_updated: 2026-07-26
+project: budget-tracker
+project_key: NOKEY
+tracking_system: file-system
+story_location: /Users/rohenha/Sites/budget-tracker/_bmad-output/implementation-artifacts
+
+development_status:
+  epic-1: done
+  epic-1-retrospective: optional
+   1-0-mise-en-place-des-fondations-ui: done
+   1-1-creation-et-configuration-des-categories: done
+  1-2-graphique-de-repartition-par-categorie: done
+
+  epic-2: done
+  epic-2-retrospective: optional
+   2-1-liste-et-filtres-des-depenses: done
+   2-2-ajout-manuel-dune-depense: done
+  2-3-import-csv-avec-revue-et-edition: done
+  2-4-graphique-des-depenses-par-jour: done
+
+  epic-3: in-progress
+  epic-3-retrospective: optional
+  3-1-liste-et-recapitulatif-des-credits: done
+  3-2-ajout-dun-credit: backlog
+  3-3-modification-et-suppression-dun-credit: backlog
+
+  epic-4: backlog
+  epic-4-retrospective: optional
+  4-1-liste-des-supports-et-repartition: backlog
+  4-2-ajout-dun-support-dinvestissement: backlog
+  4-4-achats-et-ventes-sur-un-support: backlog
+  4-5-detail-dun-support: backlog
+
+  epic-5: backlog
+  epic-5-retrospective: optional
+  5-1-liste-des-cryptos-et-repartition: backlog
+  5-2-ajout-dune-crypto: backlog
+  5-3-achats-et-ventes-de-crypto: backlog
+  5-4-detail-dune-crypto: backlog
+
+  epic-6: backlog
+  epic-6-retrospective: optional
+  6-1-indicateurs-du-patrimoine: backlog
+  6-2-import-csv-depuis-le-dashboard: backlog
+  6-3-rafraichissement-des-prix-et-dca-quick-add: backlog
