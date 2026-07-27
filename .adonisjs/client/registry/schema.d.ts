@@ -223,7 +223,7 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/depenses_controller').default['storeBatch']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
-  'loans': {
+  'credits': {
     methods: ["GET","HEAD"]
     pattern: '/credits'
     types: {
@@ -231,56 +231,8 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/loans_controller').default['index']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/loans_controller').default['index']>>>
-    }
-  }
-  'loans.show': {
-    methods: ["GET","HEAD"]
-    pattern: '/credits/:id'
-    types: {
-      body: {}
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/loans_controller').default['show']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/loans_controller').default['show']>>>
-    }
-  }
-  'loans.store': {
-    methods: ["POST"]
-    pattern: '/credits'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/loan').storeLoanValidator)>>
-      paramsTuple: []
-      params: {}
-      query: ExtractQuery<InferInput<(typeof import('#validators/loan').storeLoanValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/loans_controller').default['store']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/loans_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'loans.update': {
-    methods: ["PATCH"]
-    pattern: '/credits/:id'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/loan').updateLoanValidator)>>
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#validators/loan').updateLoanValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/loans_controller').default['update']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/loans_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'loans.destroy': {
-    methods: ["DELETE"]
-    pattern: '/credits/:id'
-    types: {
-      body: {}
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/loans_controller').default['destroy']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/loans_controller').default['destroy']>>>
+      response: unknown
+      errorResponse: unknown
     }
   }
   'investissements': {

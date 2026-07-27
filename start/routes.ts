@@ -52,15 +52,7 @@ router
       })
       .prefix('/depenses')
 
-    router
-      .group(() => {
-        router.get('/', [controllers.Loans, 'index']).as('loans')
-        router.get('/:id', [controllers.Loans, 'show']).as('loans.show')
-        router.post('/', [controllers.Loans, 'store']).as('loans.store')
-        router.patch('/:id', [controllers.Loans, 'update']).as('loans.update')
-        router.delete('/:id', [controllers.Loans, 'destroy']).as('loans.destroy')
-      })
-      .prefix('/credits')
+    router.on('/credits').renderInertia('credits/index', {}).as('credits')
     router.on('/investissements').renderInertia('investissements/index', {}).as('investissements')
     router.on('/cryptos').renderInertia('cryptos/index', {}).as('cryptos')
   })

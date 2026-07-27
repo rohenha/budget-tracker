@@ -30,9 +30,7 @@ type FormDialogProps = {
     | 'depenses.update'
     | 'depenses.destroy'
     | 'depenses.import.upload'
-    | 'loans'
-    | 'loans.store'
-    | 'loans.update'
+    | 'credits'
     | 'investissements'
     | 'cryptos'
   routeParams?: Record<string, any>

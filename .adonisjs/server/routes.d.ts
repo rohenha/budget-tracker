@@ -22,11 +22,7 @@ export type ScannedRoutes = {
     'depenses.import.upload': { paramsTuple?: []; params?: {} }
     'depenses.import': { paramsTuple?: []; params?: {} }
     'depenses.import.validate': { paramsTuple?: []; params?: {} }
-    'loans': { paramsTuple?: []; params?: {} }
-    'loans.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'loans.store': { paramsTuple?: []; params?: {} }
-    'loans.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'loans.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'credits': { paramsTuple?: []; params?: {} }
     'investissements': { paramsTuple?: []; params?: {} }
     'cryptos': { paramsTuple?: []; params?: {} }
   }
@@ -38,8 +34,7 @@ export type ScannedRoutes = {
     'budget': { paramsTuple?: []; params?: {} }
     'depenses': { paramsTuple?: []; params?: {} }
     'depenses.import': { paramsTuple?: []; params?: {} }
-    'loans': { paramsTuple?: []; params?: {} }
-    'loans.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'credits': { paramsTuple?: []; params?: {} }
     'investissements': { paramsTuple?: []; params?: {} }
     'cryptos': { paramsTuple?: []; params?: {} }
   }
@@ -51,8 +46,7 @@ export type ScannedRoutes = {
     'budget': { paramsTuple?: []; params?: {} }
     'depenses': { paramsTuple?: []; params?: {} }
     'depenses.import': { paramsTuple?: []; params?: {} }
-    'loans': { paramsTuple?: []; params?: {} }
-    'loans.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'credits': { paramsTuple?: []; params?: {} }
     'investissements': { paramsTuple?: []; params?: {} }
     'cryptos': { paramsTuple?: []; params?: {} }
   }
@@ -64,17 +58,14 @@ export type ScannedRoutes = {
     'depenses.store': { paramsTuple?: []; params?: {} }
     'depenses.import.upload': { paramsTuple?: []; params?: {} }
     'depenses.import.validate': { paramsTuple?: []; params?: {} }
-    'loans.store': { paramsTuple?: []; params?: {} }
   }
   PATCH: {
     'categories.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'depenses.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'loans.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   DELETE: {
     'categories.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'depenses.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'loans.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
 }
 declare module '@adonisjs/core/types/http' {
