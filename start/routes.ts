@@ -33,7 +33,7 @@ router
       .group(() => {
         router.get('/', [controllers.Categories, 'index']).as('budget')
         router.post('/', [controllers.Categories, 'store']).as('categories.store')
-        router.patch('/:id', [controllers.Categories, 'update']).as('categories.update')
+        router.post('/:id', [controllers.Categories, 'update']).as('categories.update')
         router.delete('/:id', [controllers.Categories, 'destroy']).as('categories.destroy')
       })
       .prefix('/categories')
@@ -42,7 +42,7 @@ router
       .group(() => {
         router.get('/', [controllers.Depenses, 'index']).as('depenses')
         router.post('/', [controllers.Depenses, 'store']).as('depenses.store')
-        router.patch('/:id', [controllers.Depenses, 'update']).as('depenses.update')
+        router.post('/:id', [controllers.Depenses, 'update']).as('depenses.update')
         router.delete('/:id', [controllers.Depenses, 'destroy']).as('depenses.destroy')
         router.post('/import', [controllers.DepensesImport, 'upload']).as('depenses.import.upload')
         router.get('/import', [controllers.DepensesImport, 'review']).as('depenses.import')
@@ -57,7 +57,7 @@ router
         router.get('/', [controllers.Loans, 'index']).as('loans')
         router.get('/:id', [controllers.Loans, 'show']).as('loans.show')
         router.post('/', [controllers.Loans, 'store']).as('loans.store')
-        router.patch('/:id', [controllers.Loans, 'update']).as('loans.update')
+        router.post('/:id', [controllers.Loans, 'update']).as('loans.update')
         router.delete('/:id', [controllers.Loans, 'destroy']).as('loans.destroy')
       })
       .prefix('/credits')
