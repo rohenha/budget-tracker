@@ -16,6 +16,7 @@ declare module '@adonisjs/inertia/types' {
     'auth/signup': ExtractProps<(typeof import('../../inertia/pages/auth/signup.tsx'))['default']>
     'budget/index': ExtractProps<(typeof import('../../inertia/pages/budget/index.tsx'))['default']>
     'credits/index': ExtractProps<(typeof import('../../inertia/pages/credits/index.tsx'))['default']>
+    'credits/show': ExtractProps<(typeof import('../../inertia/pages/credits/show.tsx'))['default']>
     'cryptos/index': ExtractProps<(typeof import('../../inertia/pages/cryptos/index.tsx'))['default']>
     'dashboard/index': ExtractProps<(typeof import('../../inertia/pages/dashboard/index.tsx'))['default']>
     'depenses/import': ExtractProps<(typeof import('../../inertia/pages/depenses/import.tsx'))['default']>
@@ -24,6 +25,5 @@ declare module '@adonisjs/inertia/types' {
     'errors/server_error': ExtractProps<(typeof import('../../inertia/pages/errors/server_error.tsx'))['default']>
     'home': ExtractProps<(typeof import('../../inertia/pages/home.tsx'))['default']>
     'investissements/index': ExtractProps<(typeof import('../../inertia/pages/investissements/index.tsx'))['default']>
-    'credits/show': ExtractProps<(typeof import('../../inertia/pages/credits/show.tsx'))['default']>
   }
 }
