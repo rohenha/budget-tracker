@@ -5,8 +5,9 @@ import env from '#start/env'
 const dbConfig = defineConfig({
   /**
    * Default connection used for all queries.
+   * Uses DB_CONNECTION env var (defaults to 'mysql', 'sqlite' for tests).
    */
-  connection: 'mysql',
+  connection: env.get('DB_CONNECTION', 'mysql') as 'mysql' | 'sqlite',
 
   connections: {
     /**
