@@ -21,8 +21,8 @@ export default class MockSeeder {
       { label: 'Loisirs', icon: 'Gamepad2', budget: 200, color: '#8b5cf6' },
       { label: 'Santé', icon: 'Heart', budget: 150, color: '#ec4899' },
       { label: 'Éducation', icon: 'BookOpen', budget: 100, color: '#14b8a6' },
-      { label: 'Salaire', icon: 'Briefcase', budget: 0, color: '#22c55e' },
-      { label: 'Freelance', icon: 'Laptop', budget: 0, color: '#6366f1' },
+      { label: 'Salaire', icon: 'Briefcase', budget: 0, color: '#22c55e', type: 'entree' as const },
+      { label: 'Freelance', icon: 'Laptop', budget: 0, color: '#6366f1', type: 'entree' as const },
     ]
 
     const categories: Record<string, Categorie> = {}
@@ -31,6 +31,10 @@ export default class MockSeeder {
       const slug = await Categorie.generateSlug(cat.label)
       const existing = await Categorie.query().where('slug', slug).where('userId', user.id).first()
       if (existing) {
+        if (cat.type && existing.type !== cat.type) {
+          existing.type = cat.type
+          await existing.save()
+        }
         categories[cat.label] = existing
       } else {
         const created = await Categorie.create({
@@ -40,6 +44,7 @@ export default class MockSeeder {
           icon: cat.icon,
           budget: cat.budget || null,
           color: cat.color,
+          type: cat.type ?? 'sortie',
         })
         categories[cat.label] = created
       }
@@ -289,10 +294,7 @@ export default class MockSeeder {
     ]
 
     for (const loan of loansData) {
-      const existing = await Loan.query()
-        .where('name', loan.name)
-        .where('userId', user.id)
-        .first()
+      const existing = await Loan.query().where('name', loan.name).where('userId', user.id).first()
       if (!existing) {
         await Loan.create({
           userId: user.id,
