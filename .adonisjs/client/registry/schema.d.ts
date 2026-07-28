@@ -115,8 +115,8 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/categories_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
-  'categories.update': {
-    methods: ["PATCH"]
+  'categories.edit': {
+    methods: ["POST"]
     pattern: '/categories/:id'
     types: {
       body: ExtractBody<InferInput<(typeof import('#validators/categorie').updateCategorieValidator)>>
@@ -163,8 +163,8 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/depenses_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
-  'depenses.update': {
-    methods: ["PATCH"]
+  'depenses.edit': {
+    methods: ["POST"]
     pattern: '/depenses/:id'
     types: {
       body: ExtractBody<InferInput<(typeof import('#validators/depense').updateDepenseValidator)>>
@@ -259,8 +259,8 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/loans_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
-  'loans.update': {
-    methods: ["PATCH"]
+  'loans.edit': {
+    methods: ["POST"]
     pattern: '/credits/:id'
     types: {
       body: ExtractBody<InferInput<(typeof import('#validators/loan').updateLoanValidator)>>

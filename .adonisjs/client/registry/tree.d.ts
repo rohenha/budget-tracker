@@ -16,12 +16,12 @@ export interface ApiDefinition {
   budget: typeof routes['budget']
   categories: {
     store: typeof routes['categories.store']
-    update: typeof routes['categories.update']
+    edit: typeof routes['categories.edit']
     destroy: typeof routes['categories.destroy']
   }
   depenses: typeof routes['depenses'] & {
     store: typeof routes['depenses.store']
-    update: typeof routes['depenses.update']
+    edit: typeof routes['depenses.edit']
     destroy: typeof routes['depenses.destroy']
     import: typeof routes['depenses.import'] & {
       upload: typeof routes['depenses.import.upload']
@@ -31,7 +31,7 @@ export interface ApiDefinition {
   loans: typeof routes['loans'] & {
     show: typeof routes['loans.show']
     store: typeof routes['loans.store']
-    update: typeof routes['loans.update']
+    edit: typeof routes['loans.edit']
     destroy: typeof routes['loans.destroy']
   }
   investissements: typeof routes['investissements']

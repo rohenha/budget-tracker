@@ -13,11 +13,11 @@ export type ScannedRoutes = {
     'dashboard': { paramsTuple?: []; params?: {} }
     'budget': { paramsTuple?: []; params?: {} }
     'categories.store': { paramsTuple?: []; params?: {} }
-    'categories.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'categories.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'categories.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'depenses': { paramsTuple?: []; params?: {} }
     'depenses.store': { paramsTuple?: []; params?: {} }
-    'depenses.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'depenses.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'depenses.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'depenses.import.upload': { paramsTuple?: []; params?: {} }
     'depenses.import': { paramsTuple?: []; params?: {} }
@@ -25,7 +25,7 @@ export type ScannedRoutes = {
     'loans': { paramsTuple?: []; params?: {} }
     'loans.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'loans.store': { paramsTuple?: []; params?: {} }
-    'loans.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'loans.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'loans.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'investissements': { paramsTuple?: []; params?: {} }
     'cryptos': { paramsTuple?: []; params?: {} }
@@ -61,15 +61,13 @@ export type ScannedRoutes = {
     'session.store': { paramsTuple?: []; params?: {} }
     'session.destroy': { paramsTuple?: []; params?: {} }
     'categories.store': { paramsTuple?: []; params?: {} }
+    'categories.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'depenses.store': { paramsTuple?: []; params?: {} }
+    'depenses.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'depenses.import.upload': { paramsTuple?: []; params?: {} }
     'depenses.import.validate': { paramsTuple?: []; params?: {} }
     'loans.store': { paramsTuple?: []; params?: {} }
-  }
-  PATCH: {
-    'categories.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'depenses.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'loans.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'loans.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   DELETE: {
     'categories.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }

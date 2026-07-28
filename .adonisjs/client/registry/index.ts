@@ -60,11 +60,11 @@ const routes = {
     tokens: [{"old":"/categories","type":0,"val":"categories","end":""}],
     types: placeholder as Registry['categories.store']['types'],
   },
-  'categories.update': {
-    methods: ["PATCH"],
+  'categories.edit': {
+    methods: ["POST"],
     pattern: '/categories/:id',
     tokens: [{"old":"/categories/:id","type":0,"val":"categories","end":""},{"old":"/categories/:id","type":1,"val":"id","end":""}],
-    types: placeholder as Registry['categories.update']['types'],
+    types: placeholder as Registry['categories.edit']['types'],
   },
   'categories.destroy': {
     methods: ["DELETE"],
@@ -84,11 +84,11 @@ const routes = {
     tokens: [{"old":"/depenses","type":0,"val":"depenses","end":""}],
     types: placeholder as Registry['depenses.store']['types'],
   },
-  'depenses.update': {
-    methods: ["PATCH"],
+  'depenses.edit': {
+    methods: ["POST"],
     pattern: '/depenses/:id',
     tokens: [{"old":"/depenses/:id","type":0,"val":"depenses","end":""},{"old":"/depenses/:id","type":1,"val":"id","end":""}],
-    types: placeholder as Registry['depenses.update']['types'],
+    types: placeholder as Registry['depenses.edit']['types'],
   },
   'depenses.destroy': {
     methods: ["DELETE"],
@@ -132,11 +132,11 @@ const routes = {
     tokens: [{"old":"/credits","type":0,"val":"credits","end":""}],
     types: placeholder as Registry['loans.store']['types'],
   },
-  'loans.update': {
-    methods: ["PATCH"],
+  'loans.edit': {
+    methods: ["POST"],
     pattern: '/credits/:id',
     tokens: [{"old":"/credits/:id","type":0,"val":"credits","end":""},{"old":"/credits/:id","type":1,"val":"id","end":""}],
-    types: placeholder as Registry['loans.update']['types'],
+    types: placeholder as Registry['loans.edit']['types'],
   },
   'loans.destroy': {
     methods: ["DELETE"],
