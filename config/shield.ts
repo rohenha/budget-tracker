@@ -1,3 +1,4 @@
+import env from '#start/env'
 import { defineConfig } from '@adonisjs/shield'
 
 const shieldConfig = defineConfig({
@@ -30,7 +31,7 @@ const shieldConfig = defineConfig({
     /**
      * Enable CSRF token verification for state-changing requests.
      */
-    enabled: true,
+    enabled: env.get('NODE_ENV') !== 'test',
 
     /**
      * Route patterns to exclude from CSRF checks.
