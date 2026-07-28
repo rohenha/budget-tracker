@@ -16,7 +16,7 @@ export default function EditLoanDialog({
     <FormDialog
       open={open}
       onOpenChange={onOpenChange}
-      route="loans.update"
+      route="loans.edit"
       routeParams={{ id: loan.id }}
       title={`Modifier ${loan.name}`}
       description="Modifie les paramètres du crédit"

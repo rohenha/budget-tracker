@@ -23,7 +23,7 @@ export default function EditCategoryDialog({
     <FormDialog
       open={open}
       onOpenChange={onOpenChange}
-      route="categories.update"
+      route="categories.edit"
       routeParams={{ id: categorie.categorieId }}
       title={`Modifier ${categorie.label}`}
       description="Modifie les paramètres de la catégorie"

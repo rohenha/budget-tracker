@@ -24,7 +24,7 @@ export default function EditDepenseDialog({
     <FormDialog
       open={open}
       onOpenChange={onOpenChange}
-      route="depenses.update"
+      route="depenses.edit"
       routeParams={{ id: depense.id }}
       title={`Modifier ${depense.libelle}`}
       description="Modifie les paramètres de la dépense"
