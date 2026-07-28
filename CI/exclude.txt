@@ -2,6 +2,7 @@
 - .htaccess
 - .htpasswd
 - .env
+- startup.cjs
 - _bmad
 - _bmad-output
 - _.agents
