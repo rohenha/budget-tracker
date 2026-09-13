@@ -61,7 +61,11 @@ router
         router.delete('/:id', [controllers.Loans, 'destroy']).as('loans.destroy')
       })
       .prefix('/credits')
-    router.on('/investissements').renderInertia('investissements/index', {}).as('investissements')
+    router
+      .group(() => {
+        router.get('/', [controllers.SupportsInvestissement, 'index']).as('investissements')
+      })
+      .prefix('/investissements')
     router.on('/cryptos').renderInertia('cryptos/index', {}).as('cryptos')
   })
   .use(middleware.auth())

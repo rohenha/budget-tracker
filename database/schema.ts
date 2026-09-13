@@ -57,6 +57,37 @@ export class DepenseSchema extends BaseModel {
   declare userId: number
 }
 
+export class InvestmentSupportSchema extends BaseModel {
+  static $columns = ['annualFees', 'createdAt', 'description', 'externalLink', 'id', 'lastKnownPrice', 'lastPriceAt', 'name', 'storageLocation', 'symbol', 'type', 'updatedAt', 'userId'] as const
+  $columns = InvestmentSupportSchema.$columns
+  @column()
+  declare annualFees: string
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare description: string | null
+  @column()
+  declare externalLink: string | null
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare lastKnownPrice: string | null
+  @column.dateTime()
+  declare lastPriceAt: DateTime | null
+  @column()
+  declare name: string
+  @column()
+  declare storageLocation: string
+  @column()
+  declare symbol: string
+  @column()
+  declare type: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column()
+  declare userId: number
+}
+
 export class LoanSchema extends BaseModel {
   static $columns = ['borrowedAmount', 'createdAt', 'downPayment', 'durationMonths', 'id', 'interestRate', 'name', 'startDate', 'status', 'updatedAt', 'userId'] as const
   $columns = LoanSchema.$columns
