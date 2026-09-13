@@ -2,35 +2,35 @@ import { test } from '@japa/runner'
 import { parseCreditAgricoleCsv } from '#services/csv_parser'
 
 test.group('CsvParser — parseCreditAgricoleCsv', () => {
-  // ─── Cas nominaux ────────────────────────────────────────────────────────────
+  // ─── Nominal cases ────────────────────────────────────────────────────────────
 
-  test('parse une transaction sortie simple', ({ assert }) => {
+  test('parses a simple expense transaction', ({ assert }) => {
     const csv = `Date;Libellé;Débit euros;Crédit euros
-01/07/2026;COURSES LECLERC;45,50;`
+01/07/2026;GROCERIES LECLERC;45,50;`
     const result = parseCreditAgricoleCsv(csv)
     assert.lengthOf(result, 1)
-    assert.equal(result[0].libelle, 'COURSES LECLERC')
+    assert.equal(result[0].libelle, 'GROCERIES LECLERC')
     assert.equal(result[0].montant, 45.5)
     assert.equal(result[0].type, 'sortie')
     assert.equal(result[0].date, '2026-07-01')
     assert.isUndefined(result[0].dateError)
   })
 
-  test('parse une transaction entree simple', ({ assert }) => {
+  test('parses a simple income transaction', ({ assert }) => {
     const csv = `Date;Libellé;Débit euros;Crédit euros
-15/06/2026;VIREMENT SALAIRE;;2500,00`
+15/06/2026;SALARY TRANSFER;;2500,00`
     const result = parseCreditAgricoleCsv(csv)
     assert.lengthOf(result, 1)
     assert.equal(result[0].type, 'entree')
     assert.equal(result[0].montant, 2500)
-    assert.equal(result[0].libelle, 'VIREMENT SALAIRE')
+    assert.equal(result[0].libelle, 'SALARY TRANSFER')
   })
 
-  test('parse plusieurs transactions', ({ assert }) => {
+  test('parses multiple transactions', ({ assert }) => {
     const csv = `Date;Libellé;Débit euros;Crédit euros
-01/07/2026;LOYER;800,00;
-02/07/2026;SALAIRE;;3000,00
-03/07/2026;COURSES;55,30;`
+01/07/2026;RENT;800,00;
+02/07/2026;SALARY;;3000,00
+03/07/2026;GROCERIES;55,30;`
     const result = parseCreditAgricoleCsv(csv)
     assert.lengthOf(result, 3)
     assert.equal(result[0].type, 'sortie')
@@ -38,7 +38,7 @@ test.group('CsvParser — parseCreditAgricoleCsv', () => {
     assert.equal(result[2].type, 'sortie')
   })
 
-  test('gere le BOM UTF-8 en debut de fichier', ({ assert }) => {
+  test('handles UTF-8 BOM at start of file', ({ assert }) => {
     const bom = '\uFEFF'
     const csv = `${bom}Date;Libellé;Débit euros;Crédit euros
 01/07/2026;TEST BOM;10,00;`
@@ -47,15 +47,15 @@ test.group('CsvParser — parseCreditAgricoleCsv', () => {
     assert.equal(result[0].libelle, 'TEST BOM')
   })
 
-  test('gere les variantes de noms de colonnes (Debit/Credit sans accent)', ({ assert }) => {
+  test('handles column name variants (Debit/Credit without accent)', ({ assert }) => {
     const csv = `Date;Libelle;Debit;Credit
-05/07/2026;DEPENSE SANS ACCENT;20,00;`
+05/07/2026;EXPENSE NO ACCENT;20,00;`
     const result = parseCreditAgricoleCsv(csv)
     assert.lengthOf(result, 1)
     assert.equal(result[0].montant, 20)
   })
 
-  test('ignore les lignes ne contenant que des points-virgules', ({ assert }) => {
+  test('ignores lines containing only semicolons', ({ assert }) => {
     const csv = `Date;Libellé;Débit euros;Crédit euros
 01/07/2026;VALID;10,00;
 ;;;
@@ -64,100 +64,100 @@ test.group('CsvParser — parseCreditAgricoleCsv', () => {
     assert.lengthOf(result, 2)
   })
 
-  test('ignore les lignes avec montant et debit/credit vides', ({ assert }) => {
+  test('ignores lines with empty amount and debit/credit', ({ assert }) => {
     const csv = `Date;Libellé;Débit euros;Crédit euros
-01/07/2026;SANS MONTANT;;`
+01/07/2026;NO AMOUNT;;`
     const result = parseCreditAgricoleCsv(csv)
     assert.lengthOf(result, 0)
   })
 
-  // ─── Gestion des dates ───────────────────────────────────────────────────────
+  // ─── Date handling ──────────────────────────────────────────────────────────
 
-  test('retourne une dateError pour un format de date invalide', ({ assert }) => {
+  test('returns dateError for invalid date format', ({ assert }) => {
     const csv = `Date;Libellé;Débit euros;Crédit euros
-2026-07-01;FORMAT ISO;10,00;`
+2026-07-01;ISO FORMAT;10,00;`
     const result = parseCreditAgricoleCsv(csv)
     assert.lengthOf(result, 1)
     assert.isNull(result[0].date)
     assert.isString(result[0].dateError)
-    assert.include(result[0].dateError!, 'Format de date invalide')
+    assert.include(result[0].dateError!, 'Invalid date format')
   })
 
-  test('retourne une dateError pour une date vide', ({ assert }) => {
+  test('returns dateError for empty date', ({ assert }) => {
     const csv = `Date;Libellé;Débit euros;Crédit euros
-;DATE VIDE;10,00;`
+;EMPTY DATE;10,00;`
     const result = parseCreditAgricoleCsv(csv)
     assert.lengthOf(result, 1)
     assert.isNull(result[0].date)
-    assert.equal(result[0].dateError, 'Date vide')
+    assert.equal(result[0].dateError, 'Empty date')
   })
 
-  test('retourne une dateError pour une date impossible (31/02)', ({ assert }) => {
+  test('returns dateError for impossible date (31/02)', ({ assert }) => {
     const csv = `Date;Libellé;Débit euros;Crédit euros
-31/02/2026;DATE IMPOSSIBLE;10,00;`
+31/02/2026;IMPOSSIBLE DATE;10,00;`
     const result = parseCreditAgricoleCsv(csv)
     assert.lengthOf(result, 1)
     assert.isNull(result[0].date)
     assert.isString(result[0].dateError)
   })
 
-  test('accepte une date valide en fin de mois (28/02)', ({ assert }) => {
+  test('accepts valid end-of-month date (28/02)', ({ assert }) => {
     const csv = `Date;Libellé;Débit euros;Crédit euros
-28/02/2026;FIN FEVRIER;10,00;`
+28/02/2026;END FEBRUARY;10,00;`
     const result = parseCreditAgricoleCsv(csv)
     assert.equal(result[0].date, '2026-02-28')
     assert.isUndefined(result[0].dateError)
   })
 
-  // ─── Gestion des montants ────────────────────────────────────────────────────
+  // ─── Amount handling ─────────────────────────────────────────────────────────
 
-  test('parse les montants avec virgule comme separateur decimal', ({ assert }) => {
+  test('parses amounts with comma as decimal separator', ({ assert }) => {
     const csv = `Date;Libellé;Débit euros;Crédit euros
-01/07/2026;VIRGULE;1234,56;`
+01/07/2026;COMMA;1234,56;`
     const result = parseCreditAgricoleCsv(csv)
     assert.equal(result[0].montant, 1234.56)
   })
 
-  test('parse les montants avec point comme separateur decimal', ({ assert }) => {
+  test('parses amounts with dot as decimal separator', ({ assert }) => {
     const csv = `Date;Libellé;Débit euros;Crédit euros
-01/07/2026;POINT;99.99;`
+01/07/2026;DOT;99.99;`
     const result = parseCreditAgricoleCsv(csv)
     assert.equal(result[0].montant, 99.99)
   })
 
-  test('retourne 0 pour un montant vide', ({ assert }) => {
+  test('returns 0 for empty amount', ({ assert }) => {
     const csv = `Date;Libellé;Débit euros;Crédit euros
 01/07/2026;ZERO;;0`
     const result = parseCreditAgricoleCsv(csv)
-    // montant 0 credit + montant debit vide => ignored car montant === 0 && !debit && !credit n'est pas le cas
-    // credit = "0", donc montant = 0, non ignoré
+    // amount 0 credit + empty debit amount => not ignored because montant === 0 && !debit && !credit is not the case
+    // credit = "0", so montant = 0, not ignored
     assert.lengthOf(result, 1)
     assert.equal(result[0].montant, 0)
   })
 
-  // ─── Fichier vide / edge cases ───────────────────────────────────────────────
+  // ─── Empty file / edge cases ─────────────────────────────────────────────────
 
-  test('retourne un tableau vide pour un CSV sans lignes de données', ({ assert }) => {
+  test('returns empty array for CSV without data rows', ({ assert }) => {
     const csv = `Date;Libellé;Débit euros;Crédit euros`
     const result = parseCreditAgricoleCsv(csv)
     assert.lengthOf(result, 0)
   })
 
-  test('conserve rawDate tel quel', ({ assert }) => {
+  test('preserves rawDate as is', ({ assert }) => {
     const csv = `Date;Libellé;Débit euros;Crédit euros
 01/07/2026;TEST;10,00;`
     const result = parseCreditAgricoleCsv(csv)
     assert.equal(result[0].rawDate, '01/07/2026')
   })
 
-  test('description est toujours null', ({ assert }) => {
+  test('description is always null', ({ assert }) => {
     const csv = `Date;Libellé;Débit euros;Crédit euros
 01/07/2026;TEST;10,00;`
     const result = parseCreditAgricoleCsv(csv)
     assert.isNull(result[0].description)
   })
 
-  test('libelle est trimme des espaces', ({ assert }) => {
+  test('libelle is trimmed of spaces', ({ assert }) => {
     const csv = `Date;Libellé;Débit euros;Crédit euros
 01/07/2026;  SPACES  ;10,00;`
     const result = parseCreditAgricoleCsv(csv)

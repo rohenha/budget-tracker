@@ -22,19 +22,19 @@ function parseAmount(value: string): number {
 
 function parseDate(dateStr: string): { date: string | null; error?: string } {
   const trimmed = dateStr.trim()
-  if (!trimmed) return { date: null, error: 'Date vide' }
+  if (!trimmed) return { date: null, error: 'Empty date' }
   const parts = trimmed.split('/')
-  if (parts.length !== 3) return { date: null, error: `Format de date invalide: ${trimmed}` }
+  if (parts.length !== 3) return { date: null, error: `Invalid date format: ${trimmed}` }
   const [day, month, year] = parts.map(Number)
   if (Number.isNaN(day) || Number.isNaN(month) || Number.isNaN(year))
-    return { date: null, error: `Date invalide: ${trimmed}` }
+    return { date: null, error: `Invalid date: ${trimmed}` }
   const date = new Date(Date.UTC(year, month - 1, day))
   if (
     date.getUTCFullYear() !== year ||
     date.getUTCMonth() !== month - 1 ||
     date.getUTCDate() !== day
   ) {
-    return { date: null, error: `Date invalide: ${trimmed}` }
+    return { date: null, error: `Invalid date: ${trimmed}` }
   }
   return { date: date.toISOString().split('T')[0], error: undefined }
 }

@@ -186,8 +186,10 @@ export default function CreditsShow({
         </CardContent>
       </Card>
 
-      <EditLoanDialog open={editOpen} onOpenChange={setEditOpen} loan={loan} />
-      <DeleteLoanDialog open={deleteOpen} onOpenChange={setDeleteOpen} loan={loan} />
+      {editOpen && <EditLoanDialog open={editOpen} onOpenChange={setEditOpen} loan={loan} />}
+      {deleteOpen && (
+        <DeleteLoanDialog open={deleteOpen} onOpenChange={setDeleteOpen} loan={loan} />
+      )}
     </div>
   )
 }

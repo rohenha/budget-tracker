@@ -1,6 +1,9 @@
 import {
+  Briefcase,
   Circle,
   Home,
+  Laptop,
+  ShoppingCart,
   Car,
   ShoppingBag,
   UtensilsCrossed,
@@ -41,6 +44,9 @@ export type Categorie = {
 
 export const ICONS: Record<string, LucideIcon> = {
   Circle,
+  Briefcase,
+  Laptop,
+  ShoppingCart,
   Home,
   Car,
   ShoppingBag,

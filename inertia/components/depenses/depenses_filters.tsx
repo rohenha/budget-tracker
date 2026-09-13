@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { router } from '@inertiajs/react'
 import { RotateCcw } from 'lucide-react'
 import { Button } from '~/components/ui/button'
@@ -38,15 +38,24 @@ type DepensesFiltersProps = {
 export default function DepensesFilters({ filters, categories }: DepensesFiltersProps) {
   const [dateDebut, setDateDebut] = useState(filters.dateDebut ?? '')
   const [dateFin, setDateFin] = useState(filters.dateFin ?? '')
-  const isCustom = filters.periode === 'custom'
+  const [period, setPeriod] = useState(filters.periode ?? 'month')
+  const isCustom = useMemo(() => {
+    return period === 'custom'
+  }, [period])
 
   function applyFilters() {
+    console.log({
+      category: filters.category,
+      range: filters.range,
+      periode: filters.periode,
+      ...(isCustom ? { dateDebut, dateFin } : {}),
+    })
     router.get(
       '/depenses',
       {
         category: filters.category,
         range: filters.range,
-        periode: filters.periode,
+        periode: period,
         ...(isCustom ? { dateDebut, dateFin } : {}),
       },
       { preserveState: true, preserveScroll: true }
@@ -55,6 +64,7 @@ export default function DepensesFilters({ filters, categories }: DepensesFilters
 
   function handlePeriodeChange(value: string | null) {
     if (!value || value === filters.periode) return
+    setPeriod(value)
     if (value !== 'custom') {
       router.get(
         '/depenses',
@@ -84,6 +94,7 @@ export default function DepensesFilters({ filters, categories }: DepensesFilters
   }
 
   function handleResetFilters() {
+    setPeriod('month')
     router.get(
       '/depenses',
       { category: '', periode: 'month', range: 25 },
@@ -125,7 +136,7 @@ export default function DepensesFilters({ filters, categories }: DepensesFilters
         <FieldLabel htmlFor="periode" className="text-xs">
           Période
         </FieldLabel>
-        <Select value={filters.periode} onValueChange={handlePeriodeChange}>
+        <Select value={period} onValueChange={handlePeriodeChange}>
           <SelectTrigger id="periode" className="w-36">
             <SelectValue />
           </SelectTrigger>
@@ -141,8 +152,32 @@ export default function DepensesFilters({ filters, categories }: DepensesFilters
         </Select>
       </Field>
 
+      <Field className="w-fit">
+        <FieldLabel htmlFor="select-rows-per-page">Nombre par page</FieldLabel>
+        <Select value={filters.range} onValueChange={handleRangeChange}>
+          <SelectTrigger className="w-20" id="select-rows-per-page">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent align="start">
+            <SelectGroup>
+              <SelectItem value="10">10</SelectItem>
+              <SelectItem value="25">25</SelectItem>
+              <SelectItem value="50">50</SelectItem>
+              <SelectItem value="100">100</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </Field>
+
+      {(period !== 'month' || filters.category !== '' || filters.range !== 25) && (
+        <Button size="sm" variant="outline" onClick={handleResetFilters}>
+          <RotateCcw className="size-4 mr-2" />
+          Réinitialiser
+        </Button>
+      )}
+
       {isCustom && (
-        <>
+        <div className="w-full flex gap-3 items-end">
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="dateDebut" className="text-xs">
               Du
@@ -170,31 +205,7 @@ export default function DepensesFilters({ filters, categories }: DepensesFilters
           <Button size="sm" onClick={applyFilters}>
             Filtrer
           </Button>
-        </>
-      )}
-
-      <Field className="w-fit">
-        <FieldLabel htmlFor="select-rows-per-page">Nombre par page</FieldLabel>
-        <Select value={filters.range} onValueChange={handleRangeChange}>
-          <SelectTrigger className="w-20" id="select-rows-per-page">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent align="start">
-            <SelectGroup>
-              <SelectItem value="10">10</SelectItem>
-              <SelectItem value="25">25</SelectItem>
-              <SelectItem value="50">50</SelectItem>
-              <SelectItem value="100">100</SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-      </Field>
-
-      {(filters.periode !== 'month' || filters.category !== '' || filters.range !== 25) && (
-        <Button size="sm" variant="outline" onClick={handleResetFilters}>
-          <RotateCcw className="size-4 mr-2" />
-          Réinitialiser
-        </Button>
+        </div>
       )}
     </div>
   )

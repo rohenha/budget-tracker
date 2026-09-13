@@ -6,12 +6,12 @@ test.group('SessionController', (group) => {
 
   // ─── GET /login ──────────────────────────────────────────────────────────────
 
-  test('GET /login retourne 200 pour un invité', async ({ client }) => {
+  test('GET /login returns 200 for guest', async ({ client }) => {
     const response = await client.get('/login')
     response.assertStatus(200)
   })
 
-  test('GET /login redirige si déjà connecté', async ({ client }) => {
+  test('GET /login redirects if already logged in', async ({ client }) => {
     const user = await createUser()
     const response = await client.get('/login').loginAs(user)
     response.assertRedirectsTo('/')
@@ -19,7 +19,7 @@ test.group('SessionController', (group) => {
 
   // ─── POST /login ─────────────────────────────────────────────────────────────
 
-  test('POST /login connecte avec identifiants valides', async ({ client }) => {
+  test('POST /login logs in with valid credentials', async ({ client }) => {
     const user = await createUser({ email: 'test@example.com', password: 'secret123' })
     const response = await client.post('/login').form({
       email: 'test@example.com',
@@ -29,7 +29,7 @@ test.group('SessionController', (group) => {
     _ = user
   })
 
-  test('POST /login echoue avec mauvais mot de passe', async ({ client }) => {
+  test('POST /login fails with wrong password', async ({ client }) => {
     await createUser({ email: 'test@example.com', password: 'secret123' })
     const response = await client.post('/login').redirects(0).form({
       email: 'test@example.com',
@@ -38,7 +38,7 @@ test.group('SessionController', (group) => {
     response.assertStatus(302)
   })
 
-  test('POST /login echoue si email inconnu', async ({ client }) => {
+  test('POST /login fails if email unknown', async ({ client }) => {
     const response = await client.post('/login').redirects(0).form({
       email: 'notexist@example.com',
       password: 'secret123',
@@ -48,7 +48,7 @@ test.group('SessionController', (group) => {
 
   // ─── POST /logout ─────────────────────────────────────────────────────────────
 
-  test('POST /logout deconnecte et redirige vers /login', async ({ client }) => {
+  test('POST /logout logs out and redirects to /login', async ({ client }) => {
     const user = await createUser()
     const response = await client.post('/logout').loginAs(user)
     response.assertRedirectsTo('/login')
@@ -60,12 +60,12 @@ test.group('SessionController', (group) => {
 test.group('NewAccountController', (group) => {
   group.each.setup(() => testUtils.db().withGlobalTransaction())
 
-  test('GET /signup retourne 200 pour un invité', async ({ client }) => {
+  test('GET /signup returns 200 for guest', async ({ client }) => {
     const response = await client.get('/signup')
     response.assertStatus(200)
   })
 
-  test('POST /signup cree un compte et redirige vers /dashboard', async ({ client }) => {
+  test('POST /signup creates account and redirects to /dashboard', async ({ client }) => {
     const response = await client.post('/signup').form({
       fullName: 'Test User',
       email: 'newuser@example.com',
@@ -75,7 +75,7 @@ test.group('NewAccountController', (group) => {
     response.assertRedirectsTo('/dashboard')
   })
 
-  test('POST /signup echoue si email deja utilise', async ({ client }) => {
+  test('POST /signup fails if email already used', async ({ client }) => {
     await createUser({ email: 'dupe@example.com' })
     const response = await client.post('/signup').redirects(0).form({
       fullName: 'Dupe User',
@@ -86,7 +86,7 @@ test.group('NewAccountController', (group) => {
     response.assertStatus(302)
   })
 
-  test('POST /signup echoue si confirmation du mot de passe ne correspond pas', async ({
+  test('POST /signup fails if password confirmation does not match', async ({
     client,
   }) => {
     const response = await client.post('/signup').redirects(0).form({
@@ -98,7 +98,7 @@ test.group('NewAccountController', (group) => {
     response.assertStatus(302)
   })
 
-  test('POST /signup cree la categorie "Autre" par defaut', async ({ client, assert }) => {
+  test('POST /signup creates "Other" category by default', async ({ client, assert }) => {
     await client.post('/signup').form({
       fullName: 'Cat Test',
       email: 'cattest@example.com',
@@ -115,7 +115,7 @@ test.group('NewAccountController', (group) => {
 
 // ─── Helper ──────────────────────────────────────────────────────────────────
 
-let _ : any
+let _: any
 
 async function createUser(opts: { email?: string; password?: string } = {}) {
   const { default: User } = await import('#models/user')

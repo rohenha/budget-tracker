@@ -2,7 +2,7 @@ import { test } from '@japa/runner'
 import User from '#models/user'
 
 /**
- * Instancie un User sans passer par la DB.
+ * Instantiates a User without going through the DB.
  */
 function makeUser(overrides: Partial<{ fullName: string | null; email: string }> = {}) {
   const user = new User()
@@ -12,31 +12,31 @@ function makeUser(overrides: Partial<{ fullName: string | null; email: string }>
 }
 
 test.group('User — initials getter', () => {
-  test('retourne les initiales du prenom et nom', ({ assert }) => {
+  test('returns first and last name initials', ({ assert }) => {
     const user = makeUser({ fullName: 'John Doe' })
     assert.equal(user.initials, 'JD')
   })
 
-  test('retourne les initiales en majuscules', ({ assert }) => {
+  test('returns uppercase initials', ({ assert }) => {
     const user = makeUser({ fullName: 'alice martin' })
     assert.equal(user.initials, 'AM')
   })
 
-  test('retourne 2 lettres si un seul mot dans fullName', ({ assert }) => {
+  test('returns 2 letters if single word in fullName', ({ assert }) => {
     const user = makeUser({ fullName: 'Mononym' })
     assert.equal(user.initials, 'MO')
   })
 
-  test('utilise email si fullName est null', ({ assert }) => {
+  test('uses email if fullName is null', ({ assert }) => {
     const user = makeUser({ fullName: null, email: 'bob@example.com' })
     // split('@') => ['bob', 'example.com'] => initials = 'BE'
     assert.equal(user.initials, 'BE')
   })
 
-  test('utilise email si fullName est une chaine vide', ({ assert }) => {
+  test('uses email if fullName is empty string', ({ assert }) => {
     const user = makeUser({ fullName: '', email: 'carol@test.com' })
-    // '' split(' ') => ['', ''] => first='', last='' => utilise email path ? Non
-    // '' est falsy donc on prend email split('@') => ['carol', 'test.com']
+    // '' split(' ') => ['', ''] => first='', last='' => uses email path? No
+    // '' is falsy so we take email split('@') => ['carol', 'test.com']
     assert.equal(user.initials, 'CT')
   })
 })

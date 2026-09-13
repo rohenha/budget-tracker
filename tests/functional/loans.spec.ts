@@ -12,16 +12,19 @@ async function createUser() {
   })
 }
 
-async function createLoan(userId: number, overrides: Partial<{
-  name: string
-  borrowedAmount: number
-  interestRate: number
-  durationMonths: number
-  status: 'active' | 'paid'
-}> = {}) {
+async function createLoan(
+  userId: number,
+  overrides: Partial<{
+    name: string
+    borrowedAmount: number
+    interestRate: number
+    durationMonths: number
+    status: 'active' | 'paid'
+  }> = {}
+) {
   return Loan.create({
     userId,
-    name: overrides.name ?? 'Prêt immobilier',
+    name: overrides.name ?? 'Mortgage',
     borrowedAmount: overrides.borrowedAmount ?? 200000,
     downPayment: 0,
     interestRate: overrides.interestRate ?? 3.5,
@@ -34,41 +37,41 @@ async function createLoan(userId: number, overrides: Partial<{
 test.group('LoansController — GET /credits', (group) => {
   group.each.setup(() => testUtils.db().withGlobalTransaction())
 
-  test('retourne 200 pour un utilisateur connecte', async ({ client }) => {
+  test('returns 200 for authenticated user', async ({ client }) => {
     const user = await createUser()
     const response = await client.get('/credits').loginAs(user)
     response.assertStatus(200)
   })
 
-  test('redirige vers /login si non connecte', async ({ client }) => {
+  test('redirects to /login if not authenticated', async ({ client }) => {
     const response = await client.get('/credits')
     response.assertRedirectsTo('/login')
   })
 
-  test('ne retourne que les prets de l utilisateur courant', async ({ client, assert }) => {
+  test('returns only current user loans', async ({ assert }) => {
     const user1 = await createUser()
     const user2 = await createUser()
-    await createLoan(user1.id, { name: 'Pret user1' })
-    await createLoan(user2.id, { name: 'Pret user2' })
+    await createLoan(user1.id, { name: 'User1 loan' })
+    await createLoan(user2.id, { name: 'User2 loan' })
 
-    // user2 ne doit pas voir les prêts de user1 — test via DB isolation
+    // user2 must not see user1 loans — test via DB isolation
     const user2Loans = await Loan.query().where('userId', user2.id)
     assert.lengthOf(user2Loans, 1)
-    assert.equal(user2Loans[0].name, 'Pret user2')
+    assert.equal(user2Loans[0].name, 'User2 loan')
   })
 })
 
 test.group('LoansController — GET /credits/:id (show)', (group) => {
   group.each.setup(() => testUtils.db().withGlobalTransaction())
 
-  test('retourne 200 pour le proprietaire', async ({ client }) => {
+  test('returns 200 for owner', async ({ client }) => {
     const user = await createUser()
     const loan = await createLoan(user.id)
     const response = await client.get(`/credits/${loan.id}`).loginAs(user)
     response.assertStatus(200)
   })
 
-  test('retourne 404 pour un pret d un autre utilisateur', async ({ client }) => {
+  test('returns 404 for another user loan', async ({ client }) => {
     const user1 = await createUser()
     const user2 = await createUser()
     const loan = await createLoan(user1.id)
@@ -80,21 +83,21 @@ test.group('LoansController — GET /credits/:id (show)', (group) => {
 test.group('LoansController — POST /credits (store)', (group) => {
   group.each.setup(() => testUtils.db().withGlobalTransaction())
 
-  test('cree un pret et redirige', async ({ client, assert }) => {
+  test('creates a loan and redirects', async ({ client, assert }) => {
     const user = await createUser()
     const response = await client.post('/credits').loginAs(user).form({
-      name: 'Voiture',
+      name: 'Car',
       borrowedAmount: 15000,
       interestRate: 4,
       durationMonths: 48,
       startDate: '2026-01-01',
     })
     response.assertRedirectsTo('/credits')
-    const loan = await Loan.query().where('userId', user.id).where('name', 'Voiture').first()
+    const loan = await Loan.query().where('userId', user.id).where('name', 'Car').first()
     assert.isNotNull(loan)
   })
 
-  test('echoue si montant <= 0', async ({ client }) => {
+  test('fails if amount <= 0', async ({ client }) => {
     const user = await createUser()
     const response = await client.post('/credits').loginAs(user).redirects(0).form({
       name: 'Test',
@@ -106,7 +109,7 @@ test.group('LoansController — POST /credits (store)', (group) => {
     response.assertStatus(302)
   })
 
-  test('echoue si duree <= 0', async ({ client }) => {
+  test('fails if duration <= 0', async ({ client }) => {
     const user = await createUser()
     const response = await client.post('/credits').loginAs(user).redirects(0).form({
       name: 'Test',
@@ -118,7 +121,7 @@ test.group('LoansController — POST /credits (store)', (group) => {
     response.assertStatus(302)
   })
 
-  test('echoue si nom manquant', async ({ client }) => {
+  test('fails if name missing', async ({ client }) => {
     const user = await createUser()
     const response = await client.post('/credits').loginAs(user).redirects(0).form({
       borrowedAmount: 10000,
@@ -133,7 +136,7 @@ test.group('LoansController — POST /credits (store)', (group) => {
 test.group('LoansController — POST /credits/:id (update)', (group) => {
   group.each.setup(() => testUtils.db().withGlobalTransaction())
 
-  test('modifie un pret existant', async ({ client, assert }) => {
+  test('updates an existing loan', async ({ client, assert }) => {
     const user = await createUser()
     const loan = await createLoan(user.id)
     const response = await client.post(`/credits/${loan.id}`).loginAs(user).form({
@@ -144,7 +147,7 @@ test.group('LoansController — POST /credits/:id (update)', (group) => {
     assert.equal(loan.status, 'paid')
   })
 
-  test('ne peut pas modifier le pret d un autre utilisateur', async ({ client }) => {
+  test('cannot update another user loan', async ({ client }) => {
     const user1 = await createUser()
     const user2 = await createUser()
     const loan = await createLoan(user1.id)
@@ -158,7 +161,7 @@ test.group('LoansController — POST /credits/:id (update)', (group) => {
 test.group('LoansController — DELETE /credits/:id (destroy)', (group) => {
   group.each.setup(() => testUtils.db().withGlobalTransaction())
 
-  test('supprime un pret', async ({ client, assert }) => {
+  test('deletes a loan', async ({ client, assert }) => {
     const user = await createUser()
     const loan = await createLoan(user.id)
     const response = await client.delete(`/credits/${loan.id}`).loginAs(user)
@@ -167,7 +170,7 @@ test.group('LoansController — DELETE /credits/:id (destroy)', (group) => {
     assert.isNull(deleted)
   })
 
-  test('ne peut pas supprimer le pret d un autre utilisateur', async ({ client }) => {
+  test('cannot delete another user loan', async ({ client }) => {
     const user1 = await createUser()
     const user2 = await createUser()
     const loan = await createLoan(user1.id)

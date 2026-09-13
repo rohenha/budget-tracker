@@ -10,22 +10,22 @@ async function createUser() {
   })
 }
 
-// Routes protégées (auth middleware)
+// Protected routes (auth middleware)
 const AUTH_ROUTES = ['/dashboard', '/categories', '/depenses', '/credits']
 
-// Routes invité (guest middleware)
+// Guest routes (guest middleware)
 const GUEST_ROUTES = ['/login', '/signup']
 
-test.group('AuthMiddleware — routes protegees', (group) => {
+test.group('AuthMiddleware — protected routes', (group) => {
   group.each.setup(() => testUtils.db().withGlobalTransaction())
 
   for (const route of AUTH_ROUTES) {
-    test(`GET ${route} redirige vers /login si non connecte`, async ({ client }) => {
+    test(`GET ${route} redirects to /login if not authenticated`, async ({ client }) => {
       const response = await client.get(route)
       response.assertRedirectsTo('/login')
     })
 
-    test(`GET ${route} retourne 200 si connecte`, async ({ client }) => {
+    test(`GET ${route} returns 200 if authenticated`, async ({ client }) => {
       const user = await createUser()
       const response = await client.get(route).loginAs(user)
       response.assertStatus(200)
@@ -33,16 +33,16 @@ test.group('AuthMiddleware — routes protegees', (group) => {
   }
 })
 
-test.group('GuestMiddleware — routes invites', (group) => {
+test.group('GuestMiddleware — guest routes', (group) => {
   group.each.setup(() => testUtils.db().withGlobalTransaction())
 
   for (const route of GUEST_ROUTES) {
-    test(`GET ${route} retourne 200 si non connecte`, async ({ client }) => {
+    test(`GET ${route} returns 200 if not authenticated`, async ({ client }) => {
       const response = await client.get(route)
       response.assertStatus(200)
     })
 
-    test(`GET ${route} redirige si deja connecte`, async ({ client }) => {
+    test(`GET ${route} redirects if already authenticated`, async ({ client }) => {
       const user = await createUser()
       const response = await client.get(route).loginAs(user)
       response.assertRedirectsTo('/')

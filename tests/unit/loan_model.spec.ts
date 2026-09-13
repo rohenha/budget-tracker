@@ -3,8 +3,8 @@ import { DateTime } from 'luxon'
 import Loan from '#models/loan'
 
 /**
- * Les getters et méthodes de Loan sont de la logique pure (pas de DB).
- * On instancie le modèle directement sans sauvegarder.
+ * The getters and methods of Loan are pure logic (no DB).
+ * We instantiate the model directly without saving.
  */
 function makeLoan(overrides: Partial<{
   borrowedAmount: number
@@ -25,79 +25,79 @@ function makeLoan(overrides: Partial<{
 }
 
 test.group('Loan — monthlyPayment', () => {
-  test('calcule la mensualite avec taux non nul', ({ assert }) => {
+  test('calculates monthly payment with non-zero rate', ({ assert }) => {
     const loan = makeLoan({ borrowedAmount: 10000, interestRate: 5, durationMonths: 12 })
-    // formule annuité: P * r(1+r)^n / ((1+r)^n - 1), r = 5/100/12
+    // annuity formula: P * r(1+r)^n / ((1+r)^n - 1), r = 5/100/12
     assert.approximately(loan.monthlyPayment, 856.07, 0.5)
   })
 
-  test('retourne 0 si montant emprunte est 0', ({ assert }) => {
+  test('returns 0 if borrowed amount is 0', ({ assert }) => {
     const loan = makeLoan({ borrowedAmount: 0, interestRate: 5, durationMonths: 12 })
     assert.equal(loan.monthlyPayment, 0)
   })
 
-  test('divise le principal par n si taux est 0', ({ assert }) => {
+  test('divides principal by n if rate is 0', ({ assert }) => {
     const loan = makeLoan({ borrowedAmount: 12000, interestRate: 0, durationMonths: 12 })
     assert.equal(loan.monthlyPayment, 1000)
   })
 })
 
 test.group('Loan — totalInterest', () => {
-  test('retourne 0 si taux est 0', ({ assert }) => {
+  test('returns 0 if rate is 0', ({ assert }) => {
     const loan = makeLoan({ borrowedAmount: 10000, interestRate: 0, durationMonths: 12 })
     assert.equal(loan.totalInterest, 0)
   })
 
-  test('retourne un interet positif avec taux > 0', ({ assert }) => {
+  test('returns positive interest with rate > 0', ({ assert }) => {
     const loan = makeLoan({ borrowedAmount: 10000, interestRate: 5, durationMonths: 12 })
     assert.isAbove(loan.totalInterest, 0)
   })
 })
 
 test.group('Loan — totalPaid', () => {
-  test('est egal a mensualite * duree', ({ assert }) => {
+  test('equals monthly payment * duration', ({ assert }) => {
     const loan = makeLoan({ borrowedAmount: 12000, interestRate: 0, durationMonths: 12 })
     assert.equal(loan.totalPaid, 12000)
   })
 })
 
 test.group('Loan — remainingBalance', () => {
-  test('retourne 0 si statut paid', ({ assert }) => {
+  test('returns 0 if status paid', ({ assert }) => {
     const loan = makeLoan({ status: 'paid' })
     assert.equal(loan.remainingBalance, 0)
   })
 
-  test('retourne le montant emprunte si statut active', ({ assert }) => {
+  test('returns borrowed amount if status active', ({ assert }) => {
     const loan = makeLoan({ borrowedAmount: 5000, status: 'active' })
     assert.equal(loan.remainingBalance, 5000)
   })
 })
 
 test.group('Loan — schedule()', () => {
-  test('retourne un tableau vide si montant est 0', ({ assert }) => {
+  test('returns empty array if amount is 0', ({ assert }) => {
     const loan = makeLoan({ borrowedAmount: 0 })
     assert.deepEqual(loan.schedule(), [])
   })
 
-  test('retourne n echeances', ({ assert }) => {
+  test('returns n installments', ({ assert }) => {
     const loan = makeLoan({ borrowedAmount: 10000, interestRate: 5, durationMonths: 12 })
     const schedule = loan.schedule()
     assert.lengthOf(schedule, 12)
   })
 
-  test('la derniere echeance solde le capital (remainingBalance = 0)', ({ assert }) => {
+  test('last installment settles principal (remainingBalance = 0)', ({ assert }) => {
     const loan = makeLoan({ borrowedAmount: 10000, interestRate: 5, durationMonths: 12 })
     const schedule = loan.schedule()
     assert.equal(schedule[schedule.length - 1].remainingBalance, 0)
   })
 
-  test('les numeros d echeance sont sequentiels', ({ assert }) => {
+  test('installment numbers are sequential', ({ assert }) => {
     const loan = makeLoan({ borrowedAmount: 10000, interestRate: 5, durationMonths: 6 })
     const schedule = loan.schedule()
     schedule.forEach((row, i) => assert.equal(row.installmentNumber, i + 1))
   })
 
-  test('les dates d echeance progressent mensuellement', ({ assert }) => {
+  test('installment dates progress monthly', ({ assert }) => {
     const start = DateTime.fromISO('2026-01-01')
     const loan = makeLoan({ durationMonths: 3, startDate: start })
     const schedule = loan.schedule()
@@ -106,7 +106,7 @@ test.group('Loan — schedule()', () => {
     assert.equal(schedule[2].dueDate, '2026-04-01')
   })
 
-  test('sans taux chaque echeance a un interet de 0', ({ assert }) => {
+  test('without rate each installment has 0 interest', ({ assert }) => {
     const loan = makeLoan({ borrowedAmount: 12000, interestRate: 0, durationMonths: 12 })
     const schedule = loan.schedule()
     schedule.forEach((row) => assert.equal(row.interest, 0))
@@ -114,8 +114,8 @@ test.group('Loan — schedule()', () => {
 })
 
 test.group('Loan — settled()', () => {
-  test('retourne 0 si aucune echeance passee', ({ assert }) => {
-    // Prêt commençant dans le futur
+  test('returns 0 if no past installment', ({ assert }) => {
+    // Loan starting in the future
     const loan = makeLoan({
       startDate: DateTime.now().plus({ years: 1 }),
       durationMonths: 12,
@@ -125,8 +125,8 @@ test.group('Loan — settled()', () => {
     assert.equal(result.currentInterest, 0)
   })
 
-  test('retourne des valeurs positives si des echeances sont passees', ({ assert }) => {
-    // Prêt commençant il y a 6 mois
+  test('returns positive values if installments are past', ({ assert }) => {
+    // Loan starting 6 months ago
     const loan = makeLoan({
       startDate: DateTime.now().minus({ months: 6 }),
       borrowedAmount: 10000,

@@ -114,7 +114,7 @@ export default function Budget({
         />
       </div>
 
-      <AddCategoryDialog open={addOpen} onOpenChange={setAddOpen} />
+      {addOpen && <AddCategoryDialog open={addOpen} onOpenChange={setAddOpen} />}
 
       <PageState
         empty={
@@ -138,7 +138,12 @@ export default function Budget({
       </PageState>
 
       {editItem && (
-        <EditCategoryDialog categorie={editItem} open onOpenChange={(o) => !o && setEditId(null)} />
+        <EditCategoryDialog
+          key={editItem.categorieId}
+          categorie={editItem}
+          open
+          onOpenChange={(o) => !o && setEditId(null)}
+        />
       )}
       {deleteItem && (
         <DeleteCategoryDialog

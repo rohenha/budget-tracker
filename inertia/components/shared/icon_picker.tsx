@@ -22,7 +22,7 @@ export default function IconPicker({ value, onChange, error }: IconPickerProps) 
         onChange={(e) => setSearch(e.target.value)}
         className="h-7"
       />
-      <div className="grid grid-cols-8 gap-1 max-h-32 overflow-y-auto mt-1">
+      <div className="grid grid-cols-10 gap-1 max-h-32 overflow-y-auto mt-1">
         {filtered.map((name) => {
           const I = getIcon(name)
           return (

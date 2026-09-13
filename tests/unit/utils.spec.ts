@@ -2,39 +2,39 @@ import { test } from '@japa/runner'
 import { cn } from '../../inertia/lib/utils.js'
 
 test.group('cn — class merger', () => {
-  test('retourne une chaine vide si aucun argument', ({ assert }) => {
+  test('returns empty string if no argument', ({ assert }) => {
     assert.equal(cn(), '')
   })
 
-  test('retourne la classe si un seul argument', ({ assert }) => {
+  test('returns class if single argument', ({ assert }) => {
     assert.equal(cn('foo'), 'foo')
   })
 
-  test('fusionne plusieurs classes', ({ assert }) => {
+  test('merges multiple classes', ({ assert }) => {
     assert.equal(cn('foo', 'bar'), 'foo bar')
   })
 
-  test('ignore les valeurs falsy (undefined, null, false)', ({ assert }) => {
+  test('ignores falsy values (undefined, null, false)', ({ assert }) => {
     assert.equal(cn('foo', undefined, null, false, 'bar'), 'foo bar')
   })
 
-  test('deduplication Tailwind : la derniere classe gagne', ({ assert }) => {
-    // tailwind-merge doit resoudre le conflit px-2 vs px-4
+  test('Tailwind dedup: last class wins', ({ assert }) => {
+    // tailwind-merge must resolve px-2 vs px-4 conflict
     const result = cn('px-2', 'px-4')
     assert.equal(result, 'px-4')
   })
 
-  test('fusionne les objets conditionnels clsx', ({ assert }) => {
+  test('merges clsx conditional objects', ({ assert }) => {
     const result = cn({ 'text-red-500': true, 'text-blue-500': false })
     assert.equal(result, 'text-red-500')
   })
 
-  test('fusionne les tableaux de classes clsx', ({ assert }) => {
+  test('merges clsx class arrays', ({ assert }) => {
     const result = cn(['foo', 'bar'], 'baz')
     assert.equal(result, 'foo bar baz')
   })
 
-  test('resout les conflits de couleur Tailwind', ({ assert }) => {
+  test('resolves Tailwind color conflicts', ({ assert }) => {
     const result = cn('bg-red-500', 'bg-blue-500')
     assert.equal(result, 'bg-blue-500')
   })

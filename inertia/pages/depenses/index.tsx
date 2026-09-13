@@ -165,7 +165,9 @@ export default function Depenses({
         )}
       </PageState>
 
-      <AddDepenseDialog open={addOpen} onOpenChange={setAddOpen} categories={categories} />
+      {addOpen && (
+        <AddDepenseDialog open={addOpen} onOpenChange={setAddOpen} categories={categories} />
+      )}
 
       {editDepense && (
         <EditDepenseDialog

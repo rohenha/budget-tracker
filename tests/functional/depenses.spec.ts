@@ -16,7 +16,7 @@ async function createUser() {
 async function createCategorie(userId: number, type: 'entree' | 'sortie' = 'sortie') {
   return Categorie.create({
     userId,
-    label: 'Alimentation',
+    label: 'Groceries',
     slug: `cat-${Date.now()}-${Math.random()}`,
     icon: 'ShoppingCart',
     type,
@@ -24,16 +24,20 @@ async function createCategorie(userId: number, type: 'entree' | 'sortie' = 'sort
   })
 }
 
-async function createDepense(userId: number, categorieId: number, overrides: Partial<{
-  libelle: string
-  montant: number
-  type: 'entree' | 'sortie'
-  date: DateTime
-}> = {}) {
+async function createDepense(
+  userId: number,
+  categorieId: number,
+  overrides: Partial<{
+    libelle: string
+    montant: number
+    type: 'entree' | 'sortie'
+    date: DateTime
+  }> = {}
+) {
   return Depense.create({
     userId,
     categorieId,
-    libelle: overrides.libelle ?? 'Courses',
+    libelle: overrides.libelle ?? 'Groceries',
     montant: overrides.montant ?? 50,
     type: overrides.type ?? 'sortie',
     date: overrides.date ?? DateTime.now(),
@@ -43,24 +47,24 @@ async function createDepense(userId: number, categorieId: number, overrides: Par
 test.group('DepensesController — GET /depenses', (group) => {
   group.each.setup(() => testUtils.db().withGlobalTransaction())
 
-  test('retourne 200 pour un utilisateur connecte', async ({ client }) => {
+  test('returns 200 for authenticated user', async ({ client }) => {
     const user = await createUser()
     const response = await client.get('/depenses').loginAs(user)
     response.assertStatus(200)
   })
 
-  test('redirige vers /login si non connecte', async ({ client }) => {
+  test('redirects to /login if not authenticated', async ({ client }) => {
     const response = await client.get('/depenses')
     response.assertRedirectsTo('/login')
   })
 
-  test('accepte les filtres de periode', async ({ client }) => {
+  test('accepts period filters', async ({ client }) => {
     const user = await createUser()
     const response = await client.get('/depenses?periode=week').loginAs(user)
     response.assertStatus(200)
   })
 
-  test('accepte la pagination', async ({ client }) => {
+  test('accepts pagination', async ({ client }) => {
     const user = await createUser()
     const response = await client.get('/depenses?page=1&range=10').loginAs(user)
     response.assertStatus(200)
@@ -70,22 +74,25 @@ test.group('DepensesController — GET /depenses', (group) => {
 test.group('DepensesController — POST /depenses (store)', (group) => {
   group.each.setup(() => testUtils.db().withGlobalTransaction())
 
-  test('cree une depense et redirige', async ({ client, assert }) => {
+  test('creates an expense and redirects', async ({ client, assert }) => {
     const user = await createUser()
     const cat = await createCategorie(user.id)
     const response = await client.post('/depenses').loginAs(user).form({
       date: '2026-07-01',
-      libelle: 'Supermarché',
+      libelle: 'Supermarket',
       montant: 75.5,
       categorieId: cat.id,
     })
     response.assertRedirectsTo('/depenses')
-    const depense = await Depense.query().where('userId', user.id).where('libelle', 'Supermarché').first()
+    const depense = await Depense.query()
+      .where('userId', user.id)
+      .where('libelle', 'Supermarket')
+      .first()
     assert.isNotNull(depense)
     assert.approximately(Number(depense!.montant), 75.5, 0.01)
   })
 
-  test('echoue si categorieId manquant', async ({ client }) => {
+  test('fails if categorieId missing', async ({ client }) => {
     const user = await createUser()
     const response = await client.post('/depenses').loginAs(user).redirects(0).form({
       date: '2026-07-01',
@@ -95,7 +102,7 @@ test.group('DepensesController — POST /depenses (store)', (group) => {
     response.assertStatus(302)
   })
 
-  test('echoue si montant <= 0', async ({ client }) => {
+  test('fails if amount <= 0', async ({ client }) => {
     const user = await createUser()
     const cat = await createCategorie(user.id)
     const response = await client.post('/depenses').loginAs(user).redirects(0).form({
@@ -107,16 +114,19 @@ test.group('DepensesController — POST /depenses (store)', (group) => {
     response.assertStatus(302)
   })
 
-  test('type est derive de la categorie', async ({ client, assert }) => {
+  test('type is derived from category', async ({ client, assert }) => {
     const user = await createUser()
     const cat = await createCategorie(user.id, 'entree')
     await client.post('/depenses').loginAs(user).form({
       date: '2026-07-01',
-      libelle: 'Salaire',
+      libelle: 'Salary',
       montant: 2000,
       categorieId: cat.id,
     })
-    const depense = await Depense.query().where('userId', user.id).where('libelle', 'Salaire').first()
+    const depense = await Depense.query()
+      .where('userId', user.id)
+      .where('libelle', 'Salary')
+      .first()
     assert.equal(depense!.type, 'entree')
   })
 })
@@ -124,19 +134,19 @@ test.group('DepensesController — POST /depenses (store)', (group) => {
 test.group('DepensesController — POST /depenses/:id (update)', (group) => {
   group.each.setup(() => testUtils.db().withGlobalTransaction())
 
-  test('modifie une depense existante', async ({ client, assert }) => {
+  test('updates an existing expense', async ({ client, assert }) => {
     const user = await createUser()
     const cat = await createCategorie(user.id)
     const depense = await createDepense(user.id, cat.id)
     const response = await client.post(`/depenses/${depense.id}`).loginAs(user).form({
-      libelle: 'Modifie',
+      libelle: 'Updated',
     })
     response.assertRedirectsTo('/depenses')
     await depense.refresh()
-    assert.equal(depense.libelle, 'Modifie')
+    assert.equal(depense.libelle, 'Updated')
   })
 
-  test('ne peut pas modifier la depense d un autre utilisateur', async ({ client }) => {
+  test('cannot update another user expense', async ({ client }) => {
     const user1 = await createUser()
     const user2 = await createUser()
     const cat = await createCategorie(user1.id)
@@ -151,7 +161,7 @@ test.group('DepensesController — POST /depenses/:id (update)', (group) => {
 test.group('DepensesController — DELETE /depenses/:id (destroy)', (group) => {
   group.each.setup(() => testUtils.db().withGlobalTransaction())
 
-  test('supprime une depense', async ({ client, assert }) => {
+  test('deletes an expense', async ({ client, assert }) => {
     const user = await createUser()
     const cat = await createCategorie(user.id)
     const depense = await createDepense(user.id, cat.id)
@@ -161,7 +171,7 @@ test.group('DepensesController — DELETE /depenses/:id (destroy)', (group) => {
     assert.isNull(deleted)
   })
 
-  test('ne peut pas supprimer la depense d un autre utilisateur', async ({ client }) => {
+  test('cannot delete another user expense', async ({ client }) => {
     const user1 = await createUser()
     const user2 = await createUser()
     const cat = await createCategorie(user1.id)
@@ -174,36 +184,43 @@ test.group('DepensesController — DELETE /depenses/:id (destroy)', (group) => {
 test.group('DepensesController — POST /depenses/import/validate (storeBatch)', (group) => {
   group.each.setup(() => testUtils.db().withGlobalTransaction())
 
-  test('importe un lot de transactions valides', async ({ client, assert }) => {
+  test('imports a batch of valid transactions', async ({ client, assert }) => {
     const user = await createUser()
     const cat = await createCategorie(user.id)
-    const response = await client.post('/depenses/import/validate').loginAs(user).json({
-      transactions: [
-        {
-          date: '2026-07-01',
-          libelle: 'Import 1',
-          montant: 10,
-          type: 'sortie',
-          categorieId: cat.id,
-        },
-        {
-          date: '2026-07-02',
-          libelle: 'Import 2',
-          montant: 20,
-          type: 'sortie',
-        },
-      ],
-    })
+    const response = await client
+      .post('/depenses/import/validate')
+      .loginAs(user)
+      .json({
+        transactions: [
+          {
+            date: '2026-07-01',
+            libelle: 'Import 1',
+            montant: 10,
+            type: 'sortie',
+            categorieId: cat.id,
+          },
+          {
+            date: '2026-07-02',
+            libelle: 'Import 2',
+            montant: 20,
+            type: 'sortie',
+          },
+        ],
+      })
     response.assertRedirectsTo('/depenses')
     const count = await Depense.query().where('userId', user.id).count('* as total')
     assert.equal(Number((count[0] as any).$extras.total), 2)
   })
 
-  test('echoue si transactions est vide', async ({ client }) => {
+  test('fails if transactions is empty', async ({ client }) => {
     const user = await createUser()
-    const response = await client.post('/depenses/import/validate').loginAs(user).redirects(0).json({
-      transactions: [],
-    })
+    const response = await client
+      .post('/depenses/import/validate')
+      .loginAs(user)
+      .redirects(0)
+      .json({
+        transactions: [],
+      })
     response.assertStatus(302)
   })
 })

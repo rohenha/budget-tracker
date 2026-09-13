@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Input } from '~/components/ui/input'
 import { Field, FieldContent, FieldError, FieldLabel } from '~/components/ui/field'
 import { getIcon } from '~/components/budget/constants'
+import IconPicker from '~/components/shared/icon_picker'
 import { type CategorySpending } from '~/components/budget/category_pie_chart'
 import FormDialog from '~/components/shared/form_dialog'
 import TypeExpenseSelect from '~/components/ui/type_expense_select'
@@ -15,9 +16,10 @@ export default function EditCategoryDialog({
   open: boolean
   onOpenChange: (v: boolean) => void
 }) {
-  const Icon = getIcon(categorie.icon)
   const [typeState, setTypeState] = useState(categorie.type)
   const [iconColor, setIconColor] = useState(categorie.color || '#6366f1')
+  const [icon, setIcon] = useState(categorie.icon)
+  const Icon = getIcon(icon)
 
   return (
     <FormDialog
@@ -40,6 +42,12 @@ export default function EditCategoryDialog({
                 aria-invalid={!!errors.label}
               />
               <FieldError errors={[{ message: errors.label }]} />
+            </FieldContent>
+          </Field>
+          <Field>
+            <FieldLabel>Icône</FieldLabel>
+            <FieldContent>
+              <IconPicker value={icon} onChange={setIcon} error={errors.icon} />
             </FieldContent>
           </Field>
           <Field>
@@ -81,10 +89,6 @@ export default function EditCategoryDialog({
               <FieldError errors={[{ message: errors.type }]} />
             </FieldContent>
           </Field>
-          <div className="flex items-center gap-1 text-xs text-muted-foreground">
-            <Icon className="size-4" style={{ color: iconColor }} />
-            <span>{categorie.icon}</span>
-          </div>
         </>
       )}
     </FormDialog>
