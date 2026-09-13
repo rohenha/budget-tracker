@@ -1,7 +1,12 @@
 import { DateTime } from 'luxon'
 import db from '@adonisjs/lucid/services/db'
 import Categorie from '#models/categorie'
-import { createCategorieValidator, updateCategorieValidator } from '#validators/categorie'
+import Depense from '#models/depense'
+import {
+  createCategorieValidator,
+  indexCategorieValidator,
+  updateCategorieValidator,
+} from '#validators/categorie'
 import type { HttpContext } from '@adonisjs/core/http'
 type CategorySpending = {
   categorieId: number
@@ -15,13 +20,35 @@ type CategorySpending = {
 }
 
 export default class CategoriesController {
-  async index({ inertia, auth }: HttpContext) {
+  async index({ inertia, auth, request }: HttpContext) {
     const user = auth.user!
+    const { mois } = await request.validateUsing(indexCategorieValidator)
     const categories = await Categorie.query().where('userId', user.id).orderBy('type', 'asc')
 
     const now = DateTime.now()
-    const startOfMonth = now.startOf('month').toSQLDate()
-    const endOfMonth = now.endOf('month').toSQLDate()
+    const firstDepense = await Depense.query()
+      .where('userId', user.id)
+      .orderBy('date', 'asc')
+      .first()
+
+    const startCursor = firstDepense ? firstDepense.date.startOf('month') : now.startOf('month')
+    const endCursor = now.startOf('month')
+
+    const availableMonths: Array<{ value: string; label: string }> = []
+    let cursor = startCursor
+    while (cursor <= endCursor) {
+      const value = cursor.toFormat('yyyy-MM')
+      const rawLabel = cursor.setLocale('fr').toFormat('LLLL yyyy')
+      availableMonths.push({ value, label: rawLabel.charAt(0).toUpperCase() + rawLabel.slice(1) })
+      cursor = cursor.plus({ months: 1 })
+    }
+
+    const selectedMonth =
+      mois && availableMonths.some((m) => m.value === mois) ? mois : now.toFormat('yyyy-MM')
+
+    const selectedDate = DateTime.fromFormat(selectedMonth, 'yyyy-MM')
+    const startOfMonth = selectedDate.startOf('month').toSQLDate()
+    const endOfMonth = selectedDate.endOf('month').toSQLDate()
 
     const rows = await db
       .from('depenses')
@@ -56,6 +83,8 @@ export default class CategoriesController {
     return inertia.render('budget/index', {
       categorySpending,
       categoryEntry,
+      availableMonths,
+      selectedMonth,
     })
   }
 

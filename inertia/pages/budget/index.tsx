@@ -8,6 +8,7 @@ import AddCategoryDialog from '~/components/budget/add_category_dialog'
 import EditCategoryDialog from '~/components/budget/edit_category_dialog'
 import DeleteCategoryDialog from '~/components/budget/delete_category_dialog'
 import CategoryPieChart, { type CategorySpending } from '~/components/budget/category_pie_chart'
+import BudgetFilters, { type MonthOption } from '~/components/budget/budget_filters'
 import { getIcon, formatBudget } from '~/components/budget/constants'
 import ProgressBadge from '~/components/depenses/progress_badge'
 import DataTable from '~/components/ui/data_table'
@@ -15,9 +16,13 @@ import DataTable from '~/components/ui/data_table'
 export default function Budget({
   categorySpending = [],
   categoryEntry = [],
+  availableMonths = [],
+  selectedMonth = '',
 }: InertiaProps<{
   categorySpending: CategorySpending[]
   categoryEntry: CategorySpending[]
+  availableMonths: MonthOption[]
+  selectedMonth: string
 }>) {
   const [addOpen, setAddOpen] = useState(false)
   const [editId, setEditId] = useState<number | null>(null)
@@ -97,19 +102,21 @@ export default function Budget({
         )}
       </div>
 
+      <BudgetFilters availableMonths={availableMonths} selectedMonth={selectedMonth} />
+
       <div className="grid lg:grid-cols-2 gap-2">
         <CategoryPieChart
           data={categoryEntry}
           label="Rentrées"
           title="Répartition des rentrées"
-          description="Aucune rentrée ce mois-ci"
+          description="Aucune rentrée pour ce mois-ci"
           spending={false}
         />
         <CategoryPieChart
           data={categorySpending}
           label="Dépensé"
           title="Répartition des dépenses"
-          description="Aucune dépense ce mois-ci"
+          description="Aucune dépense pour ce mois-ci"
           spending={true}
         />
       </div>

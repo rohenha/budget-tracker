@@ -98,9 +98,9 @@ export interface Registry {
       body: {}
       paramsTuple: []
       params: {}
-      query: {}
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/categorie').indexCategorieValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/categories_controller').default['index']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/categories_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/categories_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'categories.store': {

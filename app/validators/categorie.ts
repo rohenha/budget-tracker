@@ -1,5 +1,13 @@
 import vine from '@vinejs/vine'
 
+export const indexCategorieValidator = vine.create({
+  mois: vine
+    .string()
+    .trim()
+    .regex(/^\d{4}-(0[1-9]|1[0-2])$/)
+    .optional(),
+})
+
 export const createCategorieValidator = vine.create({
   label: vine.string().trim().minLength(1).maxLength(100),
   slug: vine.string().trim().minLength(1).maxLength(100).optional(),
