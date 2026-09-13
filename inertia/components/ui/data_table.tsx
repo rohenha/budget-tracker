@@ -23,6 +23,7 @@ type DataTableProps<T> = {
   onEdit?: (item: T) => void
   onDelete?: (item: T) => void
   canDelete?: (item: T) => boolean
+  rowClassName?: (item: T) => string | undefined
 }
 
 export default function DataTable<T>({
@@ -33,6 +34,7 @@ export default function DataTable<T>({
   onEdit,
   onDelete,
   canDelete,
+  rowClassName,
 }: DataTableProps<T>) {
   const hasActions = onEdit || onDelete
 
@@ -52,7 +54,11 @@ export default function DataTable<T>({
         {data.map((item) => (
           <TableRow
             key={keyExtractor(item)}
-            className={onRowClick ? 'cursor-pointer' : undefined}
+            className={
+              [onRowClick ? 'cursor-pointer' : '', rowClassName?.(item) ?? '']
+                .filter(Boolean)
+                .join(' ') || undefined
+            }
             onClick={
               onRowClick
                 ? (e) => {

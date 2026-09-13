@@ -21,6 +21,12 @@ export default function CreditsShow({
 }>) {
   const [editOpen, setEditOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
+  const paidSoFar = loan.settled.currentPaid + loan.settled.currentInterest
+  const remainingDue =
+    loan.status === 'paid' ? 0 : Math.max(loan.remainingBalance - loan.settled.currentPaid, 0)
+  const progressPct = loan.totalPaid > 0 ? Math.round((paidSoFar / loan.totalPaid) * 1000) / 10 : 0
+  const today = new Date().toLocaleDateString('en-CA')
+  const isPast = (r: InstallmentRow) => r.dueDate < today
   const scheduleColumns: {
     label: string
     className?: string
@@ -82,7 +88,7 @@ export default function CreditsShow({
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold tabular-nums text-primary">
-              {formatBudget(loan.remainingBalance - loan.settled.currentPaid)}
+              {formatBudget(remainingDue)}
             </p>
           </CardContent>
         </Card>
@@ -104,7 +110,7 @@ export default function CreditsShow({
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold tabular-nums text-primary">
-              {formatBudget(loan.settled.currentPaid + loan.settled.currentInterest)}
+              {formatBudget(paidSoFar)}
             </p>
           </CardContent>
         </Card>
@@ -115,12 +121,7 @@ export default function CreditsShow({
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold tabular-nums text-primary">
-              {Math.round(
-                ((loan.settled.currentPaid + loan.settled.currentInterest) / loan.totalPaid) * 1000
-              ) / 10}
-              %
-            </p>
+            <p className="text-3xl font-bold tabular-nums text-primary">{progressPct}%</p>
           </CardContent>
         </Card>
       </div>
@@ -178,10 +179,20 @@ export default function CreditsShow({
           <CardTitle>Échéancier</CardTitle>
         </CardHeader>
         <CardContent>
+          <div className="flex items-center gap-4 text-xs text-muted-foreground mb-2">
+            <span className="flex items-center gap-1.5">
+              <span className="inline-block size-3 rounded-sm bg-muted border" />
+              Déjà traitée
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="inline-block size-3 rounded-sm bg-background border" />À venir
+            </span>
+          </div>
           <DataTable
             data={loan.schedule ?? []}
             columns={scheduleColumns}
             keyExtractor={(r) => r.installmentNumber}
+            rowClassName={(r) => (isPast(r) ? 'bg-muted' : undefined)}
           />
         </CardContent>
       </Card>

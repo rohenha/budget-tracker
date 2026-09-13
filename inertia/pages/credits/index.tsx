@@ -32,10 +32,15 @@ export default function Credits({
   const editLoan = editId !== null ? loans.find((l) => l.id === editId) : null
 
   const totalPaidSoFar = globalSummary.currentPaid + globalSummary.currentInterest
-  const remainingTotal = globalSummary.totalPaid - totalPaidSoFar
+  const remainingTotal = Math.max(globalSummary.totalPaid - totalPaidSoFar, 0)
   const progressPct =
     globalSummary.totalPaid > 0
-      ? Math.round((totalPaidSoFar / globalSummary.totalPaid) * 10) / 10
+      ? Math.round((totalPaidSoFar / globalSummary.totalPaid) * 1000) / 10
+      : 0
+
+  const loanProgress = (l: Loan) =>
+    l.totalPaid > 0
+      ? Math.round(((l.settled.currentPaid + l.settled.currentInterest) / l.totalPaid) * 1000) / 10
       : 0
 
   const columns = [
@@ -62,8 +67,7 @@ export default function Credits({
     {
       label: 'Pourcentage',
       className: 'text-right tabular-nums',
-      render: (l: Loan) =>
-        `${Math.round(((l.settled.currentPaid + l.settled.currentInterest) / l.totalPaid) * 1000) / 10}%`,
+      render: (l: Loan) => `${loanProgress(l)}%`,
     },
     {
       label: 'Taux',
@@ -105,30 +109,44 @@ export default function Credits({
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card className="border-primary/20 bg-primary/5">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Total emprunté</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Total emprunté
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold tabular-nums text-primary">
               {formatBudget(globalSummary.totalBorrowed)}
             </p>
-          </CardContent>
-        </Card>
-        <Card className="border-primary/20 bg-primary/5">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Déjà remboursé</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-3xl font-bold tabular-nums text-primary">
-              {formatBudget(totalPaidSoFar)}
+            <p className="text-xs text-muted-foreground mt-1">
+              Coût total : {formatBudget(globalSummary.totalPaid)} dont{' '}
+              {formatBudget(globalSummary.totalInterest)} d&apos;intérêts
             </p>
           </CardContent>
         </Card>
         <Card className="border-primary/20 bg-primary/5">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Reste à rembourser</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Déjà remboursé
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-3xl font-bold tabular-nums text-primary">
+              {formatBudget(totalPaidSoFar)}
+            </p>
+            <p className="text-xs text-muted-foreground mt-1">
+              {formatBudget(globalSummary.currentPaid)} capital +{' '}
+              {formatBudget(globalSummary.currentInterest)} intérêts
+            </p>
+          </CardContent>
+        </Card>
+        <Card className="border-primary/20 bg-primary/5">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Reste à rembourser
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold tabular-nums text-primary">
@@ -136,37 +154,15 @@ export default function Credits({
             </p>
           </CardContent>
         </Card>
+        <Card className="border-primary/20 bg-primary/5">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Progression</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-3xl font-bold tabular-nums text-primary">{progressPct}%</p>
+          </CardContent>
+        </Card>
       </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Récapitulatif</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-3 text-sm">
-            <div>
-              <p className="text-xs text-muted-foreground">Total remboursé (prévisionnel)</p>
-              <p className="font-medium tabular-nums">{formatBudget(globalSummary.totalPaid)}</p>
-            </div>
-            <div>
-              <p className="text-xs text-muted-foreground">Total intérêts (prévisionnel)</p>
-              <p className="font-medium tabular-nums">{formatBudget(globalSummary.totalInterest)}</p>
-            </div>
-            <div>
-              <p className="text-xs text-muted-foreground">Principal déjà remboursé</p>
-              <p className="font-medium tabular-nums">{formatBudget(globalSummary.currentPaid)}</p>
-            </div>
-            <div>
-              <p className="text-xs text-muted-foreground">Intérêts déjà payés</p>
-              <p className="font-medium tabular-nums">{formatBudget(globalSummary.currentInterest)}</p>
-            </div>
-            <div>
-              <p className="text-xs text-muted-foreground">Progression</p>
-              <p className="font-medium tabular-nums">{progressPct}%</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
 
       <PageState
         empty={
