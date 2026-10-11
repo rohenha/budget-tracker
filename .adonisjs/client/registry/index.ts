@@ -150,6 +150,18 @@ const routes = {
     tokens: [{"old":"/investissements","type":0,"val":"investissements","end":""}],
     types: placeholder as Registry['investissements']['types'],
   },
+  'investissements.store': {
+    methods: ["POST"],
+    pattern: '/investissements',
+    tokens: [{"old":"/investissements","type":0,"val":"investissements","end":""}],
+    types: placeholder as Registry['investissements.store']['types'],
+  },
+  'investissements.search': {
+    methods: ["GET","HEAD"],
+    pattern: '/investissements/search',
+    tokens: [{"old":"/investissements/search","type":0,"val":"investissements","end":""},{"old":"/investissements/search","type":0,"val":"search","end":""}],
+    types: placeholder as Registry['investissements.search']['types'],
+  },
   'cryptos': {
     methods: ["GET","HEAD"],
     pattern: '/cryptos',

@@ -28,6 +28,8 @@ export type ScannedRoutes = {
     'loans.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'loans.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'investissements': { paramsTuple?: []; params?: {} }
+    'investissements.store': { paramsTuple?: []; params?: {} }
+    'investissements.search': { paramsTuple?: []; params?: {} }
     'cryptos': { paramsTuple?: []; params?: {} }
   }
   GET: {
@@ -41,6 +43,7 @@ export type ScannedRoutes = {
     'loans': { paramsTuple?: []; params?: {} }
     'loans.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'investissements': { paramsTuple?: []; params?: {} }
+    'investissements.search': { paramsTuple?: []; params?: {} }
     'cryptos': { paramsTuple?: []; params?: {} }
   }
   HEAD: {
@@ -54,6 +57,7 @@ export type ScannedRoutes = {
     'loans': { paramsTuple?: []; params?: {} }
     'loans.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'investissements': { paramsTuple?: []; params?: {} }
+    'investissements.search': { paramsTuple?: []; params?: {} }
     'cryptos': { paramsTuple?: []; params?: {} }
   }
   POST: {
@@ -68,6 +72,7 @@ export type ScannedRoutes = {
     'depenses.import.validate': { paramsTuple?: []; params?: {} }
     'loans.store': { paramsTuple?: []; params?: {} }
     'loans.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'investissements.store': { paramsTuple?: []; params?: {} }
   }
   DELETE: {
     'categories.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }

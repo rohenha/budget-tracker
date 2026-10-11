@@ -34,6 +34,7 @@ type FormDialogProps = {
     | 'loans.store'
     | 'loans.edit'
     | 'investissements'
+    | 'investissements.store'
     | 'cryptos'
   routeParams?: Record<string, any>
   title: string
