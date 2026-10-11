@@ -68,7 +68,7 @@ export default function AddInvestmentsDialog({
     setData('externalLink', `https://finance.yahoo.com/quote/${result.symbol}`)
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.SubmitEvent) => {
     e.preventDefault()
     const routeInfo = tuyau.getRoute('investissements.store', { params: {} })
     const method = routeInfo.methods[0].toLowerCase() as 'get' | 'post' | 'put' | 'patch' | 'delete'

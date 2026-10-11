@@ -1,9 +1,26 @@
 import { test } from '@japa/runner'
-import { getCurrentPrice, searchSymbols } from '#services/prix_investissement_service'
+import {
+  getCurrentPrice,
+  searchSymbols,
+  setYahooFinanceForTesting,
+} from '#services/prix_investissement_service'
+import YahooFinance from 'yahoo-finance2'
 
-test.group('PrixInvestissementService', () => {
+test.group('PrixInvestissementService', (group) => {
+  group.each.setup(() => {
+    const mockYahoo = new YahooFinance({
+      queue: { concurrency: 1, interval: 0 },
+      suppressNotices: ['yahooSurvey'],
+    })
+    setYahooFinanceForTesting(mockYahoo)
+  })
+
+  group.each.teardown(() => {
+    setYahooFinanceForTesting(null as any)
+  })
+
   test('invalid symbol returns null without throwing', async ({ assert }) => {
-    const price = await getCurrentPrice('INVALID_XYZ_123456_NOPE')
+    const price = await getCurrentPrice('INVALID_SYMBOL_TEST_XXXX')
     assert.isNull(price)
   })
 

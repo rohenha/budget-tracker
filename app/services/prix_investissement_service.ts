@@ -1,20 +1,32 @@
 import YahooFinance from 'yahoo-finance2'
-import type { SearchResult } from '~/components/investments/constants.ts'
+import type { SearchResult } from '../../inertia/components/investments/constants.ts'
 
-const yahooFinance = new YahooFinance({
-  queue: { concurrency: 2, interval: 250 },
-  suppressNotices: ['yahooSurvey'],
-})
+type YahooFinanceInstance = InstanceType<typeof YahooFinance>
+
+let yahooFinanceInstance: YahooFinanceInstance | null = null
+
+function getYahooFinance(): YahooFinanceInstance {
+  if (!yahooFinanceInstance) {
+    yahooFinanceInstance = new YahooFinance({
+      queue: { concurrency: 10, interval: 100 },
+      suppressNotices: ['yahooSurvey'],
+    })
+  }
+  return yahooFinanceInstance
+}
+
+export function setYahooFinanceForTesting(instance: YahooFinanceInstance): void {
+  yahooFinanceInstance = instance
+}
 
 export async function getCurrentPrice(symbol: string): Promise<number | null> {
   const trimmed = symbol?.trim()
   if (!trimmed) return null
+
+  const yf = getYahooFinance()
   try {
-    const quote = (await Promise.race([
-      yahooFinance.quote(trimmed),
-      new Promise<null>((resolve) => setTimeout(() => resolve(null), 5000)),
-    ])) as { regularMarketPrice?: number | null } | null
-    const price = quote?.regularMarketPrice
+    const quote = await yf.quote(trimmed)
+    const price = quote?.regularMarketPrice ?? quote?.postMarketPrice ?? quote?.preMarketPrice
     if (typeof price !== 'number' || !Number.isFinite(price) || price <= 0) return null
     return price
   } catch {
@@ -25,18 +37,24 @@ export async function getCurrentPrice(symbol: string): Promise<number | null> {
 export async function searchSymbols(query: string): Promise<SearchResult[]> {
   const trimmed = query?.trim()
   if (!trimmed || trimmed.length < 2) return []
+
+  const yf = getYahooFinance()
   try {
-    const results = await Promise.race([
-      yahooFinance.search(trimmed),
-      new Promise<{ quotes: SearchResult[] } | null>((resolve) =>
-        setTimeout(() => resolve(null), 5000)
-      ),
-    ])
+    const results = await yf.search(trimmed)
     if (!results?.quotes) return []
-    const filtered = results.quotes.filter(
-      (q): q is SearchResult => !!q.symbol && (!!q.shortname || !!q.longname)
-    )
-    return filtered
+    return results.quotes
+      .filter((q) => !!q.symbol && (!!q.shortname || !!q.longname))
+      .map((q) => ({
+        symbol: q.symbol!,
+        shortname: q.shortname ?? '',
+        longname: q.longname ?? '',
+        exchange: q.exchange ?? '',
+        quoteType: q.quoteType ?? '',
+        index: q.index ?? '',
+        score: q.score ?? 0,
+        typeDisp: q.typeDisp ?? '',
+        isYahooFinance: q.isYahooFinance ?? false,
+      })) as SearchResult[]
   } catch {
     return []
   }

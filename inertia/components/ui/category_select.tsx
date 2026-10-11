@@ -28,11 +28,13 @@ export default function CategorySelect({
   value,
   onValueChange,
   errors,
+  disabled,
 }: {
   categories: Categorie[]
   value: string | number | undefined
   onValueChange: (value: string | null) => void
   errors?: string | string[]
+  disabled?: boolean
 }) {
   const display = (() => {
     if (value === undefined || value === null || value === '') return '-'
@@ -52,8 +54,13 @@ export default function CategorySelect({
   })()
 
   return (
-    <Select value={String(value ?? '')} onValueChange={onValueChange} data-invalid={!!errors}>
-      <SelectTrigger className="w-full" aria-invalid={!!errors}>
+    <Select
+      value={String(value ?? '')}
+      onValueChange={onValueChange}
+      data-invalid={!!errors}
+      disabled={disabled}
+    >
+      <SelectTrigger className="w-full" aria-invalid={!!errors} disabled={disabled}>
         <SelectValue placeholder="Sélectionner">{display}</SelectValue>
       </SelectTrigger>
       <SelectContent>

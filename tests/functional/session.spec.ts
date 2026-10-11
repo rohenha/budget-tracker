@@ -86,9 +86,7 @@ test.group('NewAccountController', (group) => {
     response.assertStatus(302)
   })
 
-  test('POST /signup fails if password confirmation does not match', async ({
-    client,
-  }) => {
+  test('POST /signup fails if password confirmation does not match', async ({ client }) => {
     const response = await client.post('/signup').redirects(0).form({
       fullName: 'Test',
       email: 'mismatch@example.com',

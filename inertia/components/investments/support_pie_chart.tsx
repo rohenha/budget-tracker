@@ -9,7 +9,31 @@ const COLORS = [
   'var(--chart-3)',
   'var(--chart-4)',
   'var(--chart-5)',
+  'var(--chart-6)',
+  'var(--chart-7)',
+  'var(--chart-8)',
+  'var(--chart-9)',
+  'var(--chart-10)',
 ]
+
+const FALLBACK_COLORS = [
+  '#3b82f6', // blue-500
+  '#22c55e', // green-500
+  '#f97316', // orange-500
+  '#eab308', // yellow-500
+  '#a855f7', // purple-500
+  '#ec4899', // pink-500
+  '#06b6d4', // cyan-500
+  '#84cc16', // lime-500
+  '#f43f5e', // rose-500
+  '#6366f1', // indigo-500
+]
+
+function getColor(index: number): string {
+  const cssVar = COLORS[index % COLORS.length]
+  const fallback = FALLBACK_COLORS[index % FALLBACK_COLORS.length]
+  return `var(${cssVar.replace('var(--', '').replace(')', '')}, ${fallback})`
+}
 
 type Props = {
   supports: InvestmentSupport[]
@@ -17,7 +41,11 @@ type Props = {
 }
 
 export default function SupportPieChart({ supports, title = 'Répartition par support' }: Props) {
-  const total = supports.reduce((sum, s) => sum + s.currentValue, 0)
+  const validSupports = supports.filter(
+    (s) =>
+      typeof s.currentValue === 'number' && Number.isFinite(s.currentValue) && s.currentValue > 0
+  )
+  const total = validSupports.reduce((sum, s) => sum + s.currentValue, 0)
 
   if (total <= 0) {
     return (
@@ -34,13 +62,11 @@ export default function SupportPieChart({ supports, title = 'Répartition par su
     )
   }
 
-  const data = supports
-    .filter((s) => s.currentValue > 0)
-    .map((s, i) => ({
-      name: s.name,
-      value: s.currentValue,
-      fill: COLORS[i % COLORS.length],
-    }))
+  const data = validSupports.map((s, i) => ({
+    name: s.name,
+    value: s.currentValue,
+    fill: getColor(i),
+  }))
 
   return (
     <Card>
@@ -54,9 +80,16 @@ export default function SupportPieChart({ supports, title = 'Répartition par su
         </p>
       </CardHeader>
       <CardContent>
-        <div className="h-72">
+        <div
+          className="h-72"
+          role="img"
+          aria-label={`Répartition du portefeuille: ${data.map((d) => `${d.name} ${formatBudget(d.value)}`).join(', ')}`}
+        >
           <ResponsiveContainer width="100%" height="100%">
-            <PieChart accessibilityLayer={true}>
+            <PieChart
+              accessibilityLayer={true}
+              aria-label={`Répartition du portefeuille, total ${formatBudget(total)}`}
+            >
               <Pie
                 data={data}
                 dataKey="value"
