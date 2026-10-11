@@ -39,6 +39,12 @@ export interface ApiDefinition {
     edit: typeof routes['investissements.edit']
     destroy: typeof routes['investissements.destroy']
     search: typeof routes['investissements.search']
+    show: typeof routes['investissements.show']
+    transactions: {
+      store: typeof routes['investissements.transactions.store']
+      edit: typeof routes['investissements.transactions.edit']
+      destroy: typeof routes['investissements.transactions.destroy']
+    }
   }
   cryptos: typeof routes['cryptos']
 }

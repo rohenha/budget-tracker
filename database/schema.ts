@@ -124,6 +124,42 @@ export class InvestmentSupportSchema extends BaseModel {
   declare userId: number
 }
 
+export class InvestmentTransactionSchema extends BaseModel {
+  static $columns = [
+    'createdAt',
+    'date',
+    'fees',
+    'id',
+    'notes',
+    'price',
+    'quantity',
+    'supportId',
+    'type',
+    'updatedAt',
+  ] as const
+  $columns = InvestmentTransactionSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+  @column.date()
+  declare date: DateTime
+  @column()
+  declare fees: string | null
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare notes: string | null
+  @column()
+  declare price: string
+  @column()
+  declare quantity: string
+  @column()
+  declare supportId: number | null
+  @column()
+  declare type: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+}
+
 export class LoanSchema extends BaseModel {
   static $columns = [
     'borrowedAmount',

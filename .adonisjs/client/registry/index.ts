@@ -174,6 +174,30 @@ const routes = {
     tokens: [{"old":"/investissements/search","type":0,"val":"investissements","end":""},{"old":"/investissements/search","type":0,"val":"search","end":""}],
     types: placeholder as Registry['investissements.search']['types'],
   },
+  'investissements.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/investissements/:id',
+    tokens: [{"old":"/investissements/:id","type":0,"val":"investissements","end":""},{"old":"/investissements/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['investissements.show']['types'],
+  },
+  'investissements.transactions.store': {
+    methods: ["POST"],
+    pattern: '/investissements/:id/transactions',
+    tokens: [{"old":"/investissements/:id/transactions","type":0,"val":"investissements","end":""},{"old":"/investissements/:id/transactions","type":1,"val":"id","end":""},{"old":"/investissements/:id/transactions","type":0,"val":"transactions","end":""}],
+    types: placeholder as Registry['investissements.transactions.store']['types'],
+  },
+  'investissements.transactions.edit': {
+    methods: ["POST"],
+    pattern: '/investissements/:id/transactions/:transactionId',
+    tokens: [{"old":"/investissements/:id/transactions/:transactionId","type":0,"val":"investissements","end":""},{"old":"/investissements/:id/transactions/:transactionId","type":1,"val":"id","end":""},{"old":"/investissements/:id/transactions/:transactionId","type":0,"val":"transactions","end":""},{"old":"/investissements/:id/transactions/:transactionId","type":1,"val":"transactionId","end":""}],
+    types: placeholder as Registry['investissements.transactions.edit']['types'],
+  },
+  'investissements.transactions.destroy': {
+    methods: ["DELETE"],
+    pattern: '/investissements/:id/transactions/:transactionId',
+    tokens: [{"old":"/investissements/:id/transactions/:transactionId","type":0,"val":"investissements","end":""},{"old":"/investissements/:id/transactions/:transactionId","type":1,"val":"id","end":""},{"old":"/investissements/:id/transactions/:transactionId","type":0,"val":"transactions","end":""},{"old":"/investissements/:id/transactions/:transactionId","type":1,"val":"transactionId","end":""}],
+    types: placeholder as Registry['investissements.transactions.destroy']['types'],
+  },
   'cryptos': {
     methods: ["GET","HEAD"],
     pattern: '/cryptos',

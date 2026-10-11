@@ -72,6 +72,19 @@ router
         router
           .get('/search', [controllers.SupportsInvestments, 'search'])
           .as('investissements.search')
+        router.get('/:id', [controllers.InvestmentTransactions, 'index']).as('investissements.show')
+        router
+          .post('/:id/transactions', [controllers.InvestmentTransactions, 'store'])
+          .as('investissements.transactions.store')
+        router
+          .post('/:id/transactions/:transactionId', [controllers.InvestmentTransactions, 'update'])
+          .as('investissements.transactions.edit')
+        router
+          .delete('/:id/transactions/:transactionId', [
+            controllers.InvestmentTransactions,
+            'destroy',
+          ])
+          .as('investissements.transactions.destroy')
       })
       .prefix('/investissements')
     router.on('/cryptos').renderInertia('cryptos/index', {}).as('cryptos')

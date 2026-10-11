@@ -35,3 +35,24 @@ export type InvestmentSupport = {
 export type InvestmentsSummary = {
   totalValue: number
 }
+
+export type InvestmentTransaction = {
+  id: number
+  supportId: number
+  type: 'achat' | 'vente'
+  date: string
+  quantity: number
+  price: number
+  fees: number
+  notes: string | null
+  total: number
+  createdAt: string
+}
+
+export type SupportSummary = {
+  totalQuantity: number
+  pru: number
+  currentValue: number
+  plValue: number
+  currentPrice: number
+}

@@ -36,3 +36,32 @@ export const searchInvestmentSupportValidator = vine.compile(
     q: vine.string().trim().minLength(2).maxLength(100),
   })
 )
+
+const notFuture = vine.createRule((value: unknown) => {
+  if (typeof value === 'string' || value instanceof Date) {
+    const date = new Date(value)
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    if (date > today) {
+      return 'La date ne peut pas être dans le futur'
+    }
+  }
+})
+
+export const storeInvestmentTransactionValidator = vine.create({
+  type: vine.enum(['achat', 'vente']),
+  date: vine.date().use(notFuture()),
+  quantity: vine.number().min(0.00000001),
+  price: vine.number().min(0.01),
+  fees: vine.number().min(0).optional(),
+  notes: vine.string().nullable().optional(),
+})
+
+export const updateInvestmentTransactionValidator = vine.create({
+  type: vine.enum(['achat', 'vente']).optional(),
+  date: vine.date().use(notFuture()).optional(),
+  quantity: vine.number().min(0.00000001).optional(),
+  price: vine.number().min(0.01).optional(),
+  fees: vine.number().min(0).optional(),
+  notes: vine.string().nullable().optional(),
+})

@@ -32,6 +32,10 @@ export type ScannedRoutes = {
     'investissements.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'investissements.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'investissements.search': { paramsTuple?: []; params?: {} }
+    'investissements.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'investissements.transactions.store': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'investissements.transactions.edit': { paramsTuple: [ParamValue,ParamValue]; params: {'id': ParamValue,'transactionId': ParamValue} }
+    'investissements.transactions.destroy': { paramsTuple: [ParamValue,ParamValue]; params: {'id': ParamValue,'transactionId': ParamValue} }
     'cryptos': { paramsTuple?: []; params?: {} }
   }
   GET: {
@@ -46,6 +50,7 @@ export type ScannedRoutes = {
     'loans.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'investissements': { paramsTuple?: []; params?: {} }
     'investissements.search': { paramsTuple?: []; params?: {} }
+    'investissements.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'cryptos': { paramsTuple?: []; params?: {} }
   }
   HEAD: {
@@ -60,6 +65,7 @@ export type ScannedRoutes = {
     'loans.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'investissements': { paramsTuple?: []; params?: {} }
     'investissements.search': { paramsTuple?: []; params?: {} }
+    'investissements.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'cryptos': { paramsTuple?: []; params?: {} }
   }
   POST: {
@@ -76,12 +82,15 @@ export type ScannedRoutes = {
     'loans.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'investissements.store': { paramsTuple?: []; params?: {} }
     'investissements.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'investissements.transactions.store': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'investissements.transactions.edit': { paramsTuple: [ParamValue,ParamValue]; params: {'id': ParamValue,'transactionId': ParamValue} }
   }
   DELETE: {
     'categories.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'depenses.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'loans.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'investissements.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'investissements.transactions.destroy': { paramsTuple: [ParamValue,ParamValue]; params: {'id': ParamValue,'transactionId': ParamValue} }
   }
 }
 declare module '@adonisjs/core/types/http' {
