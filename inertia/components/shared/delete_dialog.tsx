@@ -14,7 +14,7 @@ import { router } from '@inertiajs/react'
 interface DeleteDialogProps {
   open: boolean
   onOpenChange: (v: boolean) => void
-  route: 'categories.destroy' | 'depenses.destroy' | 'loans.destroy'
+  route: 'categories.destroy' | 'depenses.destroy' | 'loans.destroy' | 'investissements.destroy'
   routeParams: Record<string, any>
   entityName: string
   message?: string
@@ -45,7 +45,9 @@ export default function DeleteDialog({
             ? '/categories'
             : route === 'depenses.destroy'
               ? '/depenses'
-              : '/credits'
+              : route === 'investissements.destroy'
+                ? '/investissements'
+                : '/credits'
         )
       },
       onError: () => {

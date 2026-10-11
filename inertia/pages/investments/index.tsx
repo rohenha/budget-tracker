@@ -143,23 +143,27 @@ export default function Investissements({
         />
       </PageState>
       {/* TODO 4.5: page détail /investissements/:id — navigation posée, écran complet en 4.5 */}
-      <AddInvestmentsDialog open={addOpen} onOpenChange={setAddOpen} />
-      <EditInvestmentDialog
-        support={selectedSupport!}
-        open={editOpen}
-        onOpenChange={(v) => {
-          setEditOpen(v)
-          if (!v) setSelectedSupport(null)
-        }}
-      />
-      <DeleteInvestmentDialog
-        support={selectedSupport}
-        open={deleteOpen}
-        onOpenChange={(v) => {
-          setDeleteOpen(v)
-          if (!v) setSelectedSupport(null)
-        }}
-      />
+      {addOpen && <AddInvestmentsDialog open={addOpen} onOpenChange={setAddOpen} />}
+      {editOpen && (
+        <EditInvestmentDialog
+          support={selectedSupport!}
+          open={editOpen}
+          onOpenChange={(v) => {
+            setEditOpen(v)
+            if (!v) setSelectedSupport(null)
+          }}
+        />
+      )}
+      {deleteOpen && (
+        <DeleteInvestmentDialog
+          support={selectedSupport}
+          open={deleteOpen}
+          onOpenChange={(v) => {
+            setDeleteOpen(v)
+            if (!v) setSelectedSupport(null)
+          }}
+        />
+      )}
     </div>
   )
 }
