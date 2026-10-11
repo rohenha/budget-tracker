@@ -1,3 +1,19 @@
+export type SearchResult = {
+  exchange: string
+  shortname: string
+  quoteType: 'EQUITY' | 'ETF' | 'MUTUALFUND' | string
+  symbol: string
+  index: string
+  score: number
+  typeDispo: string
+  longname: string
+  exchDisp: string
+  sector: string
+  industry: string
+  dispSecIndFlag: boolean
+  isYahooFinance: boolean
+}
+
 export type InvestmentSupport = {
   id: number
   userId: number

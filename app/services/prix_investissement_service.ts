@@ -1,4 +1,5 @@
 import YahooFinance from 'yahoo-finance2'
+import type { SearchResult } from '~/components/investments/constants.ts'
 
 const yahooFinance = new YahooFinance({
   queue: { concurrency: 2, interval: 250 },
@@ -18,5 +19,25 @@ export async function getCurrentPrice(symbol: string): Promise<number | null> {
     return price
   } catch {
     return null
+  }
+}
+
+export async function searchSymbols(query: string): Promise<SearchResult[]> {
+  const trimmed = query?.trim()
+  if (!trimmed || trimmed.length < 2) return []
+  try {
+    const results = await Promise.race([
+      yahooFinance.search(trimmed),
+      new Promise<{ quotes: SearchResult[] } | null>((resolve) =>
+        setTimeout(() => resolve(null), 5000)
+      ),
+    ])
+    if (!results?.quotes) return []
+    const filtered = results.quotes.filter(
+      (q): q is SearchResult => !!q.symbol && (!!q.shortname || !!q.longname)
+    )
+    return filtered
+  } catch {
+    return []
   }
 }

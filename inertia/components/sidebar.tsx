@@ -34,7 +34,12 @@ const navItems = [
   { route: 'budget' as const, label: 'Budget', icon: PiggyBank, href: '/categories' },
   { route: 'depenses' as const, label: 'Dépenses', icon: Receipt, href: '/depenses' },
   { route: 'loans' as const, label: 'Crédits', icon: Landmark, href: '/credits' },
-  { route: 'investissements' as const, label: 'Investissements', icon: TrendingUp, href: '/investissements' },
+  {
+    route: 'investissements' as const,
+    label: 'Investissements',
+    icon: TrendingUp,
+    href: '/investissements',
+  },
   { route: 'cryptos' as const, label: 'Cryptos', icon: Bitcoin, href: '/cryptos' },
 ]
 

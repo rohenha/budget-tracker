@@ -10,5 +10,5 @@ export const controllers = {
   Loans: () => import('#controllers/loans_controller'),
   NewAccount: () => import('#controllers/new_account_controller'),
   Session: () => import('#controllers/session_controller'),
-  SupportsInvestissement: () => import('#controllers/supports_investissement_controller'),
+  SupportsInvestments: () => import('#controllers/supports_investments_controller'),
 }

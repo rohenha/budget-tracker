@@ -34,6 +34,9 @@ export interface ApiDefinition {
     edit: typeof routes['loans.edit']
     destroy: typeof routes['loans.destroy']
   }
-  investissements: typeof routes['investissements']
+  investissements: typeof routes['investissements'] & {
+    store: typeof routes['investissements.store']
+    search: typeof routes['investissements.search']
+  }
   cryptos: typeof routes['cryptos']
 }

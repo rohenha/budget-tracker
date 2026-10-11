@@ -63,7 +63,9 @@ router
       .prefix('/credits')
     router
       .group(() => {
-        router.get('/', [controllers.SupportsInvestissement, 'index']).as('investissements')
+        router.get('/', [controllers.SupportsInvestments, 'index']).as('investissements')
+        router.post('/', [controllers.SupportsInvestments, 'store']).as('investissements.store')
+        router.get('/search', [controllers.SupportsInvestments, 'search']).as('investissements.search')
       })
       .prefix('/investissements')
     router.on('/cryptos').renderInertia('cryptos/index', {}).as('cryptos')

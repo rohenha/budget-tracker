@@ -1,7 +1,7 @@
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts'
 import { Card, CardHeader, CardTitle, CardContent } from '~/components/ui/card'
 import { formatBudget } from '~/components/budget/constants'
-import type { InvestmentSupport } from '~/components/investissements/constants'
+import type { InvestmentSupport } from '~/components/investments/constants'
 
 const COLORS = [
   'var(--chart-1)',

@@ -1,16 +1,21 @@
+import { useState } from 'react'
 import { router } from '@inertiajs/react'
 import type { InertiaProps } from '~/types'
 import PageState from '~/components/page_state'
 import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
+import { Plus } from 'lucide-react'
 import DataTable from '~/components/ui/data_table'
 import { formatBudget } from '~/components/budget/constants'
-import SupportPieChart from '~/components/investissements/support_pie_chart'
-import type { InvestmentSupport, InvestmentsSummary } from '~/components/investissements/constants'
+import SupportPieChart from '~/components/investments/support_pie_chart'
+import { Button } from '~/components/ui/button'
+import type { InvestmentSupport, InvestmentsSummary } from '~/components/investments/constants'
+import AddInvestmentsDialog from '~/components/investments/add_investments_dialog'
 
 export default function Investissements({
   supports = [],
   summary = { totalValue: 0 },
 }: InertiaProps<{ supports: InvestmentSupport[]; summary: InvestmentsSummary }>) {
+  const [addOpen, setAddOpen] = useState(false)
   const columns = [
     {
       label: 'Nom',
@@ -76,6 +81,10 @@ export default function Investissements({
           <h1>Investissements</h1>
           <p className="text-sm text-muted-foreground">Suivi des supports d&apos;investissement</p>
         </div>
+        <Button size="sm" onClick={() => setAddOpen(true)}>
+          <Plus className="size-4 mr-2" />
+          Ajouter
+        </Button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -117,6 +126,7 @@ export default function Investissements({
       </PageState>
       {/* TODO 4.5: page détail /investissements/:id — navigation posée, écran complet en 4.5 */}
       {/* TODO 4.2: CTA "Ajouter support" → Dialog création (route 4.2) */}
+      <AddInvestmentsDialog open={addOpen} onOpenChange={setAddOpen} />
     </div>
   )
 }

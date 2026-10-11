@@ -291,8 +291,32 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/supports_investissement_controller').default['index']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/supports_investissement_controller').default['index']>>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/supports_investments_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/supports_investments_controller').default['index']>>>
+    }
+  }
+  'investissements.store': {
+    methods: ["POST"]
+    pattern: '/investissements'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/investment_support').storeInvestmentSupportValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/investment_support').storeInvestmentSupportValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/supports_investments_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/supports_investments_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'investissements.search': {
+    methods: ["GET","HEAD"]
+    pattern: '/investissements/search'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/supports_investments_controller').default['search']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/supports_investments_controller').default['search']>>>
     }
   }
   'cryptos': {
