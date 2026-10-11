@@ -1,5 +1,5 @@
 import YahooFinance from 'yahoo-finance2'
-import type { SearchResult } from '../../inertia/components/investments/constants.ts'
+import type { SearchResult } from '~/components/investments/constants.ts'
 
 type YahooFinanceInstance = InstanceType<typeof YahooFinance>
 
