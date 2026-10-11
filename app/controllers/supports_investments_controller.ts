@@ -8,6 +8,7 @@ import {
 } from '#validators/investment_support'
 import type { HttpContext } from '@adonisjs/core/http'
 import { ValidationError } from '@vinejs/vine'
+import db from '@adonisjs/lucid/services/db'
 
 const searchRateLimit = new Map<string, { count: number; resetAt: number }>()
 
@@ -194,6 +195,17 @@ export default class SupportsInvestmentsController {
       .where('id', params.id)
       .where('userId', user.id)
       .firstOrFail()
+
+    const transactionsCount = await db
+      .from('investment_transactions')
+      .where('support_id', support.id)
+      .count('* as total')
+
+    if (Number(transactionsCount[0].total) > 0) {
+      session.flash('error', 'Impossible de supprimer : ce support a des transactions associées')
+      response.redirect().back()
+      return
+    }
 
     await support.delete()
 

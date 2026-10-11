@@ -19,7 +19,6 @@ import {
   DialogTitle,
 } from '~/components/ui/dialog'
 import { Button } from '~/components/ui/button'
-import { router } from '@inertiajs/react'
 import type { InvestmentSupport } from '~/components/investments/constants'
 
 interface FormData {
@@ -37,7 +36,7 @@ export default function EditInvestmentDialog({
   open,
   onOpenChange,
 }: {
-  support: InvestmentSupport
+  support: InvestmentSupport | null
   open: boolean
   onOpenChange: (v: boolean) => void
 }) {
@@ -51,24 +50,24 @@ export default function EditInvestmentDialog({
     submit,
     reset: resetFormState,
   } = useForm<FormData>({
-    symbol: support.symbol,
-    name: support.name,
-    externalLink: support.externalLink ?? '',
-    type: support.type,
-    storageLocation: support.storageLocation,
-    annualFees: String(support.annualFees ?? ''),
-    description: support.description ?? '',
+    symbol: support?.symbol ?? '',
+    name: support?.name ?? '',
+    externalLink: support?.externalLink ?? '',
+    type: support?.type ?? '',
+    storageLocation: support?.storageLocation ?? '',
+    annualFees: String(support?.annualFees ?? ''),
+    description: support?.description ?? '',
   })
 
   const handleSubmit = (e: React.SubmitEvent) => {
     e.preventDefault()
+    if (!support) return
     const routeInfo = tuyau.getRoute('investissements.edit', { params: { id: support.id } })
     const method = routeInfo.methods[0].toLowerCase() as 'get' | 'post' | 'put' | 'patch' | 'delete'
     submit(method, routeInfo.url, {
       onSuccess: () => {
         resetFormState()
         onOpenChange(false)
-        router.visit('/investissements')
       },
       onError: () => {
         // Errors are automatically handled by useForm
@@ -82,6 +81,8 @@ export default function EditInvestmentDialog({
     }
     onOpenChange(value)
   }
+
+  if (!support) return null
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>

@@ -127,7 +127,7 @@ export default function Investissements({
                 message: 'Ajoute ton premier support',
                 action: {
                   label: 'Ajouter support',
-                  onClick: () => router.visit('/investissements'),
+                  onClick: () => setAddOpen(true),
                 },
               }
             : null
@@ -144,26 +144,22 @@ export default function Investissements({
       </PageState>
       {/* TODO 4.5: page détail /investissements/:id — navigation posée, écran complet en 4.5 */}
       {addOpen && <AddInvestmentsDialog open={addOpen} onOpenChange={setAddOpen} />}
-      {editOpen && (
-        <EditInvestmentDialog
-          support={selectedSupport!}
-          open={editOpen}
-          onOpenChange={(v) => {
-            setEditOpen(v)
-            if (!v) setSelectedSupport(null)
-          }}
-        />
-      )}
-      {deleteOpen && (
-        <DeleteInvestmentDialog
-          support={selectedSupport}
-          open={deleteOpen}
-          onOpenChange={(v) => {
-            setDeleteOpen(v)
-            if (!v) setSelectedSupport(null)
-          }}
-        />
-      )}
+      <EditInvestmentDialog
+        support={selectedSupport}
+        open={editOpen}
+        onOpenChange={(v) => {
+          setEditOpen(v)
+          if (!v) setSelectedSupport(null)
+        }}
+      />
+      <DeleteInvestmentDialog
+        support={selectedSupport}
+        open={deleteOpen}
+        onOpenChange={(v) => {
+          setDeleteOpen(v)
+          if (!v) setSelectedSupport(null)
+        }}
+      />
     </div>
   )
 }
