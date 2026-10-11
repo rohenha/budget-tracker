@@ -4,6 +4,14 @@ build
 tmp/*
 !tmp/.gitkeep
 
+# AdonisJS generated files
+.adonisjs/
+adonisrc.js
+adonisrc.d.ts
+config/*.js
+config/*.d.ts
+tsconfig.inertia.tsbuildinfo
+
 # Secrets
 .env
 .env.local

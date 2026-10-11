@@ -1,9 +1,28 @@
 import { useState } from 'react'
+import { useForm } from '@inertiajs/react'
+import { useTuyau } from '@adonisjs/inertia/react'
 import { Input } from '~/components/ui/input'
 import { Field, FieldContent, FieldError, FieldLabel } from '~/components/ui/field'
 import IconPicker from '~/components/shared/icon_picker'
-import FormDialog from '~/components/shared/form_dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '~/components/ui/dialog'
+import { Button } from '~/components/ui/button'
 import TypeExpenseSelect from '~/components/ui/type_expense_select'
+import { router } from '@inertiajs/react'
+
+interface FormData {
+  label: string
+  icon: string
+  budget: string
+  color: string
+  type: 'entree' | 'sortie'
+}
 
 export default function AddCategoryDialog({
   open,
@@ -12,78 +31,167 @@ export default function AddCategoryDialog({
   open: boolean
   onOpenChange: (v: boolean) => void
 }) {
-  const [icon, setIcon] = useState('Circle')
-  const [typeState, setTypeState] = useState('sortie' as 'entree' | 'sortie')
+  const [typeState, setTypeState] = useState<'entree' | 'sortie'>('sortie')
+  const tuyau = useTuyau()
+
+  const {
+    data,
+    setData,
+    errors,
+    processing,
+    submit,
+    reset: resetFormState,
+  } = useForm<FormData>({
+    label: '',
+    icon: 'Circle',
+    budget: '',
+    color: '#6366f1',
+    type: 'sortie',
+  })
+
+  const handleSubmit = (e: React.SubmitEvent) => {
+    e.preventDefault()
+    const routeInfo = tuyau.getRoute('categories.store', { params: {} })
+    const method = routeInfo.methods[0].toLowerCase() as 'get' | 'post' | 'put' | 'patch' | 'delete'
+    submit(method, routeInfo.url, {
+      onSuccess: () => {
+        resetFormState()
+        onOpenChange(false)
+        router.visit('/categories')
+      },
+      onError: () => {
+        // Errors are automatically handled by useForm
+      },
+    })
+  }
+
+  const handleOpenChange = (value: boolean) => {
+    if (!value) {
+      resetFormState()
+      setTypeState('sortie')
+    }
+    onOpenChange(value)
+  }
+
   return (
-    <FormDialog
-      open={open}
-      onOpenChange={onOpenChange}
-      route="categories.store"
-      title="Ajouter une catégorie"
-      description="Crée une nouvelle catégorie de dépenses"
-      submitLabel="Ajouter"
-    >
-      {({ errors }) => (
-        <>
-          <Field>
-            <FieldLabel>Nom</FieldLabel>
-            <FieldContent>
-              <Input
-                name="label"
-                id="label"
-                placeholder="Alimentation"
-                aria-invalid={!!errors.label}
-              />
-              <FieldError errors={[{ message: errors.label }]} />
-            </FieldContent>
-          </Field>
-          <Field>
-            <FieldLabel>Icône</FieldLabel>
-            <FieldContent>
-              <IconPicker value={icon} onChange={setIcon} error={errors.icon} />
-            </FieldContent>
-          </Field>
-          <Field>
-            <FieldLabel>Budget mensuel (€)</FieldLabel>
-            <FieldContent>
-              <Input
-                type="number"
-                name="budget"
-                step="0.01"
-                min="0"
-                placeholder="500"
-                aria-invalid={!!errors.budget}
-              />
-              <FieldError errors={[{ message: errors.budget }]} />
-            </FieldContent>
-          </Field>
-          <Field>
-            <FieldLabel>Couleur</FieldLabel>
-            <FieldContent>
-              <Input
-                type="color"
-                name="color"
-                defaultValue="#6366f1"
-                className="h-7 w-14 p-0.5"
-                aria-invalid={!!errors.color}
-              />
-              <FieldError errors={[{ message: errors.color }]} />
-            </FieldContent>
-          </Field>
-          <Field>
-            <FieldLabel>Type</FieldLabel>
-            <FieldContent className="flex flex-row items-center gap-2">
-              <TypeExpenseSelect
-                value={typeState}
-                onValueChange={setTypeState}
-                errors={errors.type}
-              />
-              <input type="hidden" name="type" value={typeState} />
-              <FieldError errors={[{ message: errors.type }]} />
-            </FieldContent>
-          </Field>
-        </>
-      )}
-    </FormDialog>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      <DialogContent>
+        <form onSubmit={handleSubmit}>
+          <DialogHeader>
+            <DialogTitle>Ajouter une catégorie</DialogTitle>
+            <DialogDescription>Crée une nouvelle catégorie de dépenses</DialogDescription>
+          </DialogHeader>
+          <div className="flex flex-col gap-4">
+            <Field>
+              <FieldLabel htmlFor="label">Nom</FieldLabel>
+              <FieldContent>
+                <Input
+                  name="label"
+                  id="label"
+                  placeholder="Alimentation"
+                  autoFocus
+                  value={data.label}
+                  onChange={(e) => setData('label', e.target.value)}
+                  aria-invalid={!!errors.label}
+                  aria-describedby={errors.label ? 'label-error' : undefined}
+                  disabled={processing}
+                />
+                <FieldError
+                  id="label-error"
+                  errors={errors.label ? [{ message: errors.label }] : []}
+                />
+              </FieldContent>
+            </Field>
+            <Field>
+              <FieldLabel>Icône</FieldLabel>
+              <FieldContent>
+                <IconPicker
+                  value={data.icon}
+                  onChange={(value) => setData('icon', value)}
+                  error={errors.icon}
+                />
+                <FieldError
+                  id="icon-error"
+                  errors={errors.icon ? [{ message: errors.icon }] : []}
+                />
+              </FieldContent>
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="budget">Budget mensuel (€)</FieldLabel>
+              <FieldContent>
+                <Input
+                  type="number"
+                  name="budget"
+                  id="budget"
+                  step="0.01"
+                  min="0"
+                  placeholder="500"
+                  value={data.budget}
+                  onChange={(e) => setData('budget', e.target.value)}
+                  aria-invalid={!!errors.budget}
+                  aria-describedby={errors.budget ? 'budget-error' : undefined}
+                  disabled={processing}
+                />
+                <FieldError
+                  id="budget-error"
+                  errors={errors.budget ? [{ message: errors.budget }] : []}
+                />
+              </FieldContent>
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="color">Couleur</FieldLabel>
+              <FieldContent>
+                <Input
+                  type="color"
+                  name="color"
+                  id="color"
+                  value={data.color}
+                  onChange={(e) => setData('color', e.target.value)}
+                  className="h-7 w-14 p-0.5"
+                  aria-invalid={!!errors.color}
+                  aria-describedby={errors.color ? 'color-error' : undefined}
+                  disabled={processing}
+                />
+                <FieldError
+                  id="color-error"
+                  errors={errors.color ? [{ message: errors.color }] : []}
+                />
+              </FieldContent>
+            </Field>
+            <Field>
+              <FieldLabel>Type</FieldLabel>
+              <FieldContent className="flex flex-row items-center gap-2">
+                <TypeExpenseSelect
+                  value={typeState}
+                  onValueChange={(value) => {
+                    setTypeState(value)
+                    setData('type', value)
+                  }}
+                  errors={errors.type}
+                />
+                <FieldError
+                  id="type-error"
+                  errors={errors.type ? [{ message: errors.type }] : []}
+                />
+              </FieldContent>
+            </Field>
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => onOpenChange(false)}
+                disabled={processing}
+              >
+                Annuler
+              </Button>
+              <Button type="submit" size="sm" disabled={processing}>
+                {processing ? 'Ajout...' : 'Ajouter'}
+              </Button>
+            </DialogFooter>
+          </div>
+        </form>
+      </DialogContent>
+    </Dialog>
   )
 }

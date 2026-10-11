@@ -6,14 +6,16 @@ import Loan from '#models/loan'
  * The getters and methods of Loan are pure logic (no DB).
  * We instantiate the model directly without saving.
  */
-function makeLoan(overrides: Partial<{
-  borrowedAmount: number
-  downPayment: number
-  interestRate: number
-  durationMonths: number
-  status: 'active' | 'paid'
-  startDate: DateTime
-}> = {}) {
+function makeLoan(
+  overrides: Partial<{
+    borrowedAmount: number
+    downPayment: number
+    interestRate: number
+    durationMonths: number
+    status: 'active' | 'paid'
+    startDate: DateTime
+  }> = {}
+) {
   const loan = new Loan()
   loan.borrowedAmount = overrides.borrowedAmount ?? 10000
   loan.downPayment = overrides.downPayment ?? 0

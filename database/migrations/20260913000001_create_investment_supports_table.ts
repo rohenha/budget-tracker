@@ -24,6 +24,9 @@ export default class extends BaseSchema {
       table.timestamp('last_price_at').nullable()
       table.timestamp('created_at').notNullable()
       table.timestamp('updated_at').nullable()
+
+      table.unique(['user_id', 'symbol'])
+      table.index('user_id')
     })
   }
 

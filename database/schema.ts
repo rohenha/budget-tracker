@@ -8,7 +8,18 @@ import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 
 export class CategorySchema extends BaseModel {
-  static $columns = ['budget', 'color', 'createdAt', 'icon', 'id', 'label', 'slug', 'type', 'updatedAt', 'userId'] as const
+  static $columns = [
+    'budget',
+    'color',
+    'createdAt',
+    'icon',
+    'id',
+    'label',
+    'slug',
+    'type',
+    'updatedAt',
+    'userId',
+  ] as const
   $columns = CategorySchema.$columns
   @column()
   declare budget: string | null
@@ -33,7 +44,18 @@ export class CategorySchema extends BaseModel {
 }
 
 export class DepenseSchema extends BaseModel {
-  static $columns = ['categorieId', 'createdAt', 'date', 'description', 'id', 'libelle', 'montant', 'type', 'updatedAt', 'userId'] as const
+  static $columns = [
+    'categorieId',
+    'createdAt',
+    'date',
+    'description',
+    'id',
+    'libelle',
+    'montant',
+    'type',
+    'updatedAt',
+    'userId',
+  ] as const
   $columns = DepenseSchema.$columns
   @column()
   declare categorieId: number | null
@@ -58,7 +80,21 @@ export class DepenseSchema extends BaseModel {
 }
 
 export class InvestmentSupportSchema extends BaseModel {
-  static $columns = ['annualFees', 'createdAt', 'description', 'externalLink', 'id', 'lastKnownPrice', 'lastPriceAt', 'name', 'storageLocation', 'symbol', 'type', 'updatedAt', 'userId'] as const
+  static $columns = [
+    'annualFees',
+    'createdAt',
+    'description',
+    'externalLink',
+    'id',
+    'lastKnownPrice',
+    'lastPriceAt',
+    'name',
+    'storageLocation',
+    'symbol',
+    'type',
+    'updatedAt',
+    'userId',
+  ] as const
   $columns = InvestmentSupportSchema.$columns
   @column()
   declare annualFees: string
@@ -89,7 +125,19 @@ export class InvestmentSupportSchema extends BaseModel {
 }
 
 export class LoanSchema extends BaseModel {
-  static $columns = ['borrowedAmount', 'createdAt', 'downPayment', 'durationMonths', 'id', 'interestRate', 'name', 'startDate', 'status', 'updatedAt', 'userId'] as const
+  static $columns = [
+    'borrowedAmount',
+    'createdAt',
+    'downPayment',
+    'durationMonths',
+    'id',
+    'interestRate',
+    'name',
+    'startDate',
+    'status',
+    'updatedAt',
+    'userId',
+  ] as const
   $columns = LoanSchema.$columns
   @column()
   declare borrowedAmount: string

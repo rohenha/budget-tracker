@@ -1,7 +1,12 @@
 import vine from '@vinejs/vine'
 
 export const storeInvestmentSupportValidator = vine.create({
-  symbol: vine.string().trim().minLength(1).maxLength(10).regex(/^[A-Za-z0-9.^=]+$/),
+  symbol: vine
+    .string()
+    .trim()
+    .minLength(1)
+    .maxLength(10)
+    .regex(/^[A-Za-z0-9.^=]+$/),
   name: vine.string().trim().minLength(1).maxLength(255),
   type: vine.enum(['PEA', 'AV', 'CTO']),
   storageLocation: vine.string().trim().minLength(1).maxLength(255),
@@ -11,7 +16,13 @@ export const storeInvestmentSupportValidator = vine.create({
 })
 
 export const updateInvestmentSupportValidator = vine.create({
-  symbol: vine.string().trim().minLength(1).maxLength(10).regex(/^[A-Za-z0-9.^=]+$/).optional(),
+  symbol: vine
+    .string()
+    .trim()
+    .minLength(1)
+    .maxLength(10)
+    .regex(/^[A-Za-z0-9.^=]+$/)
+    .optional(),
   name: vine.string().trim().minLength(1).maxLength(255).optional(),
   type: vine.enum(['PEA', 'AV', 'CTO']).optional(),
   storageLocation: vine.string().trim().minLength(1).maxLength(255).optional(),
@@ -19,3 +30,9 @@ export const updateInvestmentSupportValidator = vine.create({
   description: vine.string().nullable().optional(),
   externalLink: vine.string().url().nullable().optional(),
 })
+
+export const searchInvestmentSupportValidator = vine.compile(
+  vine.object({
+    q: vine.string().trim().minLength(2).maxLength(100),
+  })
+)

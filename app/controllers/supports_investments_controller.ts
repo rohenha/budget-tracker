@@ -1,24 +1,46 @@
 import { DateTime } from 'luxon'
 import InvestmentSupport from '#models/investment_support'
 import { getCurrentPrice, searchSymbols } from '#services/prix_investissement_service'
-import { storeInvestmentSupportValidator } from '#validators/investment_support'
+import {
+  storeInvestmentSupportValidator,
+  searchInvestmentSupportValidator,
+} from '#validators/investment_support'
 import type { HttpContext } from '@adonisjs/core/http'
-import vine from '@vinejs/vine'
 import { ValidationError } from '@vinejs/vine'
 
-const searchValidator = vine.compile(
-  vine.object({
-    q: vine.string().trim().minLength(2).maxLength(100),
-  })
-)
+const searchRateLimit = new Map<string, { count: number; resetAt: number }>()
 
-export default class SupportsInvestissementController {
-  async index({ inertia, auth }: HttpContext) {
+function checkSearchRateLimit(identifier: string): boolean {
+  const now = Date.now()
+  const windowMs = 60_000 // 1 minute
+  const maxRequests = 30 // 30 requests per minute
+
+  const record = searchRateLimit.get(identifier)
+  if (!record || now > record.resetAt) {
+    searchRateLimit.set(identifier, { count: 1, resetAt: now + windowMs })
+    return true
+  }
+
+  if (record.count >= maxRequests) {
+    return false
+  }
+
+  record.count++
+  return true
+}
+
+export default class SupportsInvestmentsController {
+  async index({ inertia, auth, request }: HttpContext) {
     const user = auth.user!
-    const supports = await InvestmentSupport.query().where('userId', user.id)
+    const page = request.input('page', 1)
+    const limit = 50
+    const supports = await InvestmentSupport.query()
+      .where('userId', user.id)
+      .orderBy('createdAt', 'desc')
+      .paginate(page, limit)
 
     const dtos = await Promise.all(
-      supports.map(async (support) => {
+      supports.all().map(async (support) => {
         let price = support.lastKnownPrice ? Number(support.lastKnownPrice) : null
         let stale = false
 
@@ -28,14 +50,18 @@ export default class SupportsInvestissementController {
             price = live
             support.lastKnownPrice = live
             support.lastPriceAt = DateTime.now()
-            await support.save().catch(() => {})
-          } else if (price !== null) {
-            stale = true
+            try {
+              await support.save()
+            } catch (saveError) {
+              // Log error but don't block rendering - price update is best-effort
+              console.error('Failed to update support price:', saveError)
+            }
+            stale = false
           } else {
             stale = true
           }
         } catch {
-          stale = price !== null ? true : true
+          stale = true
         }
 
         const currentValue = 0
@@ -64,9 +90,17 @@ export default class SupportsInvestissementController {
 
     const totalValue = dtos.reduce((sum, s) => sum + s.currentValue, 0)
 
+    const pagination = {
+      currentPage: supports.currentPage,
+      lastPage: supports.lastPage,
+      perPage: supports.perPage,
+      total: supports.total,
+    }
+
     return inertia.render('investments/index', {
       supports: dtos,
       summary: { totalValue },
+      pagination,
     })
   }
 
@@ -99,10 +133,14 @@ export default class SupportsInvestissementController {
     response.redirect().toRoute('investissements')
   }
 
-  async search({ request, response }: HttpContext) {
-    // const user = auth.user!
+  async search({ request, response, auth }: HttpContext) {
+    const identifier = auth.user?.id?.toString() ?? request.ip() ?? 'anonymous'
+    if (!checkSearchRateLimit(identifier)) {
+      return response.status(429).json({ error: 'Too many requests. Please slow down.' })
+    }
+
     try {
-      const { q } = await request.validateUsing(searchValidator)
+      const { q } = await request.validateUsing(searchInvestmentSupportValidator)
       const results = await searchSymbols(q)
       return response.json({ results })
     } catch (error) {

@@ -17,7 +17,7 @@ async function createSupport(
 ) {
   return InvestmentSupport.create({
     userId,
-    symbol: overrides.symbol ?? 'INVALID_XYZ_123456',
+    symbol: overrides.symbol ?? 'INVALID_SYMBOL_TEST_XXXX',
     name: overrides.name ?? 'Support Test',
     type: 'PEA',
     storageLocation: 'Bourse',
@@ -56,11 +56,13 @@ test.group('SupportsInvestissement — GET /investissements', (group) => {
 
   test('unknown symbol returns 200 with stale flag', async ({ client, assert }) => {
     const user = await createUser()
-    await createSupport(user.id, { symbol: 'INVALID_XYZ_123456' })
+    await createSupport(user.id, { symbol: 'INVALID_SYMBOL_TEST_XXXX' })
     const response = await client.get('/investissements').loginAs(user)
     response.assertStatus(200)
     const body = response.text()
     assert.include(body, 'investissements')
+    // Check that stale flag is passed in page props (SSR)
+    assert.isTrue(body.includes('stale') && body.includes('true'))
   })
 })
 
@@ -212,7 +214,9 @@ test.group('SupportsInvestissement — GET /investissements/search', (group) => 
 
   test('returns empty results for unknown query', async ({ client, assert }) => {
     const user = await createUser()
-    const response = await client.get('/investissements/search?q=INVALID_XYZ_123456_NOPE').loginAs(user)
+    const response = await client
+      .get('/investissements/search?q=INVALID_SYMBOL_TEST_XXXX')
+      .loginAs(user)
     response.assertStatus(200)
     const body = response.body() as { results: unknown[] }
     assert.isArray(body.results)

@@ -314,9 +314,9 @@ export interface Registry {
       body: {}
       paramsTuple: []
       params: {}
-      query: {}
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/investment_support').searchInvestmentSupportValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/supports_investments_controller').default['search']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/supports_investments_controller').default['search']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/supports_investments_controller').default['search']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'cryptos': {
