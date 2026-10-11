@@ -9,12 +9,11 @@ import {
   DialogTitle,
 } from '~/components/ui/dialog'
 import { Button } from '~/components/ui/button'
-import { router } from '@inertiajs/react'
 
 interface DeleteDialogProps {
   open: boolean
   onOpenChange: (v: boolean) => void
-  route: 'categories.destroy' | 'depenses.destroy' | 'loans.destroy' | 'investissements.destroy'
+  route: string
   routeParams: Record<string, any>
   entityName: string
   message?: string
@@ -40,15 +39,6 @@ export default function DeleteDialog({
       onSuccess: () => {
         resetFormState()
         onOpenChange(false)
-        router.visit(
-          route === 'categories.destroy'
-            ? '/categories'
-            : route === 'depenses.destroy'
-              ? '/depenses'
-              : route === 'investissements.destroy'
-                ? '/investissements'
-                : '/credits'
-        )
       },
       onError: () => {
         // Errors are automatically handled by useForm
