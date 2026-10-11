@@ -64,7 +64,7 @@ export default function AddInvestmentsDialog({
   const handleSearchSelect = (result: SearchResult) => {
     setSearchResult(result)
     setData('symbol', result.symbol)
-    setData('name', result.longname)
+    setData('name', result.longname || result.shortname || result.symbol)
     setData('externalLink', `https://finance.yahoo.com/quote/${result.symbol}`)
   }
 
