@@ -156,6 +156,18 @@ const routes = {
     tokens: [{"old":"/investissements","type":0,"val":"investissements","end":""}],
     types: placeholder as Registry['investissements.store']['types'],
   },
+  'investissements.edit': {
+    methods: ["POST"],
+    pattern: '/investissements/:id',
+    tokens: [{"old":"/investissements/:id","type":0,"val":"investissements","end":""},{"old":"/investissements/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['investissements.edit']['types'],
+  },
+  'investissements.destroy': {
+    methods: ["DELETE"],
+    pattern: '/investissements/:id',
+    tokens: [{"old":"/investissements/:id","type":0,"val":"investissements","end":""},{"old":"/investissements/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['investissements.destroy']['types'],
+  },
   'investissements.search': {
     methods: ["GET","HEAD"],
     pattern: '/investissements/search',

@@ -4,6 +4,7 @@ import { getCurrentPrice, searchSymbols } from '#services/prix_investissement_se
 import {
   storeInvestmentSupportValidator,
   searchInvestmentSupportValidator,
+  updateInvestmentSupportValidator,
 } from '#validators/investment_support'
 import type { HttpContext } from '@adonisjs/core/http'
 import { ValidationError } from '@vinejs/vine'
@@ -149,5 +150,54 @@ export default class SupportsInvestmentsController {
       }
       throw error
     }
+  }
+
+  async update({ request, response, auth, session, params }: HttpContext) {
+    const user = auth.user!
+    const support = await InvestmentSupport.query()
+      .where('id', params.id)
+      .where('userId', user.id)
+      .firstOrFail()
+
+    const payload = await request.validateUsing(updateInvestmentSupportValidator)
+
+    let lastKnownPrice: number | null = support.lastKnownPrice
+    let lastPriceAt: DateTime | null = support.lastPriceAt
+
+    if (payload.symbol && payload.symbol !== support.symbol) {
+      try {
+        const live = await getCurrentPrice(payload.symbol)
+        if (live !== null) {
+          lastKnownPrice = live
+          lastPriceAt = DateTime.now()
+        }
+      } catch {
+        // Ignore price fetch errors
+      }
+    }
+
+    support.merge({
+      ...payload,
+      annualFees: payload.annualFees ?? support.annualFees,
+      lastKnownPrice,
+      lastPriceAt,
+    })
+    await support.save()
+
+    session.flash('success', 'Support modifié')
+    response.redirect().toRoute('investissements')
+  }
+
+  async destroy({ auth, session, response, params }: HttpContext) {
+    const user = auth.user!
+    const support = await InvestmentSupport.query()
+      .where('id', params.id)
+      .where('userId', user.id)
+      .firstOrFail()
+
+    await support.delete()
+
+    session.flash('success', 'Support supprimé')
+    response.redirect().toRoute('investissements')
   }
 }

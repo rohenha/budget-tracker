@@ -65,6 +65,10 @@ router
       .group(() => {
         router.get('/', [controllers.SupportsInvestments, 'index']).as('investissements')
         router.post('/', [controllers.SupportsInvestments, 'store']).as('investissements.store')
+        router.post('/:id', [controllers.SupportsInvestments, 'update']).as('investissements.edit')
+        router
+          .delete('/:id', [controllers.SupportsInvestments, 'destroy'])
+          .as('investissements.destroy')
         router
           .get('/search', [controllers.SupportsInvestments, 'search'])
           .as('investissements.search')

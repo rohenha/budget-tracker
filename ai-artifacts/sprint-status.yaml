@@ -29,7 +29,8 @@ development_status:
   epic-4-retrospective: optional
   4-1-liste-des-supports-et-repartition: backlog
   4-2-ajout-dun-support-dinvestissement: backlog
-  4-4-achats-et-ventes-sur-un-support: backlog
+  4-3-modification-et-suppression-dun-support-dinvestissement: backlog
+  4-4-achats-et-ventes-sur-un-support-dinvestissement: backlog
   4-5-detail-dun-support: backlog
 
   epic-5: backlog
@@ -44,3 +45,21 @@ development_status:
   6-1-indicateurs-du-patrimoine: backlog
   6-2-import-csv-depuis-le-dashboard: backlog
   6-3-rafraichissement-des-prix-et-dca-quick-add: backlog
+
+    - id: "4.1"
+      title: "Ajout d'un support d'investissement"
+      status: ready-for-dev
+      parent: 4
+      file: implementation-artifacts/stories/4-1-ajout-dun-support-dinvestissement.md
+
+    - id: "4.2"
+      title: "Modification et suppression d'un support d'investissement"
+      status: ready-for-dev
+      parent: 4
+      file: implementation-artifacts/stories/4-2-modification-et-suppression-dun-support-dinvestissement.md
+
+    - id: "4.3"
+      title: "Achats et ventes sur un support d'investissement"
+      status: ready-for-dev
+      parent: 4
+      file: implementation-artifacts/stories/4-3-achats-et-ventes-sur-un-support-dinvestissement.md
