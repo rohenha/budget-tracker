@@ -1,7 +1,7 @@
 # Story 4.2: Modification et suppression d'un support d'investissement
 
 ## Status
-review
+done
 
 ## User Story
 En tant qu'utilisateur, je veux pouvoir modifier les informations d'un support d'investissement existant (nom, type, description) et le supprimer s'il n'est plus pertinent, afin de maintenir ma liste de supports à jour et précise.

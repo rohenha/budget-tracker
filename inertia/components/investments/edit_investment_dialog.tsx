@@ -90,7 +90,7 @@ export default function EditInvestmentDialog({
           <DialogHeader>
             <DialogTitle>Modifier {support.name}</DialogTitle>
             <DialogDescription>
-              Modifie les param\u00e8tres du support d\u0027investissement
+              Modifie les paramètres du support d'investissement
             </DialogDescription>
           </DialogHeader>
           <div className="flex flex-col gap-4">
