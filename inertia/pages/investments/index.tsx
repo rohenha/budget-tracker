@@ -10,12 +10,18 @@ import SupportPieChart from '~/components/investments/support_pie_chart'
 import { Button } from '~/components/ui/button'
 import type { InvestmentSupport, InvestmentsSummary } from '~/components/investments/constants'
 import AddInvestmentsDialog from '~/components/investments/add_investments_dialog'
+import EditInvestmentDialog from '~/components/investments/edit_investment_dialog'
+import DeleteInvestmentDialog from '~/components/investments/delete_investment_dialog'
 
 export default function Investissements({
   supports = [],
   summary = { totalValue: 0 },
 }: InertiaProps<{ supports: InvestmentSupport[]; summary: InvestmentsSummary }>) {
   const [addOpen, setAddOpen] = useState(false)
+  const [editOpen, setEditOpen] = useState(false)
+  const [deleteOpen, setDeleteOpen] = useState(false)
+  const [selectedSupport, setSelectedSupport] = useState<InvestmentSupport | null>(null)
+
   const columns = [
     {
       label: 'Nom',
@@ -74,6 +80,16 @@ export default function Investissements({
     },
   ]
 
+  const handleEdit = (support: InvestmentSupport) => {
+    setSelectedSupport(support)
+    setEditOpen(true)
+  }
+
+  const handleDelete = (support: InvestmentSupport) => {
+    setSelectedSupport(support)
+    setDeleteOpen(true)
+  }
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
@@ -111,7 +127,7 @@ export default function Investissements({
                 message: 'Ajoute ton premier support',
                 action: {
                   label: 'Ajouter support',
-                  onClick: () => router.visit('/investissements'),
+                  onClick: () => setAddOpen(true),
                 },
               }
             : null
@@ -122,11 +138,30 @@ export default function Investissements({
           columns={columns}
           keyExtractor={(s) => s.id}
           onRowClick={(s) => router.visit(`/investissements/${s.id}`)}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
         />
       </PageState>
       {/* TODO 4.5: page détail /investissements/:id — navigation posée, écran complet en 4.5 */}
-      {/* TODO 4.2: CTA "Ajouter support" → Dialog création (route 4.2) */}
-      <AddInvestmentsDialog open={addOpen} onOpenChange={setAddOpen} />
+      {addOpen && <AddInvestmentsDialog open={addOpen} onOpenChange={setAddOpen} />}
+      {editOpen && selectedSupport !== null && (
+        <EditInvestmentDialog
+          support={selectedSupport}
+          open={editOpen}
+          onOpenChange={(v) => {
+            setEditOpen(v)
+            if (!v) setSelectedSupport(null)
+          }}
+        />
+      )}
+      <DeleteInvestmentDialog
+        support={selectedSupport}
+        open={deleteOpen}
+        onOpenChange={(v) => {
+          setDeleteOpen(v)
+          if (!v) setSelectedSupport(null)
+        }}
+      />
     </div>
   )
 }

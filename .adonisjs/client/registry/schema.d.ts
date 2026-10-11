@@ -307,6 +307,30 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/supports_investments_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
+  'investissements.edit': {
+    methods: ["POST"]
+    pattern: '/investissements/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/investment_support').updateInvestmentSupportValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/investment_support').updateInvestmentSupportValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/supports_investments_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/supports_investments_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'investissements.destroy': {
+    methods: ["DELETE"]
+    pattern: '/investissements/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/supports_investments_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/supports_investments_controller').default['destroy']>>>
+    }
+  }
   'investissements.search': {
     methods: ["GET","HEAD"]
     pattern: '/investissements/search'
